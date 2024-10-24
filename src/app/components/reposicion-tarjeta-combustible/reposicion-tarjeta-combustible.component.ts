@@ -582,10 +582,10 @@ export class ReposicionTarjetaCombustibleComponent {
             doc.strArchivo = this.formDocumentos['pagoRefrendo'].value;
             break;
           case "TARJETA DE CIRCULACIÓN":
-          doc.strArchivo = this.formDocumentos['dictamenGas'].value;
+          doc.strArchivo = this.formDocumentos['tarjetaCirculacion'].value;
             break;
           case "DICTAMEN DE GAS":
-            doc.strArchivo = this.formDocumentos['tarjetaCirculacion'].value;
+            doc.strArchivo = this.formDocumentos['dictamenGas'].value;
             break;
             case "INE":
             doc.strArchivo = this.formDocumentos['ine'].value;
