@@ -1,0 +1,624 @@
+<app-nav></app-nav>
+<div class="contenedor-principal">
+  <div class="container py-5 mx-auto">
+    <div class="row d-flex justify-content-center">
+      <div class="fondo-contenedor-principal rounded">
+        <br />
+        <div class="d-grid gap-1 d-md-flex fondo-stepper-encabezado rounded">
+          <h6 [ngClass]="esPersonaFisica ? 'tittle' : 'tittleMoral'" class="me-auto p-1 rounded"><span><i
+                class="bi bi-people-fill"></i>&nbsp;PERSONA: {{ esPersonaFisica ? 'FÍSICA' : 'MORAL' }} </span>
+          </h6>
+          <div>
+            <h6 [ngClass]="esPersonaFisica ? 'tittle' : 'tittleMoral'" class="me-auto p-1 rounded"><span><i
+                  class="bi bi-bus-front"></i>&nbsp;REPOSICION TARJETA</span>
+            </h6>
+          </div>
+        </div>
+        <mat-vertical-stepper [linear]="true" #stepper animationDuration="1500"
+          class="fondo-stepper rounded mat-stepper-vertical">
+          <!-- Step 1 - DATOS DE LA CONCESIÓN -->
+          <mat-step [stepControl]="datosConcesionForm">
+            <ng-template matStepLabel>
+              <h6 [ngClass]="esPersonaFisica ? 'tittle' : 'tittleMoral'" class="me-auto p-1 rounded">
+                <span class="bi bi-bus-front stepper-icons"></span>
+                <span> DATOS DE LA CONCESIÓN </span>
+              </h6>
+            </ng-template>
+            <form [formGroup]="datosConcesionForm">
+              <div class="row g-3">
+                <div class="col-12 col-md-12 col-lg-4">
+                  <label for="strNiv" class="form-label">NIV <b class="asteriscos">*</b></label>
+                  <div class="input-container">
+                    <input appAlphanumeric type="text" minlength="17" maxlength="17" id="strNiv"
+                      placeholder="Escribe NIV" formControlName="strNiv" name="strNiv" autocomplete="off"
+                      class="form-control" [ngClass]="{
+                       'is-invalid': datosConcesionForm.get('strNiv')?.invalid && (datosConcesionForm.get('strNiv')?.touched || datosConcesionForm.get('strNiv')?.dirty), 
+                       'is-valid': datosConcesionForm.get('strNiv')?.valid && (datosConcesionForm.get('strNiv')?.touched || datosConcesionForm.get('strNiv')?.dirty),
+                        }" />
+                    <div class="invalid-feedback"
+                      *ngIf="datosConcesionForm.get('strNiv')?.invalid && (datosConcesionForm.get('strNiv')?.touched || datosConcesionForm.get('strNiv')?.dirty)">
+                      <ng-container *ngIf="datosConcesionForm.get('strNiv')?.hasError('required')"> Campo Obligatorio
+                      </ng-container>
+                      <ng-container *ngIf="datosConcesionForm.get('strNiv')?.hasError('minlength')"> Debe tener al menos
+                        17 caracteres </ng-container>
+                      <ng-container *ngIf="datosConcesionForm.get('strNiv')?.hasError('maxlength')"> No puede tener más
+                        de 17 caracteres </ng-container>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-12 col-md-12 col-lg-4">
+                  <label for="strPlaca" class="form-label">PLACA <b class="asteriscos">*</b></label>
+                  <div class="input-container">
+                    <input appAlphanumeric type="text" minlength="7" maxlength="7" id="strPlaca"
+                      placeholder="Escribe placa" formControlName="strPlaca" name="strPlaca" autocomplete="off"
+                      class="form-control" [ngClass]="{
+                        'is-invalid': datosConcesionForm.get('strPlaca')?.invalid && (datosConcesionForm.get('strPlaca')?.touched || datosConcesionForm.get('strPlaca')?.dirty),
+                        'is-valid': datosConcesionForm.get('strPlaca')?.valid && (datosConcesionForm.get('strPlaca')?.touched || datosConcesionForm.get('strPlaca')?.dirty)
+                      }" />
+                    <div class="invalid-feedback"
+                      *ngIf="datosConcesionForm.get('strPlaca')?.errors && (datosConcesionForm.get('strPlaca')?.touched || datosConcesionForm.get('strPlaca')?.dirty)">
+                      <ng-container *ngIf="datosConcesionForm.get('strPlaca')?.hasError('required')">Campo
+                        Obligatorio</ng-container>
+                      <ng-container *ngIf="datosConcesionForm.get('strPlaca')?.hasError('minlength')">Debe tener al
+                        menos 7 caracteres</ng-container>
+                      <ng-container *ngIf="datosConcesionForm.get('strPlaca')?.hasError('maxlength')">No puede tener más
+                        de 7 caracteres</ng-container>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-md-12 col-lg-4">
+                  <label for="strCveVeh" class="form-label">CLAVE VEHICULAR </label><input type="text" minlength="1"
+                    maxlength="7" id="strCveVeh" formControlName="strCveVeh" name="strCveVeh" autocomplete="off"
+                    class="form-control" />
+                </div>
+                <div class="col-12 col-md-12 col-lg-4">
+                  <label for="strMotor" class="form-label">NÚMERO DE MOTOR </label><input type="text" minlength="1"
+                    maxlength="20" formControlName="strMotor" id="strMotor" name="strMotor" autocomplete="off"
+                    class="form-control" />
+                </div>
+                <div class="col-12 col-md-12 col-lg-8">
+                  <label for="strMarca" class="form-label">MARCA </label><input type="text" formControlName="strMarca"
+                    id="strMarca" name="strMarca" autocomplete="off" class="form-control" />
+                </div>
+                <div class="col-12 col-md-12 col-lg-3">
+                  <label for="intModelo" class="form-label">MODELO </label><input type="text" minlength="4"
+                    maxlength="4" formControlName="intModelo" id="intModelo" name="intModelo" autocomplete="off"
+                    class="form-control" />
+                </div>
+                <div class="col-12 col-md-12 col-lg-3">
+                  <label for="strTipoVeh" class="form-label">TIPO </label><input type="text" minlength="4" maxlength="4"
+                    formControlName="strTipoVeh" id="strTipoVeh" name="strTipoVeh" autocomplete="off"
+                    class="form-control" />
+                </div>
+                <div class="col-12 col-md-12 col-lg-2">
+                  <label for="intCapacidad" class="form-label">CAPACIDAD </label><input type="text" minlength="4"
+                    maxlength="4" formControlName="intCapacidad" id="intCapacidad" name="intCapacidad"
+                    autocomplete="off" class="form-control" />
+                </div>
+                <div class="col-12 col-md-12 col-lg-2">
+                  <label for="intCilindros" class="form-label">CILINDROS </label><input type="text" minlength="4"
+                    maxlength="4" formControlName="intCilindros" id="intCilindros" name="intCilindros"
+                    autocomplete="off" class="form-control" />
+                </div>
+                <div class="col-12 col-md-12 col-lg-2">
+                  <label for="strCombustible" class="form-label">COMBUSTIBLE </label><input type="text" minlength="4"
+                    maxlength="4" formControlName="strCombustible" id="strCombustible" name="strCombustible"
+                    autocomplete="off" class="form-control" />
+                </div>
+                <div class="col-12 col-md-12 col-lg-3">
+                  <label for="intRefrendo" class="form-label">ÚLTIMO REFERENDO PAGADO </label><input type="text"
+                    minlength="4" maxlength="4" formControlName="intRefrendo" id="intRefrendo" name="intRefrendo"
+                    autocomplete="off" class="form-control" />
+                </div>
+                <div class="col-12 col-md-12 col-lg-3">
+                  <label for="strNoTarjeta" class="form-label">TARJETA DE CIRCULACIÓN </label><input type="text" minlength="4"
+                    maxlength="4" formControlName="strNoTarjeta" id="strNoTarjeta" name="strNoTarjeta"
+                    autocomplete="off" class="form-control" />
+                </div>
+              </div>
+              <br />
+              <div class="col-12 d-grid gap-1 d-md-flex justify-content-md-end">
+                <button (click)="cargarDatosFormulario(datosConcesionForm, 'datosConcesionForm',true)" mat-button
+                  matTooltip="Siguiente paso" matTooltipPosition="above" class="text-white boton-siguiente"
+                  aria-describedby="cdk-describedby-message-pdb-1-2" cdk-describedby-host="pdb-1">
+                  <span class="mdc-button__label">Siguiente
+                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor"
+                      viewBox="0 0 16 17" class="bi bi-caret-right-fill">
+                      <path
+                        d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z">
+                      </path>
+                    </svg>
+                  </span>
+                </button>
+              </div>
+              <br />
+              <hr />
+              <p class="texto-obligatorio">
+                Los campos con ( <b class="asteriscos">*</b> ) son obligatorios
+              </p>
+            </form>
+          </mat-step>
+          <!-- Step 2 - DATOS DEL CONCESIONARIO -->
+          <mat-step [stepControl]="datosConcesionarioForm">
+            <ng-template matStepLabel>
+              <h6 [ngClass]="esPersonaFisica ? 'tittle' : 'tittleMoral'" class="me-auto p-1 rounded">
+                <span class="bi bi-person-vcard stepper-icons"></span>
+                <span> DATOS DEL CONCESIONARIO </span>
+              </h6>
+            </ng-template>
+            <form [formGroup]="datosConcesionarioForm">
+              <div class="row g-3 ">
+                <div class="col-12 col-md-12 col-lg-3">
+                  <label for="strRfc" class="form-label">RFC <b class="asteriscos">*</b></label>
+                  <div class="input-container">
+                    <div class="input-group">
+                      <button type="button" class="btn icono bi bi-info-circle-fill"
+                        (click)="muestraModalConImagen('strRfc')"></button>
+                      <input appAlphanumeric formControlName="strRfc" type="text" id="strRfc" name="strRfc"
+                        autocomplete="off" [minlength]="esPersonaFisica ? 13 : 12"
+                        [maxlength]="esPersonaFisica ? 13 : 12" [placeholder]="rfcPlaceholder" [matTooltip]="rfcTooltip"
+                        matTooltipPosition="above" [ngClass]="{
+                          'is-invalid': datosConcesionarioForm.get('strRfc')?.invalid && (datosConcesionarioForm.get('strRfc')?.dirty || datosConcesionarioForm.get('strRfc')?.touched),
+                          'is-valid': datosConcesionarioForm.get('strRfc')?.valid 
+                          }" class="form-control">
+                      <div class="invalid-feedback"
+                        *ngIf="datosConcesionarioForm.get('strRfc')?.errors && (datosConcesionarioForm.get('strRfc')?.dirty || datosConcesionarioForm.get('strRfc')?.touched)">
+                        <ng-container *ngIf="datosConcesionarioForm.get('strRfc')?.hasError('required')">Campo
+                          Obligatorio</ng-container>
+                        <ng-container *ngIf="datosConcesionarioForm.get('strRfc')?.hasError('minlength')">Debe tener 13
+                          caracteres</ng-container>
+                        <ng-container *ngIf="datosConcesionarioForm.get('strRfc')?.hasError('pattern')">Formato
+                          inválido</ng-container>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div *ngIf="esPersonaFisica" class="col-12 col-md-12 col-lg-3">
+                  <label for="strCurp" class="form-label">CURP </label><input formControlName="strCurp" type="text"
+                    minlength="4" maxlength="4" id="strCurp" name="strCurp" autocomplete="off" class="form-control" />
+                </div>
+                <div class="col-12 col-md-12 col-lg-6">
+                  <label for="strNombre" class="form-label"> {{ esPersonaFisica ? 'NOMBRE' : 'RAZÓN SOCIAL' }}
+                  </label><input formControlName="strNombre" type="text" minlength="4" maxlength="4" id="strNombre"
+                    name="strNombre" autocomplete="off" class="form-control" />
+                </div>
+                <div *ngIf="esPersonaFisica" class="col-12 col-md-12 col-lg-4">
+                  <label for="strApPaterno" class="form-label">APELLIDO PATERNO </label><input
+                    formControlName="strApPaterno" type="text" minlength="4" maxlength="4" id="strApPaterno"
+                    name="strApPaterno" autocomplete="off" class="form-control" />
+                </div>
+                <div *ngIf="esPersonaFisica" class="col-12 col-md-12 col-lg-4">
+                  <label for="strApMaterno" class="form-label">APELLIDO MATERNO </label><input
+                    formControlName="strApMaterno" type="text" minlength="4" maxlength="4" id="strApMaterno"
+                    name="strApMaterno" autocomplete="off" class="form-control" />
+                </div>
+                <div *ngIf="esPersonaFisica" class="col-12 col-md-12 col-lg-2">
+                  <label for="strSexo" class="form-label">SEXO </label><input formControlName="strSexo" type="text"
+                    minlength="4" maxlength="4" id="strSexo" name="strSexo" autocomplete="off" class="form-control" />
+                </div>
+                <div *ngIf="esPersonaFisica" class="col-12 col-md-12 col-lg-2">
+                  <label for="dtFechaNacimiento" class="form-label">FECHA NACIMIENTO </label><input
+                    formControlName="dtFechaNacimiento" type="text" minlength="4" maxlength="4" id="dtFechaNacimiento"
+                    name="dtFechaNacimiento" autocomplete="off" class="form-control" />
+                </div>
+                <div class="col-12 col-md-12 col-lg-6">
+                  <label for="strCalleProp" class="form-label">CALLE </label><input formControlName="strCalleProp"
+                    type="text" minlength="4" maxlength="4" id="strCalleProp" name="strCalleProp" autocomplete="off"
+                    class="form-control" />
+                </div>
+                <div class="col-12 col-md-12 col-lg-3">
+                  <label for="strNumExt" class="form-label">NÚMERO EXTERIOR </label><input formControlName="strNumExt"
+                    type="text" minlength="4" maxlength="4" id="strNumExt" name="strNumExt" autocomplete="off"
+                    class="form-control" />
+                </div>
+                <div class="col-12 col-md-12 col-lg-3">
+                  <label for="strNumInt" class="form-label">NÚMERO INTERIOR </label><input formControlName="strNumInt"
+                    type="text" minlength="4" maxlength="4" id="strNumInt" name="strNumInt" autocomplete="off"
+                    class="form-control" />
+                </div>
+                <div class="col-12 col-md-12 col-lg-4">
+                  <label for="strEstado" class="form-label">ESTADO </label><input formControlName="strEstado" type="text"
+                    minlength="4" maxlength="4" id="strEstado" name="strEstado" value="Tlaxcala" autocomplete="off"
+                    class="form-control" />
+                </div>
+                <div class="col-12 col-md-12 col-lg-4">
+                  <label for="strMunicipio" class="form-label">MUNICIPIO </label><input formControlName="strMunicipio"
+                    type="text" id="strMunicipio" name="strMunicipio" autocomplete="off" class="form-control" />
+                </div>
+                <div class="col-12 col-md-12 col-lg-4">
+                  <label for="strLocalidad" class="form-label">LOCALIDAD </label><input formControlName="strLocalidad"
+                    type="text" id="strLocalidad" name="strLocalidad" autocomplete="off" class="form-control" />
+                </div>
+                <div class="col-12 col-md-12 col-lg-3">
+                  <label for="strCp" class="form-label">CÓDIGO POSTAL </label><input formControlName="strCp" type="text"
+                    id="strCp" name="strCp" autocomplete="off" class="form-control" />
+                </div>
+                <div class="col-12 col-md-12 col-lg-3">
+                  <label for="strColonia" class="form-label">COLONIA </label><input formControlName="strColonia"
+                    type="text" minlength="4" maxlength="4" id="strColonia" name="strColonia" autocomplete="off"
+                    class="form-control" />
+                </div>
+              </div>
+              <div class="mt-3 mat-step-label mat-step-label-active mat-step-label-selected">
+                <div class="mat-step-text-label ng-star-inserted">
+                  <h6 [ngClass]="esPersonaFisica ? 'tittle' : 'tittleMoral'" class="me-auto p-1 rounded">
+                    <span class="bi bi-person-lines-fill stepper-icons"></span>
+                    <span> MEDIOS DE CONTACTO </span>
+                  </h6>
+                </div>
+              </div>
+              <div class="row g-3 ">
+                <div class="col-12 col-md-12 col-lg-4">
+                  <label for="strTelefonoRepresentante" class="form-label">TELÉFONO REPRESENTANTE <b
+                      class="asteriscos">*</b></label>
+                  <input appNumeric formControlName="strTelefonoRepresentante" type="text" minlength="10" maxlength="10"
+                    matTooltip="Tu número de teléfono debe contener 10 números" matTooltipPosition="above"
+                    id="strTelefonoRepresentante" placeholder="Escribe teléfono representante"
+                    name="strTelefonoRepresentante" autocomplete="off" class="form-control" [ngClass]="{
+                      'is-invalid': datosConcesionarioForm.get('strTelefonoRepresentante')?.invalid && (datosConcesionarioForm.get('strTelefonoRepresentante')?.dirty || datosConcesionarioForm.get('strTelefonoRepresentante')?.touched),
+                      'is-valid': datosConcesionarioForm.get('strTelefonoRepresentante')?.valid 
+                      }" />
+                  <small
+                    *ngIf="datosConcesionarioForm.get('strTelefonoRepresentante')?.hasError('required') && (datosConcesionarioForm.get('strTelefonoRepresentante')?.dirty || datosConcesionarioForm.get('strTelefonoRepresentante')?.touched)"
+                    class="text-danger error-message">
+                    Campo Obligatorio
+                  </small>
+                  <small
+                    *ngIf="datosConcesionarioForm.get('strTelefonoRepresentante')?.hasError('minlength') && (datosConcesionarioForm.get('strTelefonoRepresentante')?.dirty || datosConcesionarioForm.get('strTelefonoRepresentante')?.touched)"
+                    class="text-danger error-message">
+                    Debe tener 10 números
+                  </small>
+                  <small
+                    *ngIf="datosConcesionarioForm.get('strTelefonoRepresentante')?.hasError('maxlength') && (datosConcesionarioForm.get('strTelefonoRepresentante')?.dirty || datosConcesionarioForm.get('strTelefonoRepresentante')?.touched)"
+                    class="text-danger error-message">
+                    No puede tener más de 10 números
+                  </small>
+                </div>
+
+                <div class="col-12 col-md-12 col-lg-4">
+                  <label for="strEmail" class="form-label">CORREO <b class="asteriscos">*</b></label>
+                  <div class="input-container">
+                    <input appMail type="email" formControlName="strEmail" id="strEmail" [ngClass]="{
+                          'is-invalid': datosConcesionarioForm.get('strEmail')?.invalid && (datosConcesionarioForm.get('strEmail')?.dirty || datosConcesionarioForm.get('strEmail')?.touched),
+                          'is-valid': datosConcesionarioForm.get('strEmail')?.valid 
+                          }" placeholder="Escribe tu correo electrónico" name="strEmail"
+                      matTooltip="Formato correo: nombre@ejemplo.com" matTooltipPosition="above" class="form-control" />
+                    <i class="fa fa-check"></i>
+                    <small
+                      *ngIf="datosConcesionarioForm.get('strEmail')?.hasError('required') && (datosConcesionarioForm.get('strEmail')?.dirty || datosConcesionarioForm.get('strEmail')?.touched)"
+                      class="text-danger error-message">
+                      Campo Obligatorio
+                    </small>
+                    <small
+                      *ngIf="datosConcesionarioForm.get('strEmail')?.hasError('email') && (datosConcesionarioForm.get('strEmail')?.dirty || datosConcesionarioForm.get('strEmail')?.touched)"
+                      class="text-danger error-message">
+                      Correo electrónico inválido
+                    </small>
+                  </div>
+                </div>
+
+                <div class="col-12 col-md-12 col-lg-4">
+                  <label for="strTelefonoContacto" class="form-label">TELÉFONO CONCESIONARIO <b
+                      class="asteriscos">*</b></label>
+                  <div class="input-container">
+                    <input appNumeric formControlName="strTelefonoContacto" name="strTelefonoContacto" type="text"
+                      minlength="10" maxlength="10" matTooltip="Tu número de teléfono debe contener 10 números"
+                      matTooltipPosition="above" id="strTelefonoContacto" placeholder="Escribe teléfono concesionario"
+                      autocomplete="off" class="form-control" [ngClass]="{
+                        'is-invalid': datosConcesionarioForm.get('strTelefonoContacto')?.invalid && (datosConcesionarioForm.get('strTelefonoContacto')?.dirty || datosConcesionarioForm.get('strTelefonoContacto')?.touched),
+                        'is-valid': datosConcesionarioForm.get('strTelefonoContacto')?.valid 
+                        }" />
+                    <i class="fa fa-check"></i>
+                    <small
+                      *ngIf="datosConcesionarioForm.get('strTelefonoContacto')?.hasError('required') && (datosConcesionarioForm.get('strTelefonoContacto')?.dirty || datosConcesionarioForm.get('strTelefonoContacto')?.touched)"
+                      class="text-danger error-message">
+                      Campo Obligatorio
+                    </small>
+                    <small
+                      *ngIf="datosConcesionarioForm.get('strTelefonoContacto')?.hasError('minlength') && (datosConcesionarioForm.get('strTelefonoContacto')?.dirty || datosConcesionarioForm.get('strTelefonoContacto')?.touched)"
+                      class="text-danger error-message">
+                      Debe tener 10 números
+                    </small>
+                    <small
+                      *ngIf="datosConcesionarioForm.get('strTelefonoContacto')?.hasError('maxlength') && (datosConcesionarioForm.get('strTelefonoContacto')?.dirty || datosConcesionarioForm.get('strTelefonoContacto')?.touched)"
+                      class="text-danger error-message">
+                      No puede tener más de 10 números
+                    </small>
+                  </div>
+                </div>
+              </div>
+              <br />
+              <div class="d-flex bd-highlight mb-3">
+                <button mat-button matStepperPrevious matTooltip="Paso anterior" matTooltipPosition="above"
+                  class="mat-stepper-previous mat-mdc-tooltip-trigger btn boton-regresar text-white me-auto p-2 bd-highlight mdc-button mat-mdc-button mat-unthemed mat-mdc-button-base"
+                  aria-describedby="cdk-describedby-message-ewh-1-5" cdk-describedby-host="ewh-1" type="button"><span
+                    class="mdc-button__label"></span><span class="mdc-button__label"><svg
+                      xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" viewBox="0 0 16 17"
+                      class="bi bi-caret-left-fill">
+                      <path
+                        d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z">
+                      </path>
+                    </svg> Regresar</span></button>
+                <button (click)="cargarDatosFormulario(datosConcesionarioForm, 'datosConcesionarioForm',true)"
+                  mat-button matTooltip="Siguiente paso" matTooltipPosition="above"
+                  class="mat-mdc-tooltip-trigger btn boton-siguiente me-md-2 text-white mdc-button mat-mdc-button mat-unthemed mat-mdc-button-base"
+                  aria-describedby="cdk-describedby-message-ewh-1-2" cdk-describedby-host="ewh-1">
+                  <span class="mdc-button__label">Siguiente <svg xmlns="http://www.w3.org/2000/svg" width="17"
+                      height="17" fill="currentColor" viewBox="0 0 16 17" class="bi bi-caret-right-fill">
+                      <path
+                        d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z">
+                      </path>
+                    </svg></span>
+                </button>
+              </div>
+              <br />
+              <hr />
+              <p class="texto-obligatorio">
+                Los campos con ( <b class="asteriscos">*</b> ) son obligatorios
+              </p>
+            </form>
+          </mat-step>
+          <!-- Step 3 - DOCUMENTOS DE LA UNIDAD  -->
+          <mat-step [stepControl]="documentosUnidadForm">
+            <ng-template matStepLabel>
+              <h6 [ngClass]="esPersonaFisica ? 'tittle' : 'tittleMoral'" class="me-auto p-1 rounded">
+                <span class="bi bi-file-earmark-pdf stepper-icons"></span>
+                <span> DOCUMENTOS DE LA UNIDAD </span>
+              </h6>
+            </ng-template>
+            <form [formGroup]="documentosUnidadForm"><br><br>
+              <div class="container alert terminos shadow-lg rounded">
+                <div class="row g-3 justify-content-center">
+                  <p> Adjunta los documentos solicitados en formato <b>.pdf</b><br> Has uso de las herramientas <svg
+                      matTooltip="Seleccionar Documento" matTooltipPosition="left" xmlns="http://www.w3.org/2000/svg"
+                      width="20" height="20" fill="currentColor" viewBox="0 0 16 16"
+                      class="mat-mdc-tooltip-trigger bi bi-upload buton-subir-archivo"
+                      aria-describedby="cdk-describedby-message-bxa-1-9" cdk-describedby-host="bxa-1">
+                      <path
+                        d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5">
+                      </path>
+                      <path
+                        d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708z">
+                      </path>
+                    </svg> para adjuntar un documento y de <svg matTooltip="Ver Documento" matTooltipPosition="below"
+                      xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"
+                      class="mat-mdc-tooltip-trigger bi bi-eyeglasses buton-ver-archivo"
+                      aria-describedby="cdk-describedby-message-bxa-1-10" cdk-describedby-host="bxa-1">
+                      <path
+                        d="M4 6a2 2 0 1 1 0 4 2 2 0 0 1 0-4m2.625.547a3 3 0 0 0-5.584.953H.5a.5.5 0 0 0 0 1h.541A3 3 0 0 0 7 8a1 1 0 0 1 2 0 3 3 0 0 0 5.959.5h.541a.5.5 0 0 0 0-1h-.541a3 3 0 0 0-5.584-.953A1.993 1.993 0 0 0 8 6c-.532 0-1.016.208-1.375.547M14 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0">
+                      </path>
+                    </svg> para visualizar el documento seleccionado. </p>
+                </div>
+              </div>
+              <div class="cards-container row justify-content-center">
+                <div class="card cards me-2 mt-2" style="width: 18rem;">
+                  <div class="card-body">
+                    <iframe width="100%" height="300" class="rounded" [src]="pdfUrls['pagoRefrendo']"></iframe>
+                    <div class="text-center">
+                      <div class="input-group mb-3 justify-content-center">
+                        <input type="file" accept=".pdf" (change)="pdfSeleccionado($event, 'pagoRefrendo')"
+                          style="display: none;" #pagoRefrendoInput>
+                        <button type="button" matTooltip="Seleccionar Documento" matTooltipPosition="left"
+                          class="mat-mdc-tooltip-trigger btn buton-subir-archivo" (click)="pagoRefrendoInput.click()">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
+                            viewBox="0 0 16 16" class="bi bi-upload">
+                            <path
+                              d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z">
+                            </path>
+                            <path
+                              d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z">
+                            </path>
+                          </svg>
+                        </button>
+                        <a matTooltip="Ver Documento" matTooltipPosition="above" target="_blank" type="button"
+                          class="mat-mdc-tooltip-trigger btn buton-ver-archivo text-white" 
+                          [href]="pagoRefCargado ? pdfUrls['pagoRefrendo'] : null"
+                          [ngClass]="{'disabled-link': !pagoRefCargado}">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor"
+                            viewBox="0 0 16 16" class="bi bi-eyeglasses">
+                            <path
+                              d="M4 6a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm2.625.547a3 3 0 0 0-5.584.953H.5a.5.5 0 0 0 0 1h.541A3 3 0 0 0 7 8a1 1 0 0 1 2 0 3 3 0 0 0 5.959.5h.541a.5.5 0 0 0 0-1h-.541a3 3 0 0 0-5.584-.953A1.993 1.993 0 0 0 8 6c-.532 0-1.016.208-1.375.547zM14 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0z">
+                            </path>
+                          </svg>
+                        </a>
+                        <div matTooltip="Validación de Documento" matTooltipPosition="right"
+                          class="mat-mdc-tooltip-trigger input-group-text">
+                          <input type="checkbox" disabled="" class="form-check-input mt-0">
+                        </div>
+                      </div>
+                      <hr>
+                      <h6 [ngClass]="esPersonaFisica ? 'tittle' : 'tittleMoral'" class="card-title rounded">REFRENDO VIGENTE ANUAL</h6>
+                    </div>
+                  </div>
+                </div>
+                  <div class="card cards me-2 mt-2" style="width: 18rem;">
+                    <div class="card-body">
+                      <iframe width="100%" height="300" class="rounded" [src]="pdfUrls['tarjetaCirculacion']"></iframe>
+                      <div class="text-center">
+                        <div class="input-group mb-3 justify-content-center">
+                          <input type="file" accept=".pdf" (change)="pdfSeleccionado($event, 'tarjetaCirculacion')"
+                            style="display: none;" #tarjetaCirculacionInput>
+                          <button type="button" matTooltip="Seleccionar Documento" matTooltipPosition="left"
+                            class="mat-mdc-tooltip-trigger btn buton-subir-archivo" (click)="tarjetaCirculacionInput.click()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
+                              viewBox="0 0 16 16" class="bi bi-upload">
+                              <path
+                                d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z">
+                              </path>
+                              <path
+                                d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z">
+                              </path>
+                            </svg>
+                          </button>
+                          <a matTooltip="Ver Documento" matTooltipPosition="above" target="_blank" type="button"
+                            class="mat-mdc-tooltip-trigger btn buton-ver-archivo text-white"
+                            [href]="tarjetaCircCargado ? pdfUrls['tarjetaCirculacion'] : null"
+                            [ngClass]="{'disabled-link': !tarjetaCircCargado}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor"
+                              viewBox="0 0 16 16" class="bi bi-eyeglasses">
+                              <path
+                                d="M4 6a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm2.625.547a3 3 0 0 0-5.584.953H.5a.5.5 0 0 0 0 1h.541A3 3 0 0 0 7 8a1 1 0 0 1 2 0 3 3 0 0 0 5.959.5h.541a.5.5 0 0 0 0-1h-.541a3 3 0 0 0-5.584-.953A1.993 1.993 0 0 0 8 6c-.532 0-1.016.208-1.375.547zM14 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0z">
+                              </path>
+                            </svg>
+                          </a>
+                          <div matTooltip="Validación de Documento" matTooltipPosition="right"
+                            class="mat-mdc-tooltip-trigger input-group-text">
+                            <input type="checkbox" disabled="" class="form-check-input mt-0">
+                          </div>
+                        </div>
+                        <hr>
+                        <h6 [ngClass]="esPersonaFisica ? 'tittle' : 'tittleMoral'" class="card-title rounded">TARJETA DE CIRCULACION
+                        </h6>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card cards me-2 mt-2" style="width: 18rem;">
+                    <div class="card-body">
+                      <iframe width="100%" height="300" class="rounded" [src]="pdfUrls['dictamenGas']"></iframe>
+                      <div class="text-center">
+                        <div class="input-group mb-3 justify-content-center">
+                          <input type="file" accept=".pdf" (change)="pdfSeleccionado($event, 'dictamenGas')"
+                            style="display: none;" #dictamenGasInput>
+                          <button type="button" matTooltip="Seleccionar Documento" matTooltipPosition="left"
+                            class="mat-mdc-tooltip-trigger btn buton-subir-archivo" (click)="dictamenGasInput.click()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
+                              viewBox="0 0 16 16" class="bi bi-upload">
+                              <path
+                                d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z">
+                              </path>
+                              <path
+                                d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z">
+                              </path>
+                            </svg>
+                          </button>
+                          <a matTooltip="Ver Documento" matTooltipPosition="above" target="_blank" type="button"
+                            class="mat-mdc-tooltip-trigger btn buton-ver-archivo text-white"
+                            [href]="dictGasCargado ? pdfUrls['dictamenGas'] : null"
+                            [ngClass]="{'disabled-link': !dictGasCargado}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor"
+                              viewBox="0 0 16 16" class="bi bi-eyeglasses">
+                              <path
+                                d="M4 6a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm2.625.547a3 3 0 0 0-5.584.953H.5a.5.5 0 0 0 0 1h.541A3 3 0 0 0 7 8a1 1 0 0 1 2 0 3 3 0 0 0 5.959.5h.541a.5.5 0 0 0 0-1h-.541a3 3 0 0 0-5.584-.953A1.993 1.993 0 0 0 8 6c-.532 0-1.016.208-1.375.547zM14 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0z">
+                              </path>
+                            </svg>
+                          </a>
+                          <div matTooltip="Validación de Documento" matTooltipPosition="right"
+                            class="mat-mdc-tooltip-trigger input-group-text">
+                            <input type="checkbox" disabled="" class="form-check-input mt-0">
+                          </div>
+                        </div>
+                        <hr>
+                        <h6 [ngClass]="esPersonaFisica ? 'tittle' : 'tittleMoral'" class="card-title rounded">DICTAMEN DE GAS
+                        </h6>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card cards me-2 mt-2" style="width: 18rem;">
+                    <div class="card-body">
+                      <iframe width="100%" height="300" class="rounded" [src]="pdfUrls['ine']"></iframe>
+                      <div class="text-center">
+                        <div class="input-group mb-3 justify-content-center">
+                          <input type="file" accept=".pdf" (change)="pdfSeleccionado($event, 'ine')"
+                            style="display: none;" #ineInput>
+                          <button type="button" matTooltip="Seleccionar Documento" matTooltipPosition="left"
+                            class="mat-mdc-tooltip-trigger btn buton-subir-archivo" (click)="ineInput.click()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
+                              viewBox="0 0 16 16" class="bi bi-upload">
+                              <path
+                                d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z">
+                              </path>
+                              <path
+                                d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z">
+                              </path>
+                            </svg>
+                          </button>
+                          <a matTooltip="Ver Documento" matTooltipPosition="above" target="_blank" type="button"
+                            class="mat-mdc-tooltip-trigger btn buton-ver-archivo text-white"
+                            [href]="ineCargado ? pdfUrls['ine'] : null"
+                            [ngClass]="{'disabled-link': !ineCargado}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor"
+                              viewBox="0 0 16 16" class="bi bi-eyeglasses">
+                              <path
+                                d="M4 6a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm2.625.547a3 3 0 0 0-5.584.953H.5a.5.5 0 0 0 0 1h.541A3 3 0 0 0 7 8a1 1 0 0 1 2 0 3 3 0 0 0 5.959.5h.541a.5.5 0 0 0 0-1h-.541a3 3 0 0 0-5.584-.953A1.993 1.993 0 0 0 8 6c-.532 0-1.016.208-1.375.547zM14 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0z">
+                              </path>
+                            </svg>
+                          </a>
+                          <div matTooltip="Validación de Documento" matTooltipPosition="right"
+                            class="mat-mdc-tooltip-trigger input-group-text">
+                            <input type="checkbox" disabled="" class="form-check-input mt-0">
+                          </div>
+                        </div>
+                        <hr>
+                        <h6 [ngClass]="esPersonaFisica ? 'tittle' : 'tittleMoral'" class="card-title rounded">INE
+                        </h6>
+                      </div>
+                    </div>
+                  </div>
+                  
+                </div>
+              <div class="row g-3  mt-3">
+                <div class="row g-3 alert terminos shadow-lg p-3 mb-5 rounded">
+                  <br />
+                  <figure>
+                    <blockquote class="blockquote">
+                      <p>
+                        Acepto que los servicios que a través de este medio se
+                        pagan, se sujeten a los requisitos que las disposiciones
+                        fiscales y administrativas señalen para tales efectos y
+                        que en caso de no cumplir con aquéllos, quede expedito
+                        mi derecho para solicitar la devolución de este pago,
+                        conforme a derecho corresponda.
+                      </p>
+                      <hr />
+                    </blockquote>
+                  </figure>
+                  <label>
+                    <input formControlName="aceptaTerminos" type="checkbox" class="form-check-input" />
+                    He leído y acepto los
+                    <a href="#" (click)="openModal(); $event.preventDefault()">
+                      Términos y condiciones
+                    </a>
+
+                  </label>
+                </div>
+              </div>
+              <div class="d-flex bd-highlight mb-3">
+                <button mat-button="" matStepperPrevious matTooltip="Paso anterior" matTooltipPosition="above"
+                  class="mat-stepper-previous mat-mdc-tooltip-trigger btn boton-regresar text-white me-auto p-2 bd-highlight mdc-button mat-mdc-button mat-unthemed mat-mdc-button-base"
+                  aria-describedby="cdk-describedby-message-hnv-1-5" cdk-describedby-host="hnv-1" type="button">
+                  <span class="mat-mdc-button-persistent-ripple mdc-button__ripple"></span><span
+                    class="mdc-button__label"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17"
+                      fill="currentColor" viewBox="0 0 16 17" class="bi bi-caret-left-fill">
+                      <path
+                        d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z">
+                      </path>
+                    </svg>
+                    Regresar</span><span class="mat-mdc-focus-indicator"></span><span matRipple
+                    class="mat-ripple mat-mdc-button-ripple"></span><span
+                    class="mat-mdc-button-touch-target"></span></button><button
+                  [disabled]="this.documentosUnidadForm.invalid" (click)="registraInformacion()"
+                  matTooltip="Siguiente paso" matTooltipPosition="above"
+                  class="mat-mdc-tooltip-trigger btn boton-siguiente me-md-2 text-white mdc-button mat-mdc-button mat-unthemed mat-mdc-button-base"
+                  aria-describedby="cdk-describedby-message-hnv-1-2" cdk-describedby-host="hnv-1">
+                  <span class="mat-mdc-button-persistent-ripple mdc-button__ripple"></span><span
+                    class="mdc-button__label">Guardar información </span><span
+                    class="mat-mdc-focus-indicator"></span><span matRipple
+                    class="mat-ripple mat-mdc-button-ripple"></span><span class="mat-mdc-button-touch-target"></span>
+                </button>
+              </div>
+            </form>
+          </mat-step>
+        </mat-vertical-stepper>
+        <br />
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="cargarSpinner" class="blur-container">
+  <div class="spinner-container">
+    <img src="assets/images/Logotipo.png" alt="Spinner" class="rotating-image">
+    <p class="loading-text">Cargando...</p>
+  </div>
+</div>
+<app-footer></app-footer>

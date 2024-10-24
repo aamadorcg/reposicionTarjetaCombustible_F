@@ -1,0 +1,360 @@
+.contenedor-principal {
+  background-image: url("/assets/images/MitadFlorTlaxcala1.png");
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-size: 13%;
+  width: 100%;
+  padding: 20px;
+  min-height: 100vh;
+  transition: all 0.3s;
+}
+
+@media (max-width: 767px) {
+  .contenedor-principal {
+    background-image: url("/assets/images/MitadFlorTlaxcala1.png");
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-size: 70%;
+  }
+}
+
+.fondo-contenedor-principal {
+  background-color: #b7b4b03b;
+}
+
+.fondo-stepper {
+  background-color: #c5ba9f;
+  box-shadow: 0 8px 16px #0003;
+}
+
+.fondo-stepper-encabezado {
+  background-color: #c5ba9f;
+  box-shadow: 0 8px 16px #0003;
+  padding: 10px 40px;
+}
+
+.tittle {
+  background-color: #a11a5c;
+  color: #fff;
+}
+
+.tittleMoral {
+  background-color: #422b7c;
+  color: #fff;
+}
+
+.mat-stepper-header {
+  overflow: hidden;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+  box-sizing: content-box;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.mat-stepper-vertical {
+  margin-top: 8px;
+  display: block;
+}
+
+.mat-vertical-stepper-header {
+  display: flex;
+  align-items: center;
+  height: 24px;
+}
+
+.mat-step-header .mat-step-header-ripple {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+  pointer-events: none;
+}
+
+.mat-ripple {
+  overflow: hidden;
+  position: relative;
+}
+
+.mat-vertical-stepper-header .mat-step-icon {
+  margin-right: 12px;
+}
+
+::ng-deep .mat-step-header .mat-step-icon {
+  background-color: #0000008a;
+}
+
+
+::ng-deep .mat-step-header .mat-step-icon-selected {
+  background-color: #0f971a;
+  color: #fff;
+}
+
+::ng-deep .mat-step-icon.mat-step-icon-state-edit {
+  background-color: #0f971a;
+  color: #fff;
+}
+
+::ng-deep .mat-stepper-vertical-line::before {
+  background-color: #a11a5c;
+}
+
+.mat-step-icon {
+  border-radius: 50%;
+  height: 24px;
+  width: 24px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.mat-step-icon-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+}
+
+.mat-step-header .mat-step-label.mat-step-label-active {
+  color: #000000de;
+}
+
+.mat-step-label {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 50px;
+  vertical-align: middle;
+}
+
+.mat-step-text-label {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.mat-vertical-content-container {
+  margin-left: 36px;
+  border: 0;
+  position: relative;
+}
+
+.mat-stepper-vertical-line::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  border-left-width: 1px;
+  border-left-style: solid;
+}
+
+.mat-vertical-stepper-content:not(.mat-vertical-stepper-content-inactive) {
+  visibility: inherit !important;
+}
+
+.mat-vertical-content {
+  padding: 0 24px 24px 24px;
+}
+
+.asteriscos {
+  color: red;
+}
+
+.boton-siguiente {
+  background: linear-gradient(to right, #19a024 50%, #17a723 50%);
+  background-size: 200% 100%;
+  background-position: right bottom;
+  transition: background-position 0.5s;
+  z-index: 1;
+  border: 1px solid #00000034;
+}
+
+.boton-siguiente:hover {
+  background-position: left bottom;
+}
+
+.boton-regresar {
+  background: linear-gradient(to right, #a11a5be0 50%, #a11a5c 50%);
+  background-size: 200% 100%;
+  background-position: left;
+  transition: background-position 0.5s;
+  border: 1px solid #00000034;
+  z-index: 1;
+}
+
+.boton-regresar:hover {
+  background-position: right;
+}
+
+.texto-obligatorio {
+  color: #000;
+  text-align: right;
+}
+
+.icono,
+.boton-cerrar {
+  color: #fff;
+  background-color: #a11a5b;
+}
+
+.terminos {
+  background-color: #ffffffb5;
+  color: #000;
+}
+
+.stepper-icons {
+  font-size: 15px;
+}
+
+.buton-subir-archivo {
+  background: linear-gradient(to bottom, #6f7071 50%, #626262 50%);
+  color: #fff;
+  background-size: 100% 200%;
+  background-position: top;
+  transition: background-position .5s;
+}
+
+.buton-ver-archivo {
+  background-color: #17a723;
+  color: #fff;
+}
+
+.cards {
+  background-color: #c5ba9f;
+  box-shadow: 0 8px 16px #00000081;
+}
+
+.input-container {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.input-container input {
+  padding-right: 2.5rem;
+  box-sizing: border-box;
+}
+
+.form-control {
+  border: 1px solid #ced4da;
+}
+
+.form-control.is-invalid {
+  border-color: #dc3545;
+  box-shadow: none;
+}
+
+.form-control.is-valid {
+  border-color: #28a745;
+  box-shadow: none;
+}
+
+.input-container .fa-check {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: green;
+  font-size: 16px;
+  display: none;
+}
+
+.input-container .is-valid + .fa-check {
+  display: inline;
+}
+
+.input-container .is-invalid + .fa-check {
+  display: none;
+}
+
+.input-container .form-control {
+  padding-right: 30px;
+}
+
+/* Loading */
+
+.rotating-image {
+  width: 100px;
+  height: 100px;
+  animation: rotate 4s infinite linear;
+}
+
+.spinner-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 10000;
+}
+
+.blur-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+}
+
+.loading-text {
+  margin-top: 1rem;
+  font-size: 1.5rem;
+  color: #422b7cd8;
+  font-weight: 700;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.swal-wide {
+  width: 80%;
+}
+
+.modal-body {
+  background-image: url('/assets/images/florIcon.png');
+  background-size: 30%;
+  background-position: left;
+  background-repeat: no-repeat;
+}
+
+.titulo-parrafo {
+  font-size: 16px;
+}
+
+.parrafo {
+  font-size: 13px;
+  text-align: justify;
+}
+
+.custom-title {
+  background-color: #ffcc00 !important;
+  padding: 10px;
+  border-radius: 5px;
+  color: #000;
+}
+
+.input-group .form-control.is-invalid {
+  border-radius: 0 0.25rem 0.25rem 0 !important;
+}
+
+
+.disabled-link {
+  pointer-events: none;
+  opacity: 0.5; 
+  cursor: not-allowed; 
+}
+
+

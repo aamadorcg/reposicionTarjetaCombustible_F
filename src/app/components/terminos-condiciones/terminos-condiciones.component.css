@@ -1,0 +1,40 @@
+.modal-content {
+    min-height: 90vh;
+}
+
+.modal-dialog {
+    min-height: 90vh;
+}
+
+.modal-dialog {
+    max-height: 90vh;
+}
+
+.modal-header {
+    background-color: #a11a5c;
+    color: white;
+    text-align: center;
+    align-items: center;
+    border-color: #a11a5c;
+}
+
+.btn-close {
+    filter: invert(1);
+    border: none;
+    outline: none;
+    box-shadow: none;
+}
+
+.modal-body {
+    background-image: url('/assets/images/florIcon.png');
+    background-size: 30%;
+    background-position: left;
+    background-repeat: no-repeat;
+    text-align: center;
+    max-height: 470px;
+    overflow-y: auto;
+}
+
+.boton-cerrar {
+    background-color: #a11a5c;
+}

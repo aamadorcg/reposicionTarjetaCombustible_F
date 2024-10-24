@@ -1,0 +1,29 @@
+<div class="card cards mt-2" style="width: 18rem;">
+    <div class="card-body">
+      <iframe width="100%" height="300" class="rounded" [src]="pdfUrl"></iframe>
+      <div class="text-center">
+        <div class="input-group mb-3 justify-content-center">
+          <input type="file" accept=".pdf" (change)="pdfSeleccionado($event)" style="display: none;" #inputFile>
+          <button type="button" matTooltip="Seleccionar Documento" matTooltipPosition="left" class="mat-mdc-tooltip-trigger btn buton-subir-archivo" (click)="inputFile.click()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" class="bi bi-upload">
+              <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"></path>
+              <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"></path>
+            </svg>
+          </button>
+          <a matTooltip="Ver Documento" matTooltipPosition="above" target="_blank" type="button" 
+          class="mat-mdc-tooltip-trigger btn buton-ver-archivo text-white" [href]="pdfUrl"
+          [ngClass]="{'disabled-link': isDefaultPdf}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" viewBox="0 0 16 16" class="bi bi-eyeglasses">
+              <path d="M4 6a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm2.625.547a3 3 0 0 0-5.584.953H.5a.5.5 0 0 0 0 1h.541A3 3 0 0 0 7 8a1 1 0 0 1 2 0 3 3 0 0 0 5.959.5h.541a.5.5 0 0 0 0-1h-.541a3 3 0 0 0-5.584-.953A1.993 1.993 0 0 0 8 6c-.532 0-1.016.208-1.375.547zM14 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"></path>
+            </svg>
+          </a>
+          <div matTooltip="Validación de Documento" matTooltipPosition="right" class="mat-mdc-tooltip-trigger input-group-text">
+            <input type="checkbox" [checked]="documentChecked" disabled class="form-check-input mt-0"
+            >
+          </div>
+        </div>
+        <hr>
+        <h6 [ngClass]="esPersonaFisica ? 'tittle' : 'tittleMoral'" class="card-title rounded">{{ title }}</h6>
+      </div>
+    </div>
+  </div>

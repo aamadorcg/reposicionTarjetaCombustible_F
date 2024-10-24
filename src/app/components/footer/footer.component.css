@@ -1,0 +1,14 @@
+footer {
+     padding: 40px 0 20px;
+     height: 20px;
+     background-color: #b7b7b761;
+     background-position: center bottom;
+     background-size: 100% 85%;
+     background-repeat: repeat-x;
+     min-height: 20vh;
+}
+
+.back-to-top {
+     background-color: #a11a5c;
+     color: #fff;
+}

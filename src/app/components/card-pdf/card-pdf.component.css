@@ -1,0 +1,40 @@
+.tittle {
+    background-color: #a11a5c;
+    color: #fff;
+  }
+  
+  .tittleMoral {
+    background-color: #422b7c;
+    color: #fff;
+  }
+  
+.buton-subir-archivo {
+    background: linear-gradient(to bottom, #6f7071 50%, #626262 50%);
+    color: #fff;
+    background-size: 100% 200%;
+    background-position: top;
+    transition: background-position .5s;
+  }
+  
+  .buton-ver-archivo {
+    background-color: #17a723;
+    color: #fff;
+  }
+
+.cards {
+    background-color: #c5ba9f;
+    box-shadow: 0 8px 16px #00000081;
+  }
+
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+    /*gap: 20px;*/ 
+    justify-content: center;
+  }
+
+  .disabled-link {
+    pointer-events: none;
+    opacity: 0.5; 
+    cursor: not-allowed; 
+  }
