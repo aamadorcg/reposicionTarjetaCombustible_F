@@ -5,23 +5,23 @@ import { ReposicionTarjetaCombustibleComponent } from './components/reposicion-t
 
 const routes: Routes = [
   {
-    path: 'reposicion-tarjeta-combustible-fisica',
+    path: 'persona-fisica',
     component: ReposicionTarjetaCombustibleComponent,
-    data: {tipo: 'F'}
+    data: { tipo: 'F' }
   },
   {
-    path: 'reposicion-tarjeta-combustible-moral',
+    path: 'persona-moral',
     component: ReposicionTarjetaCombustibleComponent,
-    data: {tipo: 'M'}
+    data: { tipo: 'M' }
   },
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'reposicion-tarjeta-combustible-fisica'
+    redirectTo: 'persona-fisica'
   },
   {
     path: '**',
-    redirectTo: 'reposicion-tarjeta-combustible-fisica'
+    redirectTo: 'persona-fisica'
   },
 ];
 

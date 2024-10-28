@@ -582,12 +582,12 @@ export class ReposicionTarjetaCombustibleComponent {
             doc.strArchivo = this.formDocumentos['pagoRefrendo'].value;
             break;
           case "TARJETA DE CIRCULACIÓN":
-          doc.strArchivo = this.formDocumentos['tarjetaCirculacion'].value;
+            doc.strArchivo = this.formDocumentos['tarjetaCirculacion'].value;
             break;
           case "DICTAMEN DE GAS":
             doc.strArchivo = this.formDocumentos['dictamenGas'].value;
             break;
-            case "INE":
+          case "INE":
             doc.strArchivo = this.formDocumentos['ine'].value;
             break;
           default:
@@ -603,12 +603,12 @@ export class ReposicionTarjetaCombustibleComponent {
     this.stepper.reset();
     this.cargarDefaultPDFs();
     this.bloqueaVerArchivos();
-    if(this.esPersonaFisica){
-      this.router.navigate(['/reposicion-tarjeta-combustible-fisica'], { skipLocationChange: true });
-    }else if (this.esPersonaMoral){
-      this.router.navigate(['/reposicion-tarjeta-combustible-moral'], { skipLocationChange: true });
+    if (this.esPersonaFisica) {
+      this.router.navigate(['/persona-fisica'], { skipLocationChange: true });
+    } else if (this.esPersonaMoral) {
+      this.router.navigate(['/persona-moral'], { skipLocationChange: true });
     }
-    
+
   }
 
   bloqueaVerArchivos() {
