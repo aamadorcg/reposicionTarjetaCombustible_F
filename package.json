@@ -6,7 +6,9 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "build:cuatitos": "ng build --configuration=cuatitos",
+    "build:smyt": "ng build --configuration=smyt"
   },
   "private": true,
   "dependencies": {
@@ -24,6 +26,7 @@
     "animate.css": "^4.1.1",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
+    "frontend_permiso-fuera-ruta": "file:",
     "rxjs": "~7.8.0",
     "sweetalert2": "^11.12.1",
     "tslib": "^2.3.0",

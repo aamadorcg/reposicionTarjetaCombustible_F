@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://reposicion.cuatitos.com.mx'
+  apiUrl: 'http://10.50.80.220:8088/reposiciontarjeta'
 };

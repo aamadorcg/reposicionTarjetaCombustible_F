@@ -56,6 +56,22 @@
               ],
               "outputHashing": "all"
             },
+            "cuatitos": {
+              "fileReplacements": [
+                {
+                  "replace": "src/app/environments/environment.ts",
+                  "with": "src/app/environments/environment.prod.cuatitos.ts"
+                }
+              ]
+            },
+            "smyt": {
+              "fileReplacements": [
+                {
+                  "replace": "src/app/environments/environment.ts",
+                  "with": "src/app/environments/environment.prod.smyt.ts"
+                }
+              ]
+            },
             "development": {
               "buildOptimizer": false,
               "optimization": false,
