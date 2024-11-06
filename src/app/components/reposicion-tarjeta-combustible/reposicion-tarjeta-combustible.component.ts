@@ -36,9 +36,6 @@ export class ReposicionTarjetaCombustibleComponent {
     strEmail: `El campo <strong>Correo</strong> de <strong>${this.FORM_DATOS_CONCESIONARIO}</strong>, no debe estar vacío o el formato es no válido.`,
     strTelefonoContacto: `El campo <strong>Teléfono Concesionario</strong> de <strong>${this.FORM_DATOS_CONCESIONARIO}</strong>, debe contener 10 números.`,
     strTelefonoRepresentante: `El campo <strong>Teléfono Representante</strong> de <strong>${this.FORM_DATOS_CONCESIONARIO}</strong>, debe contener 10 números.`,
-    tarjetaCirculacion: `El documento <strong>CERTIFICADO DE NO INFRACCIÓN</strong> de <strong>${this.FORM_DATOS_DOCUMENTOS}</strong>, aún no se ha seleccionado.`,
-    dictamenGas: `El documento <strong>ULTIMO PAGO DE REFRENDO</strong> de <strong>${this.FORM_DATOS_DOCUMENTOS}</strong>, aún no se ha seleccionado.`,
-    pagoRefrendo: `El documento <strong>REFRENDO VIGENTE ANUAL</strong> de <strong>${this.FORM_DATOS_DOCUMENTOS}</strong>, aún no se ha seleccionado.`,
   };
 
   actualizarForm: boolean = false;
@@ -82,28 +79,8 @@ export class ReposicionTarjetaCombustibleComponent {
     this.inicializarFormularios();
     this.configurarRFCFisicaMoral();
     this.cargarDefaultPDFs();
+    this.obtenerDocumentosTramite();
     this.observarFormularios();
-    this.cargarDocumentos();
-  }
-
-  rfcValidator(): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-      const esPersonaFisica = this.esPersonaFisica;
-      const esPersonaMoral = this.esPersonaMoral;
-
-      const rfcValue = control.value;
-
-      if (esPersonaFisica) {
-        if (!rfcValue || rfcValue.length !== 13 || !new RegExp(this.RFC_FISICA_PATTERN).test(rfcValue)) {
-          return { rfcInvalido: true };
-        }
-      } else if (esPersonaMoral) {
-        if (!rfcValue || rfcValue.length !== 12 || !new RegExp(this.RFC_MORAL_PATTERN).test(rfcValue)) {
-          return { rfcInvalido: true };
-        }
-      }
-      return null;
-    };
   }
 
   private inicializarFormularios() {
@@ -157,6 +134,26 @@ export class ReposicionTarjetaCombustibleComponent {
     });
   }
 
+  rfcValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const esPersonaFisica = this.esPersonaFisica;
+      const esPersonaMoral = this.esPersonaMoral;
+
+      const rfcValue = control.value;
+
+      if (esPersonaFisica) {
+        if (!rfcValue || rfcValue.length !== 13 || !new RegExp(this.RFC_FISICA_PATTERN).test(rfcValue)) {
+          return { rfcInvalido: true };
+        }
+      } else if (esPersonaMoral) {
+        if (!rfcValue || rfcValue.length !== 12 || !new RegExp(this.RFC_MORAL_PATTERN).test(rfcValue)) {
+          return { rfcInvalido: true };
+        }
+      }
+      return null;
+    };
+  }
+
   get rfcPlaceholder(): string {
     return this.esPersonaFisica ? 'R.F.C. LLLL000000AAA' : 'R.F.C. LLL000000AAA';
   }
@@ -191,73 +188,19 @@ export class ReposicionTarjetaCombustibleComponent {
     });
   }
 
-  cargarDocumentos() {
+  obtenerDocumentosTramite() {
     let valores = {
       intIdTipoTramite: this.idTramiteRepoTarjetaCombustible
     }
     this.servicios.obtenerDocumentosTramite(valores).subscribe({
       next: (value: any) => {
         this.listaArchivos = value.data
-        console.log(this.listaArchivos);
+        //console.log(this.listaArchivos);
       },
       error: (err: HttpErrorResponse) => {
-        let message: string;
-        if (err.error instanceof ErrorEvent) {
-          message = 'Ocurrió un problema con la conexión de red. Por favor, verifica tu conexión a internet.';
-        } else if (err.status === 0) {
-          message = 'El servicio no está disponible en este momento.<br> Intente nuevamente más tarde.';
-        } else {
-          message = err.error.strMessage;
-        }
-        this.muestraError(message);
+        this.muestraErrorGeneral(err);
       }
     });
-  }
-
-  ngAfterViewInit() {
-    this.validaCamposConAutocomplete();
-  }
-
-  validaCamposConAutocomplete() {
-    const strEmailElement = document.getElementById('strEmail') as HTMLInputElement;
-    if (strEmailElement) {
-      strEmailElement.addEventListener('input', () => {
-        const strEmailControl = this.datosConcesionarioForm.get('strEmail');
-        if (strEmailControl) {
-          strEmailControl.markAsDirty();
-          strEmailControl.markAsTouched();
-          strEmailControl.updateValueAndValidity();
-        }
-      });
-    }
-  }
-
-  obtenerURLFormulario(formulario: string) {
-    let endpoint = '';
-    switch (formulario) {
-      case 'datosConcesionForm':
-        endpoint = '/tramites/obtenerPlacaNiv';
-        break;
-      case 'datosConcesionarioForm':
-        endpoint = '/tramites/obtenerRfcPlaca';
-        break;
-      case 'documentosUnidadForm':
-        endpoint = '';
-        break;
-      default:
-        throw new Error(`No existe un endpoint para el formulario: ${formulario}`);
-    }
-    return endpoint;
-  }
-
-  private cargarDefaultPDFs() {
-    const defaultPdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl('assets/documents/subirArchivo.pdf');
-    this.pdfUrls = {
-      tarjetaCirculacion: defaultPdfUrl,
-      dictamenGas: defaultPdfUrl,
-      pagoRefrendo: defaultPdfUrl,
-      ine: defaultPdfUrl
-    };
   }
 
   private observarFormularios() {
@@ -280,6 +223,24 @@ export class ReposicionTarjetaCombustibleComponent {
         }
       }, 0);
     });
+  }
+
+  ngAfterViewInit() {
+    this.validaCamposConAutocomplete();
+  }
+
+  validaCamposConAutocomplete() {
+    const strEmailElement = document.getElementById('strEmail') as HTMLInputElement;
+    if (strEmailElement) {
+      strEmailElement.addEventListener('input', () => {
+        const strEmailControl = this.datosConcesionarioForm.get('strEmail');
+        if (strEmailControl) {
+          strEmailControl.markAsDirty();
+          strEmailControl.markAsTouched();
+          strEmailControl.updateValueAndValidity();
+        }
+      });
+    }
   }
 
   cargarDatosFormulario(formulario: FormGroup, nombreFormulario: ClavesFormulario, desdeNextStep: boolean) {
@@ -373,37 +334,6 @@ export class ReposicionTarjetaCombustibleComponent {
     }
   }
 
-  private limpiarFormulariosSiguientes(formularioActual: ClavesFormulario) {
-    const formularios: ClavesFormulario[] = [
-      'datosConcesionForm',
-      'datosConcesionarioForm',
-      'documentosUnidadForm',
-    ];
-    const indiceFormularioActual = formularios.indexOf(formularioActual);
-    formularios.slice(indiceFormularioActual + 1).forEach((formulario) => {
-      this.resetFormulario(formulario);
-    });
-  }
-
-  private resetFormulario(nombreFormulario: ClavesFormulario) {
-    const formulario = this[nombreFormulario];
-    if (formulario) {
-      formulario.reset();
-      formulario.markAsPristine();
-      formulario.markAsUntouched();
-    }
-  }
-
-  private obtenerPrimerCampoInvalido(formulario: FormGroup): string {
-    const controles = formulario.controls;
-    for (const campo in controles) {
-      if (controles[campo].invalid) {
-        return campo;
-      }
-    }
-    return '';
-  }
-
   pdfSeleccionado(event: Event, controlName: string) {
     const input = event.target as HTMLInputElement;
     if (input.files?.[0]) {
@@ -473,34 +403,9 @@ export class ReposicionTarjetaCombustibleComponent {
     }
   }
 
-  muestraModalConImagen(campo: string) {
-    let img = '';
-    if (campo === 'strRfc' && this.esPersonaFisica) {
-      img = '/assets/images/LogoTlaxFisica.png';
-    } else {
-      img = '/assets/images/LogoTlaxMoral.png';
-    }
-    this.alertaUtility.mostrarAlerta({
-      message: '',
-      imageUrl: img,
-      showCloseButton: false,
-      allowOutsideClick: true,
-      showClass: {
-        popup: `
-          animate__animated
-          animate__fadeInUp
-          animate__faster
-        `
-      },
-      hideClass: {
-        popup: `
-          animate__animated
-          animate__fadeOutDown
-          animate__faster
-        `
-      }
-    });
-  }
+  /**
+   * REGISTRO DE TRÁMITE
+   */
 
   registraInformacion() {
     let urlPasarela: string;
@@ -541,7 +446,7 @@ export class ReposicionTarjetaCombustibleComponent {
               confirmButtonText: 'Aceptar',
               confirmButtonColor: '#A11A5C',
               allowOutsideClick: true,
-              background: 'url("/assets/images/logoTlaxC2.png") center/cover no-repeat'
+              background: '#fff url("/assets/images/logoTlaxC2.png") center/cover no-repeat'
             }).then(result => {
               if (result.isConfirmed) {
                 if (value && value.data) {
@@ -566,6 +471,47 @@ export class ReposicionTarjetaCombustibleComponent {
       }
     });
   }
+
+  /**
+   * REINICIO/LIMPIEZA FORMULARIO
+   */
+
+  private limpiarFormulariosSiguientes(formularioActual: ClavesFormulario) {
+    const formularios: ClavesFormulario[] = [
+      'datosConcesionForm',
+      'datosConcesionarioForm',
+      'documentosUnidadForm',
+    ];
+    const indiceFormularioActual = formularios.indexOf(formularioActual);
+    formularios.slice(indiceFormularioActual + 1).forEach((formulario) => {
+      this.resetFormulario(formulario);
+    });
+  }
+
+  private resetFormulario(nombreFormulario: ClavesFormulario) {
+    const formulario = this[nombreFormulario];
+    if (formulario) {
+      formulario.reset();
+      formulario.markAsPristine();
+      formulario.markAsUntouched();
+    }
+  }
+
+  reiniciaFormulario() {
+    this.stepper.reset();
+    this.cargarDefaultPDFs();
+    this.bloqueaVerArchivos();
+    if (this.esPersonaFisica) {
+      this.router.navigate(['/persona-fisica'], { skipLocationChange: true });
+    } else if (this.esPersonaMoral) {
+      this.router.navigate(['/persona-moral'], { skipLocationChange: true });
+    }
+
+  }
+
+  /*
+   * CONTROL ARCHIVOS
+   */
 
   obtenDocumentos() {
     if (this.listaArchivos) {
@@ -599,18 +545,6 @@ export class ReposicionTarjetaCombustibleComponent {
     }
   }
 
-  reiniciaFormulario() {
-    this.stepper.reset();
-    this.cargarDefaultPDFs();
-    this.bloqueaVerArchivos();
-    if (this.esPersonaFisica) {
-      this.router.navigate(['/persona-fisica'], { skipLocationChange: true });
-    } else if (this.esPersonaMoral) {
-      this.router.navigate(['/persona-moral'], { skipLocationChange: true });
-    }
-
-  }
-
   bloqueaVerArchivos() {
     this.tarjetaCircCargado = false;
     this.dictGasCargado = false;
@@ -618,9 +552,36 @@ export class ReposicionTarjetaCombustibleComponent {
     this.ineCargado = false;
   }
 
+
+  /**
+   * UTILIDADES
+   */
+  
+  private obtenerPrimerCampoInvalido(formulario: FormGroup): string {
+    const controles = formulario.controls;
+    for (const campo in controles) {
+      if (controles[campo].invalid) {
+        return campo;
+      }
+    }
+    return '';
+  }
+
+  muestraErrorGeneral(err: HttpErrorResponse){
+    let message: string;
+    if (err.error instanceof ErrorEvent) {
+      message = 'Ocurrió un problema con la conexión de red. Por favor, verifica tu conexión a internet.';
+    } else if (err.status === 0) {
+      message = 'El servicio no está disponible en este momento.<br> Intente nuevamente más tarde.';
+    } else {
+      message = err.error.strMessage;
+    }
+    this.muestraError(message);
+  }
+
   muestraError(message: string) {
     this.alertaUtility.mostrarAlerta({
-      message,
+      message: message,
       icon: 'error',
       showConfirmButton: true,
       confirmButtonColor: COLOR_CONFIRMAR,
@@ -628,6 +589,63 @@ export class ReposicionTarjetaCombustibleComponent {
       showCloseButton: false,
       allowOutsideClick: true
     });
+  }
+
+  private cargarDefaultPDFs() {
+    const defaultPdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl('assets/documents/subirArchivo.pdf');
+    this.pdfUrls = {
+      tarjetaCirculacion: defaultPdfUrl,
+      dictamenGas: defaultPdfUrl,
+      pagoRefrendo: defaultPdfUrl,
+      ine: defaultPdfUrl
+    };
+  }
+
+  muestraModalConImagen(campo: string) {
+    let img = '';
+    if (campo === 'strRfc' && this.esPersonaFisica) {
+      img = '/assets/images/LogoTlaxFisica.png';
+    } else {
+      img = '/assets/images/LogoTlaxMoral.png';
+    }
+    this.alertaUtility.mostrarAlerta({
+      message: '',
+      imageUrl: img,
+      showCloseButton: false,
+      allowOutsideClick: true,
+      showClass: {
+        popup: `
+          animate__animated
+          animate__fadeInUp
+          animate__faster
+        `
+      },
+      hideClass: {
+        popup: `
+          animate__animated
+          animate__fadeOutDown
+          animate__faster
+        `
+      }
+    });
+  }
+
+  obtenerURLFormulario(formulario: string) {
+    let endpoint = '';
+    switch (formulario) {
+      case 'datosConcesionForm':
+        endpoint = '/tramites/obtenerPlacaNiv';
+        break;
+      case 'datosConcesionarioForm':
+        endpoint = '/tramites/obtenerRfcPlaca';
+        break;
+      case 'documentosUnidadForm':
+        endpoint = '';
+        break;
+      default:
+        throw new Error(`No existe un endpoint para el formulario: ${formulario}`);
+    }
+    return endpoint;
   }
 
   openModal() {
