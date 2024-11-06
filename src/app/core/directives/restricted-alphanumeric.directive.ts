@@ -6,7 +6,7 @@ import { Directive, ElementRef, HostListener } from '@angular/core';
 export class RestrictedAlphanumericDirective {
 
   private readonly regex: RegExp = /^[A-Z0-9]*$/;
-  private readonly excludedChars: Set<string> = new Set(['O', 'I', 'Ñ', 'Y']);
+  private readonly excludedChars: Set<string> = new Set(['O', 'I', 'Ñ']);
 
   constructor(private readonly el: ElementRef) { }
 
