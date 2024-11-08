@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "frontend_permiso_fuera_ruta": {
+    "reposicion_tarjeta": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -16,7 +16,7 @@
             "allowedCommonJsDependencies": [
               "sweetalert2"
             ],
-            "outputPath": "dist/frontend_permiso_fuera_ruta",
+            "outputPath": "dist/reposicion_tarjeta",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
@@ -87,10 +87,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "frontend_permiso_fuera_ruta:build:production"
+              "browserTarget": "reposicion_tarjeta:build:production"
             },
             "development": {
-              "browserTarget": "frontend_permiso_fuera_ruta:build:development"
+              "browserTarget": "reposicion_tarjeta:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -98,7 +98,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "frontend_permiso_fuera_ruta:build"
+            "browserTarget": "reposicion_tarjeta:build"
           }
         },
         "test": {
