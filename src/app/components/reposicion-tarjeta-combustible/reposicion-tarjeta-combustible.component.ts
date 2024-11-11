@@ -34,9 +34,9 @@ export class ReposicionTarjetaCombustibleComponent {
     strPlaca: `El campo <strong>Placa Vehícular</strong> de <strong>${this.FORM_DATOS_CONCESION}</strong>, no debe estar vacío o el formato es no válido.`,
     strRfc: `El campo <strong>RFC</strong> de <strong>${this.FORM_DATOS_CONCESIONARIO}</strong>, no debe estar vacío o el formato es no válido.`,
     strEmail: `El campo <strong>Correo</strong> de <strong>${this.FORM_DATOS_CONCESIONARIO}</strong>, no debe estar vacío o el formato es no válido.`,
-    strTelefonoContacto: `El campo <strong>Teléfono Concesionario</strong> de <strong>${this.FORM_DATOS_CONCESIONARIO}</strong>, debe contener 10 números.`,
-    strTelefonoRepresentante: `El campo <strong>Teléfono Representante</strong> de <strong>${this.FORM_DATOS_CONCESIONARIO}</strong>, debe contener 10 números.`,
-  };
+    strTelefonoContacto: `El campo <strong>Teléfono Concesionario</strong> de <strong>${this.FORM_DATOS_CONCESIONARIO}</strong>, debe contener 10 números o el formato no es válido.`,
+    strTelefonoRepresentante: `El campo <strong>Teléfono Representante</strong> de <strong>${this.FORM_DATOS_CONCESIONARIO}</strong>, debe contener 10 números o el formato no es válido.`,
+    };
 
   actualizarForm: boolean = false;
   formularioCompleto: boolean = false;
@@ -119,9 +119,21 @@ export class ReposicionTarjetaCombustibleComponent {
       strSexo: [{ value: '', disabled: true }],
       dtFechaNacimiento: [{ value: '', disabled: true }],
       strCp: [{ value: '', disabled: true }],
-      strTelefonoRepresentante: ['', [Validators.required, Validators.minLength(10), Validators.pattern(/^\d+$/)]],
+      strTelefonoRepresentante: ['', [
+        Validators.required,
+        Validators.minLength(10),
+        Validators.pattern(/^\d+$/),
+        this.validaNoTodosIguales.bind(this)
+      ]
+      ],
       strEmail: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]],
-      strTelefonoContacto: ['', [Validators.required, Validators.minLength(10), Validators.pattern(/^\d+$/)]]
+      strTelefonoContacto: ['', [
+        Validators.required,
+        Validators.minLength(10),
+        Validators.pattern(/^\d+$/),
+        this.validaNoTodosIguales.bind(this)
+      ]
+      ]
 
     });
 
@@ -132,6 +144,15 @@ export class ReposicionTarjetaCombustibleComponent {
       ine: [null, Validators.required],
       aceptaTerminos: [false, Validators.requiredTrue]
     });
+  }
+
+  validaNoTodosIguales(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    if (!value || value.length !== 10) {
+      return null;
+    }
+    const allCharactersAreSame = /^(\d)\1*$/.test(value);
+    return allCharactersAreSame ? { noTodosIguales: true } : null;
   }
 
   rfcValidator(): ValidatorFn {
@@ -310,6 +331,18 @@ export class ReposicionTarjetaCombustibleComponent {
           formulario.patchValue(value.data, { emitEvent: false });
           if (nombreFormulario === 'datosConcesionarioForm') {
             this.buscaRFC = true;
+            let telRepControl = this.datosConcesionarioForm.get('strTelefonoRepresentante');
+            if (telRepControl) {
+              telRepControl.markAsDirty();
+              telRepControl.markAsTouched();
+              telRepControl.updateValueAndValidity();
+            }
+            let telContControl = this.datosConcesionarioForm.get('strTelefonoContacto');
+            if (telContControl) {
+              telContControl.markAsDirty();
+              telContControl.markAsTouched();
+              telContControl.updateValueAndValidity();
+            }
           }
           this.limpiarFormulariosSiguientes(nombreFormulario);
           this.actualizarForm = false;
@@ -556,7 +589,7 @@ export class ReposicionTarjetaCombustibleComponent {
   /**
    * UTILIDADES
    */
-  
+
   private obtenerPrimerCampoInvalido(formulario: FormGroup): string {
     const controles = formulario.controls;
     for (const campo in controles) {
@@ -567,7 +600,7 @@ export class ReposicionTarjetaCombustibleComponent {
     return '';
   }
 
-  muestraErrorGeneral(err: HttpErrorResponse){
+  muestraErrorGeneral(err: HttpErrorResponse) {
     let message: string;
     if (err.error instanceof ErrorEvent) {
       message = 'Ocurrió un problema con la conexión de red. Por favor, verifica tu conexión a internet.';

@@ -274,6 +274,10 @@
                     class="text-danger error-message">
                     No puede tener más de 10 números
                   </small>
+                  <small *ngIf="datosConcesionarioForm.get('strTelefonoRepresentante')?.hasError('noTodosIguales') && (datosConcesionarioForm.get('strTelefonoRepresentante')?.dirty || datosConcesionarioForm.get('strTelefonoRepresentante')?.touched)" 
+                  class="text-danger error-message">
+                    No puede contener los mismos dígitos
+                  </small>
                 </div>
 
                 <div class="col-12 col-md-12 col-lg-4">
@@ -284,7 +288,6 @@
                           'is-valid': datosConcesionarioForm.get('strEmail')?.valid 
                           }" placeholder="Escribe tu correo electrónico" name="strEmail"
                       matTooltip="Formato correo: nombre@ejemplo.com" matTooltipPosition="above" class="form-control" />
-                    <i class="fa fa-check"></i>
                     <small
                       *ngIf="datosConcesionarioForm.get('strEmail')?.hasError('required') && (datosConcesionarioForm.get('strEmail')?.dirty || datosConcesionarioForm.get('strEmail')?.touched)"
                       class="text-danger error-message">
@@ -325,6 +328,10 @@
                       class="text-danger error-message">
                       No puede tener más de 10 números
                     </small>
+                    <small *ngIf="datosConcesionarioForm.get('strTelefonoContacto')?.hasError('noTodosIguales') && (datosConcesionarioForm.get('strTelefonoContacto')?.dirty || datosConcesionarioForm.get('strTelefonoContacto')?.touched)" 
+                  class="text-danger error-message">
+                    No puede contener los mismos dígitos
+                  </small>
                   </div>
                 </div>
               </div>
