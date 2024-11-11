@@ -288,7 +288,8 @@
                           'is-valid': datosConcesionarioForm.get('strEmail')?.valid 
                           }" placeholder="Escribe tu correo electrónico" name="strEmail"
                       matTooltip="Formato correo: nombre@ejemplo.com" matTooltipPosition="above" class="form-control" />
-                    <small
+                      <i class="fa fa-check"></i>
+                      <small
                       *ngIf="datosConcesionarioForm.get('strEmail')?.hasError('required') && (datosConcesionarioForm.get('strEmail')?.dirty || datosConcesionarioForm.get('strEmail')?.touched)"
                       class="text-danger error-message">
                       Campo Obligatorio

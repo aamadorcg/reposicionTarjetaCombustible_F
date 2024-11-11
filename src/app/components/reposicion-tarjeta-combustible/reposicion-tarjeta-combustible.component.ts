@@ -331,18 +331,6 @@ export class ReposicionTarjetaCombustibleComponent {
           formulario.patchValue(value.data, { emitEvent: false });
           if (nombreFormulario === 'datosConcesionarioForm') {
             this.buscaRFC = true;
-            let telRepControl = this.datosConcesionarioForm.get('strTelefonoRepresentante');
-            if (telRepControl) {
-              telRepControl.markAsDirty();
-              telRepControl.markAsTouched();
-              telRepControl.updateValueAndValidity();
-            }
-            let telContControl = this.datosConcesionarioForm.get('strTelefonoContacto');
-            if (telContControl) {
-              telContControl.markAsDirty();
-              telContControl.markAsTouched();
-              telContControl.updateValueAndValidity();
-            }
           }
           this.limpiarFormulariosSiguientes(nombreFormulario);
           this.actualizarForm = false;
