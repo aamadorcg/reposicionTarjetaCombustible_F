@@ -1,5 +1,5 @@
 .contenedor-principal {
-  background-image: url("/assets/images/MitadFlorTlaxcala1.png");
+  background-image: url("/reposicioncom/assets/images/MitadFlorTlaxcala1.png");
   background-repeat: no-repeat;
   background-position: left center;
   background-size: 13%;
@@ -11,7 +11,7 @@
 
 @media (max-width: 767px) {
   .contenedor-principal {
-    background-image: url("/assets/images/MitadFlorTlaxcala1.png");
+    background-image: url("/reposicioncom/assets/images/MitadFlorTlaxcala1.png");
     background-repeat: no-repeat;
     background-position: left center;
     background-size: 70%;
@@ -258,11 +258,11 @@
   display: none;
 }
 
-.input-container .is-valid + .fa-check {
+.input-container .is-valid+.fa-check {
   display: inline;
 }
 
-.input-container .is-invalid + .fa-check {
+.input-container .is-invalid+.fa-check {
   display: none;
 }
 
@@ -353,8 +353,6 @@
 
 .disabled-link {
   pointer-events: none;
-  opacity: 0.5; 
-  cursor: not-allowed; 
+  opacity: 0.5;
+  cursor: not-allowed;
 }
-
-
