@@ -54,7 +54,7 @@ export class ReposicionTarjetaCombustibleComponent {
   pagoRefCargado: boolean = false;
   ineCargado: boolean = false;
   polizaCargado: boolean = false;
-  idTramiteRepoTarjetaCombustible: number = 12;
+  idTramiteRepoTarjetaCombustible: number = 11;
 
   datosConcesionForm!: FormGroup;
   datosConcesionarioForm!: FormGroup;
