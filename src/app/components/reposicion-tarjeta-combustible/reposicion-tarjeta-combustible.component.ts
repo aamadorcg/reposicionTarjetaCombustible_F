@@ -37,7 +37,7 @@ export class ReposicionTarjetaCombustibleComponent {
     strEmail: `El campo <strong>Correo</strong> de <strong>${this.FORM_DATOS_CONCESIONARIO}</strong>, no debe estar vacío o el formato es no válido.`,
     strTelefonoContacto: `El campo <strong>Teléfono Concesionario</strong> de <strong>${this.FORM_DATOS_CONCESIONARIO}</strong>, debe contener 10 números o el formato no es válido.`,
     strTelefonoRepresentante: `El campo <strong>Teléfono Representante</strong> de <strong>${this.FORM_DATOS_CONCESIONARIO}</strong>, debe contener 10 números o el formato no es válido.`,
-    };
+  };
 
   actualizarForm: boolean = false;
   formularioCompleto: boolean = false;
@@ -54,6 +54,7 @@ export class ReposicionTarjetaCombustibleComponent {
   dictGasCargado: boolean = false;
   pagoRefCargado: boolean = false;
   ineCargado: boolean = false;
+  polizaCargado: boolean = false;
   idTramiteRepoTarjetaCombustible: number = 12;
   idTramite = "";
 
@@ -258,6 +259,7 @@ export class ReposicionTarjetaCombustibleComponent {
       dictamenGasCheckbox: [{value: false, disabled:true}],
       pagoRefrendoCheckbox: [{value: false, disabled:true}],
       ineCheckbox: [{value: false, disabled:true}],
+      polizaSeguro: [null, Validators.required],
       aceptaTerminos: [false, Validators.requiredTrue]
     });
   }
@@ -673,6 +675,9 @@ export class ReposicionTarjetaCombustibleComponent {
           case "INE":
             doc.strArchivo = this.formDocumentos['ine'].value;
             break;
+          case "POLIZA DE SEGURO":
+            doc.strArchivo = this.formDocumentos['polizaSeguro'].value;
+            break;
           default:
             doc.strArchivo = "";
             break;
@@ -734,7 +739,8 @@ export class ReposicionTarjetaCombustibleComponent {
       tarjetaCirculacion: defaultPdfUrl,
       dictamenGas: defaultPdfUrl,
       pagoRefrendo: defaultPdfUrl,
-      ine: defaultPdfUrl
+      ine: defaultPdfUrl,
+      polizaSeguro: defaultPdfUrl
     };
   }
 
