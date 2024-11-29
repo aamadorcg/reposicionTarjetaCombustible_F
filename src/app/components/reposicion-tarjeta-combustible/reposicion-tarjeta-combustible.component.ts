@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { AlertaUtility } from 'src/app/shared/utilities/alerta';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { MatStepper } from '@angular/material/stepper';
 import { convertirPDFbase64 } from 'src/app/shared/utilities/convertirPDFbase64';
 import { COLOR_CONFIRMAR, COLOR_SI } from 'src/app/shared/constants/colores';
@@ -11,6 +11,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReposicionTarjetaService } from 'src/app/services/reposicion-tarjeta.service'
 import Swal from 'sweetalert2';
+import { RespuestaGenerica } from 'src/app/core/models/respuesta.generica.model';
 
 
 type ClavesFormulario = 'datosConcesionForm' | 'datosConcesionarioForm' | 'documentosUnidadForm';
@@ -55,6 +56,8 @@ export class ReposicionTarjetaCombustibleComponent {
   ineCargado: boolean = false;
   polizaCargado: boolean = false;
   idTramiteRepoTarjetaCombustible: number = 11;
+  idTramite = "";
+
 
   datosConcesionForm!: FormGroup;
   datosConcesionarioForm!: FormGroup;
@@ -66,22 +69,171 @@ export class ReposicionTarjetaCombustibleComponent {
     documentosUnidadForm: false
   };
 
+  esModificacion = false;
+  listaDocumentos: any;
+  documentosFiltrados: any;
+
   constructor(
-    private formBuilder: FormBuilder,
-    private alertaUtility: AlertaUtility,
-    private sanitizer: DomSanitizer,
-    private modalTerminosCondiciones: NgbModal,
-    private router: Router,
-    private servicios: ReposicionTarjetaService,
-    private activatedRoute: ActivatedRoute
+    private readonly formBuilder: FormBuilder,
+    private readonly alertaUtility: AlertaUtility,
+    private readonly sanitizer: DomSanitizer,
+    private readonly modalTerminosCondiciones: NgbModal,
+    private readonly router: Router,
+    private readonly servicios: ReposicionTarjetaService,
+    private readonly activatedRoute: ActivatedRoute
   ) { }
 
   ngOnInit() {
     this.inicializarFormularios();
+    this.detectarTipoTramite();
     this.configurarRFCFisicaMoral();
     this.cargarDefaultPDFs();
     this.obtenerDocumentosTramite();
     this.observarFormularios();
+  }
+
+  detectarTipoTramite() {
+    this.activatedRoute.data.subscribe(data => {
+      this.esModificacion = data['modo'] === 'modificar';
+    });
+    this.activatedRoute.paramMap.subscribe(params => {
+      this.idTramite = params.get('id') ?? '';
+      if (this.esModificacion && this.idTramite) {
+        this.cargarDatosDelTramite(this.idTramite);
+      }
+    });
+  }
+
+  cargarDatosDelTramite(idTramite: string) {
+    this.cargarSpinner = true;
+    this.servicios.obtenerTramiteParaCorregir(idTramite).subscribe({
+      next: (json: RespuestaGenerica) => {
+        const {
+          concesionariosVo, concesionesVo, documentos
+        } = json.data;
+        this.datosConcesionForm.patchValue(concesionesVo);
+        this.datosConcesionarioForm.patchValue(concesionariosVo);
+        const encontrarDocumento = (descripcion: string) => {
+          return documentos.find((doc: any) => doc.strDescDoc === descripcion)?.strArchivo || null;
+        };
+        this.listaDocumentos = documentos;
+        this.establecerCheckDocumentos(documentos);
+        this.cargarArchivosPDFs(encontrarDocumento("REFRENDO VIGENTE ANUAL"),
+          encontrarDocumento("ACTA MINISTERIAL"),
+          encontrarDocumento("CERTIFICADO DE NO INFRACCIÓN"),
+          encontrarDocumento("INE"),
+          encontrarDocumento("ULTIMO PAGO DE REFRENDO"),
+          encontrarDocumento("TARJETA DE CIRCULACIÓN"),
+          encontrarDocumento("DICTAMEN DE GAS"),
+          encontrarDocumento("POLIZA DE SEGURO")
+        );
+        this.cargarSpinner = false;
+      },
+      error: () => {
+        this.cargarSpinner = false;
+        this.router.navigate(['not-found'], { skipLocationChange: true });
+      },
+    });
+    this.datosConcesionForm.disable();
+    this.datosConcesionarioForm.disable();
+  }
+
+  cargarArchivosPDFs(
+    refrendo: string,
+    actaMinisterial: string,
+    certificado: string,
+    ine: string,
+    pagoRefrendo: string,
+    tarjetaCirculacion: string,
+    dictamenGas: string,
+    polizaSeguro: string
+  ) {
+    this.pdfUrls = {
+      certificadoNoInfraccion: this.obtenUrlSeguro(refrendo),
+      actaMinisterial: this.obtenUrlSeguro(actaMinisterial),
+      refrendoAnual: this.obtenUrlSeguro(certificado),
+      ine: this.obtenUrlSeguro(ine),
+      pagoRefrendo: this.obtenUrlSeguro(pagoRefrendo),
+      tarjetaCirculacion: this.obtenUrlSeguro(tarjetaCirculacion),
+      dictamenGas: this.obtenUrlSeguro(dictamenGas),
+      polizaSeguro: this.obtenUrlSeguro(polizaSeguro)
+    };
+  }
+
+  obtenUrlSeguro(base64: string): SafeResourceUrl {
+    if (!base64) {
+      return this.sanitizer.bypassSecurityTrustResourceUrl('assets/documents/subirArchivo.pdf');
+    }
+    const contentType = 'application/pdf';
+    const blob = this.creaBlobDeBase64(base64.split(',')[1], contentType);
+    const url = URL.createObjectURL(blob);
+    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  }
+
+  creaBlobDeBase64(base64: string, contentType: string): Blob {
+    const byteCharacters = atob(base64);//Decodifica
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    return new Blob([byteArray], { type: contentType });
+  }
+
+  establecerCheckDocumentos(documentos: any) {
+    documentos.forEach((doc: any) => {
+      const status = doc.strAceptado === 'A';
+      switch (doc.strDescDoc) {
+        case "CERTIFICADO DE NO INFRACCIÓN":
+          this.documentosUnidadForm.patchValue({
+            certificadoNoInfraccion: { value: doc.strArchivo },
+            certificadoNoInfraccionCheckbox: status
+          });
+          break;
+        case "ACTA MINISTERIAL":
+          this.documentosUnidadForm.patchValue({
+            actaMinisterial: { value: doc.strArchivo },
+            actaMinisterialCheckbox: status
+          });
+          break;
+        case "REFRENDO VIGENTE ANUAL":
+          this.documentosUnidadForm.patchValue({
+            refrendoAnual: { value: doc.strArchivo },
+            refrendoAnualCheckbox: status
+          });
+          break;
+        case "INE":
+          this.documentosUnidadForm.patchValue({
+            ine: { value: doc.strArchivo },
+            ineCheckbox: status
+          });
+          break;
+        case "ULTIMO PAGO DE REFRENDO":
+          this.documentosUnidadForm.patchValue({
+            pagoRefrendo: { value: doc.strArchivo },
+            pagoRefrendoCheckbox: status
+          });
+          break;
+        case "TARJETA DE CIRCULACIÓN":
+          this.documentosUnidadForm.patchValue({
+            tarjetaCirculacion: { value: doc.strArchivo },
+            tarjetaCirculacionCheckbox: status
+          });
+          break;
+        case "DICTAMEN DE GAS":
+          this.documentosUnidadForm.patchValue({
+            dictamenGas: { value: doc.strArchivo },
+            dictamenGasCheckbox: status
+          });
+          break;
+        case "POLIZA DE SEGURO":
+          this.documentosUnidadForm.patchValue({
+            polizaSeguro: { value: doc.strArchivo },
+            polizaSeguroCheckbox: status
+          });
+          break;
+      }
+    });
   }
 
   private inicializarFormularios() {
@@ -144,6 +296,11 @@ export class ReposicionTarjetaCombustibleComponent {
       pagoRefrendo: [null, Validators.required],
       ine: [null, Validators.required],
       polizaSeguro: [null, Validators.required],
+      tarjetaCirculacionCheckbox: [{ value: false, disabled: true }],
+      dictamenGasCheckbox: [{ value: false, disabled: true }],
+      pagoRefrendoCheckbox: [{ value: false, disabled: true }],
+      ineCheckbox: [{ value: false, disabled: true }],
+      polizaSeguroCheckbox: [{ value: false, disabled: true }],
       aceptaTerminos: [false, Validators.requiredTrue]
     });
   }
@@ -227,6 +384,7 @@ export class ReposicionTarjetaCombustibleComponent {
   }
 
   private observarFormularios() {
+    if (this.esModificacion) return;
     this.datosConcesionForm.valueChanges.subscribe((values) => {
       if (this.actualizarForm) return;
       const { strNiv, strPlaca } = values;
@@ -268,6 +426,10 @@ export class ReposicionTarjetaCombustibleComponent {
 
   cargarDatosFormulario(formulario: FormGroup, nombreFormulario: ClavesFormulario, desdeNextStep: boolean) {
     if (desdeNextStep) {
+      if (this.esModificacion) {
+        this.stepper.next();
+        return;
+      }
       if (formulario.invalid) {
         formulario.markAllAsTouched();
         const primerCampoInvalido = this.obtenerPrimerCampoInvalido(formulario);
@@ -283,6 +445,7 @@ export class ReposicionTarjetaCombustibleComponent {
         }
       }
       if (nombreFormulario === 'datosConcesionForm') {
+        if (this.esModificacion) return;
         this.alertaUtility.mostrarAlerta({
           message: '¿Estimado usuario, está seguro de que los datos mostrados pertenecen a su concesión?',
           icon: 'question',
@@ -304,6 +467,7 @@ export class ReposicionTarjetaCombustibleComponent {
         this.stepper.next();
       }
     } else {
+      if (this.esModificacion) return;
       let valores = formulario.value;
       if (nombreFormulario === 'datosConcesionForm') {
         const { strNiv, strPlaca } = this.datosConcesionForm.value;
@@ -432,19 +596,29 @@ export class ReposicionTarjetaCombustibleComponent {
 
   registraInformacion() {
     let urlPasarela: string;
-    this.obtenDocumentos();
-    let json = {
-      strPlaca: this.formConcesion['strPlaca'].value,
-      strNiv: this.formConcesion['strNiv'].value,
-      strRfc: this.formConcesionario['strRfc'].value,
-      intIdPlaca: this.formConcesion['intIdPlaca'].value,
-      strEmail: this.formConcesionario['strEmail'].value,
-      strTelefonoContacto: this.formConcesionario['strTelefonoContacto'].value,
-      strTelefonoRepresentante: this.formConcesionario['strTelefonoRepresentante'].value,
-      intIdTipoTramite: this.idTramiteRepoTarjetaCombustible,
-      documentacionVo: this.listaArchivos
-    };
-    console.log(json);
+    let json = {};
+
+    if (this.esModificacion) {
+      this.obtenDocumentosParaModificar();
+      json = {
+        documentos: this.documentosFiltrados,
+        intIdTramite: this.idTramite
+      }
+    } else {
+      this.obtenDocumentos();
+
+      json = {
+        strPlaca: this.formConcesion['strPlaca'].value,
+        strNiv: this.formConcesion['strNiv'].value,
+        strRfc: this.formConcesionario['strRfc'].value,
+        intIdPlaca: this.formConcesion['intIdPlaca'].value,
+        strEmail: this.formConcesionario['strEmail'].value,
+        strTelefonoContacto: this.formConcesionario['strTelefonoContacto'].value,
+        strTelefonoRepresentante: this.formConcesionario['strTelefonoRepresentante'].value,
+        intIdTipoTramite: this.idTramiteRepoTarjetaCombustible,
+        documentacionVo: this.listaArchivos
+      };
+    }
 
     this.alertaUtility.mostrarAlerta({
       message: '¿Estás seguro que deseas guardar la información?',
@@ -458,41 +632,127 @@ export class ReposicionTarjetaCombustibleComponent {
     }).then(result => {
       if (result.isConfirmed) {
         this.cargarSpinner = true;
-        this.servicios.registrarTramite(json).subscribe({
-          next: (value: any) => {
-            this.cargarSpinner = false;
-            Swal.fire({
-              title: '¡Éxito!',
-              html: '<p>Estimado usuario, nos complace informarle que la información ha sido registrada exitosamente.</p><p> En breve, será redirigido a la pasarela de pagos del <strong>Gobierno del Estado de Tlaxcala.</strong></p> Gracias<br>',
-              icon: 'success',
-              showConfirmButton: true,
-              confirmButtonText: 'Aceptar',
-              confirmButtonColor: '#A11A5C',
-              allowOutsideClick: true,
-              background: '#fff url("/assets/images/logoTlaxC2.png") center/cover no-repeat'
-            }).then(result => {
-              if (result.isConfirmed) {
-                if (value && value.data) {
+        if (this.esModificacion) {
+          this.servicios.corregirTramite(json).subscribe({
+            next: () => {
+              this.cargarSpinner = false;
+              this.alertaUtility.mostrarAlerta({
+                message: 'Trámite actualizado correctamente',
+                icon: 'success',
+                showConfirmButton: true,
+                confirmButtonColor: COLOR_SI,
+                confirmButtonText: 'Aceptar',
+                showCloseButton: false,
+                allowOutsideClick: true
+              }).then(result => {
+                if (result.isConfirmed) {
                   this.reiniciaFormulario();
-                  urlPasarela = value.data.strUrlPasarela;
-                  if (urlPasarela) {
-                    window.location.href = urlPasarela;
-                  }
-                } else {
-                  this.reiniciaFormulario();
-                  console.error('La URL de la pasarela no se encontró en la respuesta del API');
                 }
+              });
+            },
+            error: (err: HttpErrorResponse) => {
+              let message: string;
+              if (err.error instanceof ErrorEvent) {
+                message = 'Ocurrió un problema con la conexión de red. Por favor, verifica tu conexión a internet.';
+              } else if (err.status === 0) {
+                message = 'El servicio no está disponible en este momento.<br> Intente nuevamente más tarde.';
+              } else {
+                message = err.error.strMessage;
               }
-            });
-          }, error: (err) => {
-            this.cargarSpinner = false;
-            this.muestraError(err.error.message);
-          }
-        })
+              this.cargarSpinner = false;
+              this.muestraError(message);
+            },
+          });
+        } else {
+          this.servicios.registrarTramite(json).subscribe({
+            next: (value: any) => {
+              this.cargarSpinner = false;
+              Swal.fire({
+                title: '¡Éxito!',
+                html: '<p>Estimado usuario, nos complace informarle que la información ha sido registrada exitosamente.</p><p> En breve, será redirigido a la pasarela de pagos del <strong>Gobierno del Estado de Tlaxcala.</strong></p> Gracias<br>',
+                icon: 'success',
+                showConfirmButton: true,
+                confirmButtonText: 'Aceptar',
+                confirmButtonColor: '#A11A5C',
+                allowOutsideClick: true,
+                background: '#fff url("/assets/images/logoTlaxC2.png") center/cover no-repeat'
+              }).then(result => {
+                if (result.isConfirmed) {
+                  if (value && value.data) {
+                    this.reiniciaFormulario();
+                    urlPasarela = value.data.strUrlPasarela;
+                    if (urlPasarela) {
+                      window.location.href = urlPasarela;
+                    }
+                  } else {
+                    this.reiniciaFormulario();
+                    console.error('La URL de la pasarela no se encontró en la respuesta del API');
+                  }
+                }
+              });
+            }, error: (err) => {
+              this.cargarSpinner = false;
+              this.muestraError(err.error.message);
+            }
+          })
+        }
       } else {
         this.muestraError('La operación fue cancelada');
       }
     });
+  }
+
+  obtenDocumentosParaModificar() {
+    if (this.listaDocumentos) {
+      const documentosFiltrados = this.listaDocumentos
+        .filter((doc: any) => doc.strAceptado !== 'A').map((doc: any) => ({
+          intIdDocumento: doc.intIdDocumento,
+          strArchivo: doc.strArchivo,
+          intIdDocumentacion: doc.intIdDocumentacion,
+          strDescripcion: doc.strDescDoc
+        }))
+      documentosFiltrados.forEach((doc: any) => {
+        switch (doc.strDescripcion) {
+          case "CERTIFICADO DE NO INFRACCIÓN":
+            doc.strArchivo = this.formDocumentos['certificadoNoInfraccion'].value;
+            break;
+          case "ACTA MINISTERIAL":
+            doc.strArchivo = this.formDocumentos['actaMinisterial'].value;
+            break;
+          case "REFRENDO VIGENTE ANUAL":
+            doc.strArchivo = this.formDocumentos['refrendoAnual'].value;
+            break;
+          case "INE":
+            doc.strArchivo = this.formDocumentos['ine'].value;
+            break;
+          case "ULTIMO PAGO DE REFRENDO":
+            doc.strArchivo = this.formDocumentos['pagoRefrendo'].value;
+            break;
+          case "TARJETA DE CIRCULACIÓN":
+            doc.strArchivo = this.formDocumentos['tarjetaCirculacion'].value;
+            break;
+          case "DICTAMEN DE GAS":
+            doc.strArchivo = this.formDocumentos['dictamenGas'].value;
+            break;
+          case "POLIZA DE SEGURO":
+            doc.strArchivo = this.formDocumentos['polizaSeguro'].value;
+            break;
+          default:
+            doc.strArchivo = "";
+            break;
+        }
+      });
+      const normalizarLista = (documentosFiltrados: any[]) => {
+        return documentosFiltrados.map(doc => {
+          if (doc.strArchivo && typeof doc.strArchivo === 'object' && 'value' in doc.strArchivo) {
+            doc.strArchivo = doc.strArchivo.value;
+          }
+          return doc;
+        });
+      };
+      const listaNormalizada = normalizarLista(documentosFiltrados);
+      this.documentosFiltrados = listaNormalizada;
+    }
   }
 
   /**
@@ -500,6 +760,7 @@ export class ReposicionTarjetaCombustibleComponent {
    */
 
   private limpiarFormulariosSiguientes(formularioActual: ClavesFormulario) {
+    if (this.esModificacion) return;
     const formularios: ClavesFormulario[] = [
       'datosConcesionForm',
       'datosConcesionarioForm',

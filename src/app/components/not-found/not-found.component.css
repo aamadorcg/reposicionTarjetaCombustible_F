@@ -1,0 +1,19 @@
+.contenedor-principal {
+     background-image: url("/reposicion/assets/images/MitadFlorTlaxcala1.png");
+     background-repeat: no-repeat;
+     background-position: left center;
+     background-size: 13%;
+}
+
+.textError {
+     color: #000;
+}
+
+.boton-home {
+     color: #fff;
+     background-color: #a11a5b;
+     box-shadow: 0 8px 16px #0003;
+     border-style: solid;
+     border-color: #00000034;
+     border-width: 1px;
+}

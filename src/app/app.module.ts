@@ -14,6 +14,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { TerminosCondicionesComponent } from './components/terminos-condiciones/terminos-condiciones.component';
 import { CardPdfComponent } from './components/card-pdf/card-pdf.component';
 import { RestrictedAlphanumericDirective } from './core/directives/restricted-alphanumeric.directive';
+import { NotFoundComponent } from './components/not-found/not-found.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { RestrictedAlphanumericDirective } from './core/directives/restricted-al
     ReposicionTarjetaCombustibleComponent,
     TerminosCondicionesComponent,
     CardPdfComponent,
-    RestrictedAlphanumericDirective
+    RestrictedAlphanumericDirective,
+    NotFoundComponent
   ],
   imports: [
     BrowserModule,
