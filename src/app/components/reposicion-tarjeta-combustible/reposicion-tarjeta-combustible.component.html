@@ -407,7 +407,7 @@
                       <div class="input-group mb-3 justify-content-center">
                         <input type="file" accept=".pdf" (change)="pdfSeleccionado($event, 'pagoRefrendo')"
                           style="display: none;" #pagoRefrendoInput>
-                        <button type="button" matTooltip="Seleccionar Documento" matTooltipPosition="left"
+                        <button [disabled]="documentosUnidadForm.get('pagoRefrendoCheckbox')?.value" type="button" matTooltip="Seleccionar Documento" matTooltipPosition="left"
                           class="mat-mdc-tooltip-trigger btn buton-subir-archivo" (click)="pagoRefrendoInput.click()">
                           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
                             viewBox="0 0 16 16" class="bi bi-upload">
@@ -432,7 +432,7 @@
                         </a>
                         <div matTooltip="Validación de Documento" matTooltipPosition="right"
                           class="mat-mdc-tooltip-trigger input-group-text">
-                          <input type="checkbox" disabled="" class="form-check-input mt-0">
+                          <input formControlName="pagoRefrendoCheckbox" type="checkbox" class="form-check-input mt-0">
                         </div>
                       </div>
                       <hr>
@@ -448,7 +448,7 @@
                       <div class="input-group mb-3 justify-content-center">
                         <input type="file" accept=".pdf" (change)="pdfSeleccionado($event, 'tarjetaCirculacion')"
                           style="display: none;" #tarjetaCirculacionInput>
-                        <button type="button" matTooltip="Seleccionar Documento" matTooltipPosition="left"
+                        <button [disabled]="documentosUnidadForm.get('tarjetaCirculacionCheckbox')?.value" type="button" matTooltip="Seleccionar Documento" matTooltipPosition="left"
                           class="mat-mdc-tooltip-trigger btn buton-subir-archivo"
                           (click)="tarjetaCirculacionInput.click()">
                           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
@@ -474,7 +474,7 @@
                         </a>
                         <div matTooltip="Validación de Documento" matTooltipPosition="right"
                           class="mat-mdc-tooltip-trigger input-group-text">
-                          <input type="checkbox" disabled="" class="form-check-input mt-0">
+                          <input formControlName="tarjetaCirculacionCheckbox" type="checkbox" class="form-check-input mt-0">
                         </div>
                       </div>
                       <hr>
@@ -491,7 +491,7 @@
                       <div class="input-group mb-3 justify-content-center">
                         <input type="file" accept=".pdf" (change)="pdfSeleccionado($event, 'dictamenGas')"
                           style="display: none;" #dictamenGasInput>
-                        <button type="button" matTooltip="Seleccionar Documento" matTooltipPosition="left"
+                        <button [disabled]="documentosUnidadForm.get('dictamenGasCheckbox')?.value" type="button" matTooltip="Seleccionar Documento" matTooltipPosition="left"
                           class="mat-mdc-tooltip-trigger btn buton-subir-archivo" (click)="dictamenGasInput.click()">
                           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
                             viewBox="0 0 16 16" class="bi bi-upload">
@@ -516,7 +516,7 @@
                         </a>
                         <div matTooltip="Validación de Documento" matTooltipPosition="right"
                           class="mat-mdc-tooltip-trigger input-group-text">
-                          <input type="checkbox" disabled="" class="form-check-input mt-0">
+                          <input formControlName="dictamenGasCheckbox" type="checkbox" class="form-check-input mt-0">
                         </div>
                       </div>
                       <hr>
@@ -533,7 +533,7 @@
                       <div class="input-group mb-3 justify-content-center">
                         <input type="file" accept=".pdf" (change)="pdfSeleccionado($event, 'ine')"
                           style="display: none;" #ineInput>
-                        <button type="button" matTooltip="Seleccionar Documento" matTooltipPosition="left"
+                        <button [disabled]="documentosUnidadForm.get('ineCheckbox')?.value" type="button" matTooltip="Seleccionar Documento" matTooltipPosition="left"
                           class="mat-mdc-tooltip-trigger btn buton-subir-archivo" (click)="ineInput.click()">
                           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
                             viewBox="0 0 16 16" class="bi bi-upload">
@@ -557,7 +557,7 @@
                         </a>
                         <div matTooltip="Validación de Documento" matTooltipPosition="right"
                           class="mat-mdc-tooltip-trigger input-group-text">
-                          <input type="checkbox" disabled="" class="form-check-input mt-0">
+                          <input formControlName="ineCheckbox" type="checkbox" class="form-check-input mt-0">
                         </div>
                       </div>
                       <hr>
@@ -573,7 +573,7 @@
                       <div class="input-group mb-3 justify-content-center">
                         <input type="file" accept=".pdf" (change)="pdfSeleccionado($event, 'polizaSeguro')"
                           style="display: none;" #polizaInput>
-                        <button type="button" matTooltip="Seleccionar Documento" matTooltipPosition="left"
+                        <button [disabled]="documentosUnidadForm.get('polizaSeguroCheckbox')?.value" type="button" matTooltip="Seleccionar Documento" matTooltipPosition="left"
                           class="mat-mdc-tooltip-trigger btn buton-subir-archivo" (click)="polizaInput.click()">
                           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
                             viewBox="0 0 16 16" class="bi bi-upload">
@@ -597,7 +597,7 @@
                         </a>
                         <div matTooltip="Validación de Documento" matTooltipPosition="right"
                           class="mat-mdc-tooltip-trigger input-group-text">
-                          <input type="checkbox" disabled="" class="form-check-input mt-0">
+                          <input formControlName="polizaSeguroCheckbox" type="checkbox" class="form-check-input mt-0">
                         </div>
                       </div>
                       <hr>
