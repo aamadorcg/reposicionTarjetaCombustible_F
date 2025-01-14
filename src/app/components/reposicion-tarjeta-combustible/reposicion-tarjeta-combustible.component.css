@@ -1,5 +1,5 @@
 .contenedor-principal {
-  background-image: url("/reposicioncom/assets/images/MitadFlorTlaxcala1.png");
+  background-image: url("/assets/images/MitadFlorTlaxcala1.png");
   background-repeat: no-repeat;
   background-position: left center;
   background-size: 13%;
@@ -11,7 +11,7 @@
 
 @media (max-width: 767px) {
   .contenedor-principal {
-    background-image: url("/reposicioncom/assets/images/MitadFlorTlaxcala1.png");
+    background-image: url("/assets/images/MitadFlorTlaxcala1.png");
     background-repeat: no-repeat;
     background-position: left center;
     background-size: 70%;

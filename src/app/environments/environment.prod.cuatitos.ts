@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://189.164.207.223:8088/reposiciontarjeta'
+  apiUrl: 'http://189.164.206.105:8088/reposiciontarjeta'
 };
