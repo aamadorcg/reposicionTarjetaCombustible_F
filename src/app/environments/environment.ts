@@ -1,4 +1,5 @@
 export const environment = {
      production: false,
-     apiUrl: 'http://localhost:8082'
+     apiUrlFinanzas: 'http://localhost:8082',
+     apiUrlSmyt: 'http://localhost:8082'
    };   

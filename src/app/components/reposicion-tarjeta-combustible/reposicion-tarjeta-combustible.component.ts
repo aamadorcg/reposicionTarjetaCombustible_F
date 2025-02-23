@@ -12,6 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ReposicionTarjetaService } from 'src/app/services/reposicion-tarjeta.service'
 import Swal from 'sweetalert2';
 import { RespuestaGenerica } from 'src/app/core/models/respuesta.generica.model';
+import { switchMap, retryWhen, delayWhen, timer, of, throwError, catchError } from 'rxjs';
 
 
 type ClavesFormulario = 'datosConcesionForm' | 'datosConcesionarioForm' | 'documentosUnidadForm';
@@ -81,7 +82,7 @@ export class ReposicionTarjetaCombustibleComponent {
     private readonly router: Router,
     private readonly servicios: ReposicionTarjetaService,
     private readonly activatedRoute: ActivatedRoute
-  ) { }
+  ) { this.iniciarReintentos(); }
 
   ngOnInit() {
     this.inicializarFormularios();
@@ -250,7 +251,12 @@ export class ReposicionTarjetaCombustibleComponent {
       intCilindros: [{ value: '', disabled: true }],
       strCombustible: [{ value: '', disabled: true }],
       intRefrendo: [{ value: '', disabled: true }],
-      strNoTarjeta: [{ value: '', disabled: true }]
+      strNoTarjeta: [{ value: '', disabled: true }],
+      intIdConcesionSMyT: [{ value: '', disabled: true }],
+      intIdVehiculoSMyT: [{ value: '', disabled: true }],
+      intIdFolioTCSMyT: [{ value: '', disabled: true }],
+      intIdPlacaSMyT: [{ value: '', disabled: true }],
+      intIdConcesionarioSMyT: [{ value: '', disabled: true }]
     });
 
     this.datosConcesionarioForm = this.formBuilder.group({
@@ -664,7 +670,34 @@ export class ReposicionTarjetaCombustibleComponent {
             },
           });
         } else {
-          this.servicios.registrarTramite(json).subscribe({
+          this.servicios.registrarTramite(json).pipe(
+            switchMap(value => {
+              if (value.bolStatus) {
+                let jsonSmyt = {
+                  intIdConcesion: this.formConcesion['intIdConcesionSMyT'].value,
+                  intIdPlaca: this.formConcesion['intIdPlacaSMyT'].value,
+                  intIdVehiculo: this.formConcesion['intIdVehiculoSMyT'].value,
+                  intIdModalidad: value.data.tramite.intIdModalidad,
+                  fltTotal: value.data.tramite.dblImporte,
+                  strPlaca: this.formConcesion['strPlaca'].value
+                }
+                return this.servicios.registrarTramiteSmyt(jsonSmyt).pipe(
+                  retryWhen(errors =>
+                    errors.pipe(
+                      delayWhen(() => timer(5000)), // Espera 5 segundos antes de reintentar
+                      switchMap((error, index) => index < 2 ? of(error) : throwError(error)) // Reintenta 2 veces
+                    )
+                  ),
+                  catchError(err => {
+                    console.error("Error en registrarTramiteSmyt, guardando para reintentar después:", err);
+                    this.guardarTramiteFallido(jsonSmyt);
+                    return of(null);
+                  })
+                );
+              }
+              return of(null);
+            })
+          ).subscribe({
             next: (value: any) => {
               this.cargarSpinner = false;
               Swal.fire({
@@ -938,6 +971,34 @@ export class ReposicionTarjetaCombustibleComponent {
 
   openModal() {
     this.modalTerminosCondiciones.open(TerminosCondicionesComponent, { size: 'xl', centered: true });
+  }
+
+  guardarTramiteFallido(nuevoJsonSmyt: any) {
+    let tramitesFallidos = JSON.parse(localStorage.getItem('tramitesFallidos') || '[]');
+    tramitesFallidos.push(nuevoJsonSmyt);
+    localStorage.setItem('tramitesFallidos', JSON.stringify(tramitesFallidos));
+  }
+
+  reintentarTramitesFallidos() {
+    let tramitesFallidos = JSON.parse(localStorage.getItem('tramitesFallidos') || '[]');
+    tramitesFallidos.forEach((tramite: any, index: any) => {
+      this.servicios.registrarTramiteSmyt(tramite).subscribe({
+        next: () => {
+          tramitesFallidos.splice(index, 1);
+          localStorage.setItem('tramitesFallidos', JSON.stringify(tramitesFallidos));
+        },
+        error: () => {
+          console.error('Error al reintentar trámite fallido');
+        }
+      });
+    });
+  }
+
+  // Iniciar un intervalo que reintente los trámites cada 5 minutos
+  iniciarReintentos() {
+    setInterval(() => {
+      this.reintentarTramitesFallidos();
+    }, 300000);
   }
 
   get formConcesion() {

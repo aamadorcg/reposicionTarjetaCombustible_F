@@ -1,6 +1,6 @@
 export interface RespuestaGenerica {
-     message:    string;
-     statusCode: string;
-     data:       any;
-     status:     boolean;
- }
+    strMessage: string;
+    statusCode: string;
+    data: any;
+    bolStatus: boolean;
+}
