@@ -24,7 +24,7 @@ export class ReposicionTarjetaService {
     return this.http.post(`${this.apiUrlSmyt + url}`, body);
   }
 
-  cargarConfiguracionTramite(idTramite: string): Observable<any> {
+  cargarConfiguracionTramite(idTramite: number): Observable<any> {
     let json = {
       strCodigo: idTramite
     };

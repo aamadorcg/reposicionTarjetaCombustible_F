@@ -46,6 +46,7 @@ export class ReposicionTarjetaCombustibleComponent {
   pdfUrls: { [key: string]: any } = {};
   listaArchivos: any[] = [];
 
+  ID_TRAMITE_REPOSICIONCOM = 11;
   RFC_FISICA_PATTERN = '^([A-ZÑ&]{4})(\\d{6})([A-Z\\d]{3})$';
   RFC_MORAL_PATTERN = '^([A-ZÑ&]{3})(\\d{6})([A-Z\\d]{3})$';
   esPersonaFisica = false;
@@ -58,6 +59,7 @@ export class ReposicionTarjetaCombustibleComponent {
   polizaCargado: boolean = false;
   idTramiteRepoTarjetaCombustible: number = 11;
   idTramite = "";
+  configuracion: any[] = [];
 
 
   datosConcesionForm!: FormGroup;
@@ -90,6 +92,11 @@ export class ReposicionTarjetaCombustibleComponent {
     this.configurarRFCFisicaMoral();
     this.cargarDefaultPDFs();
     this.obtenerDocumentosTramite();
+    this.servicios.cargarConfiguracionTramite(this.ID_TRAMITE_REPOSICIONCOM).subscribe({
+      next: (res) => {
+        this.configuracion = res;
+      },
+    });
     this.observarFormularios();
   }
 
@@ -481,7 +488,8 @@ export class ReposicionTarjetaCombustibleComponent {
           strNiv,
           strPlaca,
           esPersonaFisica: this.esPersonaFisica,
-          intIdTipoTramite: this.idTramiteRepoTarjetaCombustible
+          intIdTipoTramite: this.idTramiteRepoTarjetaCombustible,
+          configTramite: this.configuracion
         }
       } else if (nombreFormulario === 'datosConcesionarioForm') {
         const { strRfc } = this.datosConcesionarioForm.value;
