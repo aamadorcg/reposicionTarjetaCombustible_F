@@ -681,13 +681,15 @@ export class ReposicionTarjetaCombustibleComponent {
           this.servicios.registrarTramite(json).pipe(
             switchMap(value => {
               if (value.bolStatus) {
+                const intIdTramite = value.data.intIdTramite;
                 let jsonSmyt = {
                   intIdConcesion: this.formConcesion['intIdConcesionSMyT'].value,
                   intIdPlaca: this.formConcesion['intIdPlacaSMyT'].value,
                   intIdVehiculo: this.formConcesion['intIdVehiculoSMyT'].value,
                   intIdModalidad: value.data.tramite.intIdModalidad,
                   fltTotal: value.data.tramite.dblImporte,
-                  strPlaca: this.formConcesion['strPlaca'].value
+                  strPlaca: this.formConcesion['strPlaca'].value,
+                  intIdTramite
                 }
                 return this.servicios.registrarTramiteSmyt(jsonSmyt).pipe(
                   retryWhen(errors =>

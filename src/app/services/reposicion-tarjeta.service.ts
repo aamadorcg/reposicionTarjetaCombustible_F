@@ -26,7 +26,7 @@ export class ReposicionTarjetaService {
 
   cargarConfiguracionTramite(idTramite: number): Observable<any> {
     let json = {
-      strCodigo: idTramite
+      intId: idTramite
     };
     return this.http.post<RespuestaGenerica>(`${this.apiUrlFinanzas + '/tiposTramites/obtenerConfiguracionTramite'}`, json)
       .pipe(
