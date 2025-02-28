@@ -12,7 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ReposicionTarjetaService } from 'src/app/services/reposicion-tarjeta.service'
 import Swal from 'sweetalert2';
 import { RespuestaGenerica } from 'src/app/core/models/respuesta.generica.model';
-import { switchMap, retryWhen, delayWhen, timer, of, throwError, catchError } from 'rxjs';
+import { switchMap, retryWhen, delayWhen, timer, of, throwError, catchError, map } from 'rxjs';
 
 
 type ClavesFormulario = 'datosConcesionForm' | 'datosConcesionarioForm' | 'documentosUnidadForm';
@@ -751,35 +751,48 @@ export class ReposicionTarjetaCombustibleComponent {
                     console.error("Error en registrarTramiteSmyt, guardando para reintentar después:", err);
                     this.guardarTramiteFallido(jsonSmyt);
                     return of(null);
-                  })
+                  }),
+                  map(responseSmyt => ({ responseSmyt, intIdTramite }))
                 );
               }
               return of(null);
             })
           ).subscribe({
             next: (value: any) => {
+              const email = this.datosConcesionarioForm.get('strEmail')?.value;
+              const strCodigo = value.intIdTramite || '';
+              let htmlTramiteEnviado = "";
+              if (email) {
+                htmlTramiteEnviado = `
+                  <div>
+                    <h4>Estimado usuario, la solicitud fue enviada con éxito</h4>
+                    <hr>
+                    En un lapso de 24 a 48 horas notificaremos a través de tu <b>correo electrónico:</b>
+                    <b><p style="color: #a11a5c;">${email}</p></b>
+                    la información sobre el seguimiento al trámite por parte de SMyT.
+                    <br>
+                    <h5><b>Folio Trámite: ${strCodigo}</b></h5>
+                    Gracias.
+                  </div>
+                `;
+              }
               this.cargarSpinner = false;
-              Swal.fire({
-                title: '¡Éxito!',
-                html: '<p>Estimado usuario, nos complace informarle que la información ha sido registrada exitosamente.</p><p> En breve, será redirigido a la pasarela de pagos del <strong>Gobierno del Estado de Tlaxcala.</strong></p> Gracias<br>',
+              this.alertaUtility.mostrarAlerta({
+                message: htmlTramiteEnviado,
                 icon: 'success',
                 showConfirmButton: true,
+                confirmButtonColor: COLOR_SI,
                 confirmButtonText: 'Aceptar',
-                confirmButtonColor: '#A11A5C',
-                allowOutsideClick: true,
-                background: '#fff url("/assets/images/logoTlaxC2.png") center/cover no-repeat'
+                showCloseButton: false,
+                allowOutsideClick: false,
               }).then(result => {
                 if (result.isConfirmed) {
-                  if (value && value.data) {
-                    this.reiniciaFormulario();
-                    urlPasarela = value.data.strUrlPasarela;
-                    if (urlPasarela) {
-                      window.location.href = urlPasarela;
-                    }
-                  } else {
-                    this.reiniciaFormulario();
-                    console.error('La URL de la pasarela no se encontró en la respuesta del API');
-                  }
+                  this.reiniciaFormulario();
+
+                  // this.cargarArchivosPDFs('', '', '', '');
+                  this.stepper.reset();
+                  // this.bloqueBotonVerArchivos();
+                  this.router.navigate([this.router.url], { skipLocationChange: true });
                 }
               });
             }, error: (err) => {
