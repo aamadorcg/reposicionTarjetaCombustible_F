@@ -259,6 +259,11 @@ export class ReposicionTarjetaCombustibleComponent {
       strCombustible: [{ value: '', disabled: true }],
       intRefrendo: [{ value: '', disabled: true }],
       strNoTarjeta: [{ value: '', disabled: true }],
+      dtFechaAlta: [{ value: '', disabled: true }],
+      dblValorVehiculo: [{ value: '', disabled: true }],
+      strEstatus: [{ value: '', disabled: true }],
+      strModalidad: [{ value: '', disabled: true }],
+      strRepuve: [{ value: '', disabled: true }],
       intIdConcesionSMyT: [{ value: '', disabled: true }],
       intIdVehiculoSMyT: [{ value: '', disabled: true }],
       intIdFolioTCSMyT: [{ value: '', disabled: true }],
@@ -622,6 +627,7 @@ export class ReposicionTarjetaCombustibleComponent {
       this.obtenDocumentos();
 
       json = {
+        intId: 0,
         strPlaca: this.formConcesion['strPlaca'].value,
         strNiv: this.formConcesion['strNiv'].value,
         strRfc: this.formConcesionario['strRfc'].value,
@@ -630,7 +636,50 @@ export class ReposicionTarjetaCombustibleComponent {
         strTelefonoContacto: this.formConcesionario['strTelefonoContacto'].value,
         strTelefonoRepresentante: this.formConcesionario['strTelefonoRepresentante'].value,
         intIdTipoTramite: this.idTramiteRepoTarjetaCombustible,
-        documentacionVo: this.listaArchivos
+        documentacionVo: this.listaArchivos,
+        bolPersonaFisica: this.esPersonaFisica,
+        concesion: {
+          intIdPlaca: 0,
+          strPlaca: this.formConcesion['strPlaca'].value,
+          strNiv: this.formConcesion['strNiv'].value,
+          strCveVeh: this.formConcesion['strCveVeh'].value,
+          strMotor: this.formConcesion['strMotor'].value,
+          strMarca: this.formConcesion['strMarca'].value,
+          intModelo: this.formConcesion['intModelo'].value,
+          strTipoVeh: this.formConcesion['strTipoVeh'].value,
+          intCapacidad: this.formConcesion['intCapacidad'].value,
+          intCilindros: this.formConcesion['intCilindros'].value,
+          strCombustible: this.formConcesion['strCombustible'].value,
+          intRefrendo: this.formConcesion['intRefrendo'].value,
+          strNoTarjeta: this.formConcesion['strNoTarjeta'].value,
+          dtFechaAlta: this.formConcesion['dtFechaAlta'].value,
+          dblValorVehiculo: this.formConcesion['dblValorVehiculo'].value,
+          strRepuve: this.formConcesion['strRepuve'].value,
+          strEstatus: this.formConcesion['strEstatus'].value,
+          strModalidad: this.formConcesion['strModalidad'].value
+        },
+        concesionario: {
+          strNiv: this.formConcesion['strNiv'].value,
+          strRfc: this.formConcesionario['strRfc'].value,
+          strPlaca: this.formConcesion['strPlaca'].value,
+          strEmail: this.formConcesionario['strEmail'].value,
+          strNombre: this.formConcesionario['strNombre'].value,
+          strApPaterno: this.formConcesionario['strApPaterno'].value,
+          strApMaterno: this.formConcesionario['strApMaterno'].value,
+          strCalleProp: this.formConcesionario['strCalleProp'].value,
+          strNumExt: this.formConcesionario['strNumExt'].value,
+          strNumInt: this.formConcesionario['strNumInt'].value,
+          strColonia: this.formConcesionario['strColonia'].value,
+          strLocalidad: this.formConcesionario['strLocalidad'].value,
+          strMunicipio: this.formConcesionario['strMunicipio'].value,
+          strEstado: this.formConcesionario['strEstado'].value,
+          strTelefonoContacto: this.formConcesionario['strTelefonoContacto'].value,
+          strTelefonoRepresentante: this.formConcesionario['strTelefonoRepresentante'].value,
+          strCp: this.formConcesionario['strCp'].value,
+          strCurp: this.formConcesionario['strCurp'].value,
+          strSexo: this.formConcesionario['strSexo'].value,
+          dtFechaNacimiento: this.formConcesionario['dtFechaNacimiento'].value
+        }
       };
     }
 
