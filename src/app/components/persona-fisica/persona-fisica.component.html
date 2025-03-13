@@ -26,7 +26,7 @@
             </ng-template>
             <form [formGroup]="datosConcesionForm">
               <div class="row g-3">
-                <div class="col-12 col-md-12 col-lg-4">
+                <div class="campo-formulario-mediano">
                   <label for="strNiv" class="form-label">NIV <b class="asteriscos">*</b></label>
                   <div class="input-container">
                     <input appRestrictedAlphanumeric type="text" minlength="17" maxlength="17" id="strNiv"
@@ -47,7 +47,7 @@
                   </div>
                 </div>
 
-                <div class="col-12 col-md-12 col-lg-4">
+                <div class="campo-formulario-mediano">
                   <label for="strPlaca" class="form-label">PLACA <b class="asteriscos">*</b></label>
                   <div class="input-container">
                     <input appAlphanumeric type="text" minlength="7" maxlength="7" id="strPlaca"
@@ -67,12 +67,12 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-12 col-md-12 col-lg-4">
+                <div class="campo-formulario-mediano">
                   <label for="strCveVeh" class="form-label">CLAVE VEHICULAR </label><input type="text" minlength="1"
                     maxlength="7" id="strCveVeh" formControlName="strCveVeh" name="strCveVeh" autocomplete="off"
                     class="form-control" />
                 </div>
-                <div class="col-12 col-md-12 col-lg-4">
+                <div class="campo-formulario-mediano">
                   <label for="strMotor" class="form-label">NÚMERO DE MOTOR </label><input type="text" minlength="1"
                     maxlength="20" formControlName="strMotor" id="strMotor" name="strMotor" autocomplete="off"
                     class="form-control" />
@@ -81,37 +81,37 @@
                   <label for="strMarca" class="form-label">MARCA </label><input type="text" formControlName="strMarca"
                     id="strMarca" name="strMarca" autocomplete="off" class="form-control" />
                 </div>
-                <div class="col-12 col-md-12 col-lg-3">
+                <div class="campo-formulario-sm">
                   <label for="intModelo" class="form-label">MODELO </label><input type="text" minlength="4"
                     maxlength="4" formControlName="intModelo" id="intModelo" name="intModelo" autocomplete="off"
                     class="form-control" />
                 </div>
-                <div class="col-12 col-md-12 col-lg-3">
+                <div class="campo-formulario-sm">
                   <label for="strTipoVeh" class="form-label">TIPO </label><input type="text" minlength="4" maxlength="4"
                     formControlName="strTipoVeh" id="strTipoVeh" name="strTipoVeh" autocomplete="off"
                     class="form-control" />
                 </div>
-                <div class="col-12 col-md-12 col-lg-2">
+                <div class="campo-formulario-min">
                   <label for="intCapacidad" class="form-label">CAPACIDAD </label><input type="text" minlength="4"
                     maxlength="4" formControlName="intCapacidad" id="intCapacidad" name="intCapacidad"
                     autocomplete="off" class="form-control" />
                 </div>
-                <div class="col-12 col-md-12 col-lg-2">
+                <div class="campo-formulario-min">
                   <label for="intCilindros" class="form-label">CILINDROS </label><input type="text" minlength="4"
                     maxlength="4" formControlName="intCilindros" id="intCilindros" name="intCilindros"
                     autocomplete="off" class="form-control" />
                 </div>
-                <div class="col-12 col-md-12 col-lg-2">
+                <div class="campo-formulario-min">
                   <label for="strCombustible" class="form-label">COMBUSTIBLE </label><input type="text" minlength="4"
                     maxlength="4" formControlName="strCombustible" id="strCombustible" name="strCombustible"
                     autocomplete="off" class="form-control" />
                 </div>
-                <div class="col-12 col-md-12 col-lg-3">
+                <div class="campo-formulario-sm">
                   <label for="intRefrendo" class="form-label">ÚLTIMO REFRENDO PAGADO </label><input type="text"
                     minlength="4" maxlength="4" formControlName="intRefrendo" id="intRefrendo" name="intRefrendo"
                     autocomplete="off" class="form-control" />
                 </div>
-                <div class="col-12 col-md-12 col-lg-3">
+                <div class="campo-formulario-sm">
                   <label for="strNoTarjeta" class="form-label">TARJETA DE CIRCULACIÓN </label><input type="text"
                     minlength="4" maxlength="4" formControlName="strNoTarjeta" id="strNoTarjeta" name="strNoTarjeta"
                     autocomplete="off" class="form-control" />
@@ -149,7 +149,7 @@
             </ng-template>
             <form [formGroup]="datosConcesionarioForm">
               <div class="row g-3 ">
-                <div class="col-12 col-md-12 col-lg-3">
+                <div class="campo-formulario-sm">
                   <label for="strRfc" class="form-label">RFC <b class="asteriscos">*</b></label>
                   <div class="input-container">
                     <div class="input-group">
@@ -174,7 +174,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-12 col-md-12 col-lg-3">
+                <div class="campo-formulario-sm">
                   <label for="strCurp" class="form-label">CURP </label><input formControlName="strCurp" type="text"
                     minlength="4" maxlength="4" id="strCurp" name="strCurp" autocomplete="off" class="form-control" />
                 </div>
@@ -183,21 +183,21 @@
                   </label><input formControlName="strNombre" type="text" minlength="4" maxlength="4" id="strNombre"
                     name="strNombre" autocomplete="off" class="form-control" />
                 </div>
-                <div class="col-12 col-md-12 col-lg-4">
+                <div class="campo-formulario-mediano">
                   <label for="strApPaterno" class="form-label">APELLIDO PATERNO </label><input
                     formControlName="strApPaterno" type="text" minlength="4" maxlength="4" id="strApPaterno"
                     name="strApPaterno" autocomplete="off" class="form-control" />
                 </div>
-                <div class="col-12 col-md-12 col-lg-4">
+                <div class="campo-formulario-mediano">
                   <label for="strApMaterno" class="form-label">APELLIDO MATERNO </label><input
                     formControlName="strApMaterno" type="text" minlength="4" maxlength="4" id="strApMaterno"
                     name="strApMaterno" autocomplete="off" class="form-control" />
                 </div>
-                <div class="col-12 col-md-12 col-lg-2">
+                <div class="campo-formulario-min">
                   <label for="strSexo" class="form-label">SEXO </label><input formControlName="strSexo" type="text"
                     minlength="4" maxlength="4" id="strSexo" name="strSexo" autocomplete="off" class="form-control" />
                 </div>
-                <div class="col-12 col-md-12 col-lg-2">
+                <div class="campo-formulario-min">
                   <label for="dtFechaNacimiento" class="form-label">FECHA NACIMIENTO </label><input
                     formControlName="dtFechaNacimiento" type="text" minlength="4" maxlength="4" id="dtFechaNacimiento"
                     name="dtFechaNacimiento" autocomplete="off" class="form-control" />
@@ -207,34 +207,34 @@
                     type="text" minlength="4" maxlength="4" id="strCalleProp" name="strCalleProp" autocomplete="off"
                     class="form-control" />
                 </div>
-                <div class="col-12 col-md-12 col-lg-3">
+                <div class="campo-formulario-sm">
                   <label for="strNumExt" class="form-label">NÚMERO EXTERIOR </label><input formControlName="strNumExt"
                     type="text" minlength="4" maxlength="4" id="strNumExt" name="strNumExt" autocomplete="off"
                     class="form-control" />
                 </div>
-                <div class="col-12 col-md-12 col-lg-3">
+                <div class="campo-formulario-sm">
                   <label for="strNumInt" class="form-label">NÚMERO INTERIOR </label><input formControlName="strNumInt"
                     type="text" minlength="4" maxlength="4" id="strNumInt" name="strNumInt" autocomplete="off"
                     class="form-control" />
                 </div>
-                <div class="col-12 col-md-12 col-lg-4">
+                <div class="campo-formulario-mediano">
                   <label for="strEstado" class="form-label">ESTADO </label><input formControlName="strEstado"
                     type="text" minlength="4" maxlength="4" id="strEstado" name="strEstado" value="Tlaxcala"
                     autocomplete="off" class="form-control" />
                 </div>
-                <div class="col-12 col-md-12 col-lg-4">
+                <div class="campo-formulario-mediano">
                   <label for="strMunicipio" class="form-label">MUNICIPIO </label><input formControlName="strMunicipio"
                     type="text" id="strMunicipio" name="strMunicipio" autocomplete="off" class="form-control" />
                 </div>
-                <div class="col-12 col-md-12 col-lg-4">
+                <div class="campo-formulario-mediano">
                   <label for="strLocalidad" class="form-label">LOCALIDAD </label><input formControlName="strLocalidad"
                     type="text" id="strLocalidad" name="strLocalidad" autocomplete="off" class="form-control" />
                 </div>
-                <div class="col-12 col-md-12 col-lg-3">
+                <div class="campo-formulario-sm">
                   <label for="strCp" class="form-label">CÓDIGO POSTAL </label><input formControlName="strCp" type="text"
                     id="strCp" name="strCp" autocomplete="off" class="form-control" />
                 </div>
-                <div class="col-12 col-md-12 col-lg-3">
+                <div class="campo-formulario-sm">
                   <label for="strColonia" class="form-label">COLONIA </label><input formControlName="strColonia"
                     type="text" minlength="4" maxlength="4" id="strColonia" name="strColonia" autocomplete="off"
                     class="form-control" />
@@ -249,7 +249,7 @@
                 </div>
               </div>
               <div class="row g-3 ">
-                <div class="col-12 col-md-12 col-lg-4">
+                <div class="campo-formulario-mediano">
                   <label for="strTelefonoRepresentante" class="form-label">TELÉFONO REPRESENTANTE <b
                       class="asteriscos">*</b></label>
                   <input appNumeric formControlName="strTelefonoRepresentante" type="text" minlength="10" maxlength="10"
@@ -280,7 +280,7 @@
                   </small>
                 </div>
 
-                <div class="col-12 col-md-12 col-lg-4">
+                <div class="campo-formulario-mediano">
                   <label for="strEmail" class="form-label">CORREO <b class="asteriscos">*</b></label>
                   <div class="input-container">
                     <input appMail type="email" formControlName="strEmail" id="strEmail" [ngClass]="{
@@ -302,7 +302,7 @@
                   </div>
                 </div>
 
-                <div class="col-12 col-md-12 col-lg-4">
+                <div class="campo-formulario-mediano">
                   <label for="strTelefonoContacto" class="form-label">TELÉFONO CONCESIONARIO <b
                       class="asteriscos">*</b></label>
                   <div class="input-container">
