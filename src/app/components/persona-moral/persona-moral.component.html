@@ -24,7 +24,7 @@
                 <span> DATOS DE LA CONCESIÓN </span>
               </h6>
             </ng-template>
-            <form [formGroup]="datosConcesionForm">
+            <form [formGroup]="datosConcesionForm" (ngSubmit)="cargarDatosFormulario(datosConcesionForm, 'datosConcesionForm',true)">
               <div class="row g-3">
                 <div class="campo-formulario-mediano">
                   <label for="strNiv" class="form-label">NIV <b class="asteriscos">*</b></label>
@@ -119,7 +119,7 @@
               </div>
               <br />
               <div class="col-12 d-grid gap-1 d-md-flex justify-content-md-end">
-                <button (click)="cargarDatosFormulario(datosConcesionForm, 'datosConcesionForm',true)" mat-button
+                <button type="submit" mat-button
                   matTooltip="Siguiente paso" matTooltipPosition="above" class="text-white boton-siguiente"
                   aria-describedby="cdk-describedby-message-pdb-1-2" cdk-describedby-host="pdb-1">
                   <span class="mdc-button__label">Siguiente
@@ -147,7 +147,7 @@
                 <span> DATOS DEL CONCESIONARIO </span>
               </h6>
             </ng-template>
-            <form [formGroup]="datosConcesionarioForm">
+            <form [formGroup]="datosConcesionarioForm" (ngSubmit)="cargarDatosFormulario(datosConcesionarioForm, 'datosConcesionarioForm',true)">
               <div class="row g-3 ">
                 <div class="campo-formulario-sm">
                   <label for="strRfc" class="form-label">RFC <b class="asteriscos">*</b></label>
@@ -325,7 +325,7 @@
                         d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z">
                       </path>
                     </svg> Regresar</span></button>
-                <button (click)="cargarDatosFormulario(datosConcesionarioForm, 'datosConcesionarioForm',true)"
+                <button type="submit"
                   mat-button matTooltip="Siguiente paso" matTooltipPosition="above"
                   class="mat-mdc-tooltip-trigger btn boton-siguiente me-md-2 text-white mdc-button mat-mdc-button mat-unthemed mat-mdc-button-base"
                   aria-describedby="cdk-describedby-message-ewh-1-2" cdk-describedby-host="ewh-1">
@@ -352,7 +352,8 @@
                 <span> DOCUMENTOS DE LA UNIDAD </span>
               </h6>
             </ng-template>
-            <form [formGroup]="documentosUnidadForm"><br><br>
+            <form [formGroup]="documentosUnidadForm" (ngSubmit)="registraInformacion()">
+              <br><br>
               <div class="container alert terminos shadow-lg rounded">
                 <div class="row g-3 justify-content-center">
                   <p> Adjunta los documentos solicitados en formato <b>.pdf</b><br> Has uso de las herramientas <svg
@@ -623,7 +624,7 @@
                     Regresar</span><span class="mat-mdc-focus-indicator"></span><span matRipple
                     class="mat-ripple mat-mdc-button-ripple"></span><span
                     class="mat-mdc-button-touch-target"></span></button><button
-                  [disabled]="this.documentosUnidadForm.invalid" (click)="registraInformacion()"
+                  [disabled]="this.documentosUnidadForm.invalid" type="submit"
                   matTooltip="Siguiente paso" matTooltipPosition="above"
                   class="mat-mdc-tooltip-trigger btn boton-siguiente me-md-2 text-white mdc-button mat-mdc-button mat-unthemed mat-mdc-button-base"
                   aria-describedby="cdk-describedby-message-hnv-1-2" cdk-describedby-host="hnv-1">
