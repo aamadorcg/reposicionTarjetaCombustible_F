@@ -278,8 +278,8 @@ Define los campos, establece validaciones y deshabilita aquellos que no deben se
   private inicializarFormularios() {
     this.datosConcesionForm = this.formBuilder.group({
       intIdPlaca: 0,
-      strNiv: ['', Validators.required],
-      strPlaca: ['', Validators.required],
+      strNiv: ['', [Validators.required,Validators.minLength(17), Validators.maxLength(17)]],
+      strPlaca: ['', [Validators.required,Validators.minLength(7), Validators.maxLength(7)]],
       strCveVeh: [{ value: '', disabled: true }],
       strMotor: [{ value: '', disabled: true }],
       strMarca: [{ value: '', disabled: true }],
@@ -324,6 +324,7 @@ Define los campos, establece validaciones y deshabilita aquellos que no deben se
       strTelefonoRepresentante: ['', [
         Validators.required,
         Validators.minLength(10),
+        Validators.maxLength(10),
         Validators.pattern(/^\d+$/),
         this.validaNoTodosIguales.bind(this)
       ]
@@ -332,6 +333,7 @@ Define los campos, establece validaciones y deshabilita aquellos que no deben se
       strTelefonoContacto: ['', [
         Validators.required,
         Validators.minLength(10),
+        Validators.maxLength(10),
         Validators.pattern(/^\d+$/),
         this.validaNoTodosIguales.bind(this)
       ]

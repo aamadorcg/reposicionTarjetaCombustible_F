@@ -280,8 +280,8 @@ export class PersonaFisicaComponent {
   private inicializarFormularios() {
     this.datosConcesionForm = this.formBuilder.group({
       intIdPlaca: 0,
-      strNiv: ['', Validators.required],
-      strPlaca: ['', Validators.required],
+      strNiv: ['', [Validators.required,Validators.minLength(17), Validators.maxLength(17)]],
+      strPlaca: ['', [Validators.required,Validators.minLength(7), Validators.maxLength(7)]],
       strCveVeh: [{ value: '', disabled: true }],
       strMotor: [{ value: '', disabled: true }],
       strMarca: [{ value: '', disabled: true }],
@@ -326,6 +326,7 @@ export class PersonaFisicaComponent {
       strTelefonoRepresentante: ['', [
         Validators.required,
         Validators.minLength(10),
+        Validators.maxLength(10),
         Validators.pattern(/^\d+$/),
         this.validaNoTodosIguales.bind(this)
       ]
@@ -334,6 +335,7 @@ export class PersonaFisicaComponent {
       strTelefonoContacto: ['', [
         Validators.required,
         Validators.minLength(10),
+        Validators.maxLength(10),
         Validators.pattern(/^\d+$/),
         this.validaNoTodosIguales.bind(this)
       ]
