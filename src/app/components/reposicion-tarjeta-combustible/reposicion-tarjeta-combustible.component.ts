@@ -10,7 +10,6 @@ import { TerminosCondicionesComponent } from 'src/app/components/terminos-condic
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReposicionTarjetaService } from 'src/app/services/reposicion-tarjeta.service'
-import Swal from 'sweetalert2';
 import { RespuestaGenerica } from 'src/app/core/models/respuesta.generica.model';
 import { switchMap, retryWhen, delayWhen, timer, of, throwError, catchError, map } from 'rxjs';
 
@@ -393,7 +392,6 @@ export class ReposicionTarjetaCombustibleComponent {
     this.servicios.obtenerDocumentosTramite(valores).subscribe({
       next: (value: any) => {
         this.listaArchivos = value.data
-        //console.log(this.listaArchivos);
       },
       error: (err: HttpErrorResponse) => {
         this.muestraErrorGeneral(err);
@@ -788,10 +786,7 @@ export class ReposicionTarjetaCombustibleComponent {
               }).then(result => {
                 if (result.isConfirmed) {
                   this.reiniciaFormulario();
-
-                  // this.cargarArchivosPDFs('', '', '', '');
                   this.stepper.reset();
-                  // this.bloqueBotonVerArchivos();
                   this.router.navigate([this.router.url], { skipLocationChange: true });
                 }
               });
