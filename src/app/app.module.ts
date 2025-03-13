@@ -5,7 +5,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ReposicionTarjetaCombustibleComponent } from './components/reposicion-tarjeta-combustible/reposicion-tarjeta-combustible.component';
 import { SharedModule } from './shared/shared.module';
 import { HttpClientModule } from '@angular/common/http';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
@@ -15,17 +14,20 @@ import { TerminosCondicionesComponent } from './components/terminos-condiciones/
 import { CardPdfComponent } from './components/card-pdf/card-pdf.component';
 import { RestrictedAlphanumericDirective } from './core/directives/restricted-alphanumeric.directive';
 import { NotFoundComponent } from './components/not-found/not-found.component';
+import { PersonaFisicaComponent } from './components/persona-fisica/persona-fisica.component';
+import { PersonaMoralComponent } from './components/persona-moral/persona-moral.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavComponent,
     FooterComponent,
-    ReposicionTarjetaCombustibleComponent,
     TerminosCondicionesComponent,
     CardPdfComponent,
     RestrictedAlphanumericDirective,
-    NotFoundComponent
+    NotFoundComponent,
+    PersonaFisicaComponent,
+    PersonaMoralComponent
   ],
   imports: [
     BrowserModule,

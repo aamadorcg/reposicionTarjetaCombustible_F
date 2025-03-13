@@ -1,29 +1,28 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ReposicionTarjetaCombustibleComponent } from './components/reposicion-tarjeta-combustible/reposicion-tarjeta-combustible.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
+import { PersonaFisicaComponent } from './components/persona-fisica/persona-fisica.component';
+import { PersonaMoralComponent } from './components/persona-moral/persona-moral.component';
 
 
 const routes: Routes = [
   {
     path: 'persona-fisica',
-    component: ReposicionTarjetaCombustibleComponent,
-    data: { tipo: 'F' }
+    component: PersonaFisicaComponent
   },
   {
     path: 'persona-moral',
-    component: ReposicionTarjetaCombustibleComponent,
-    data: { tipo: 'M' }
+    component: PersonaMoralComponent
   },
   {
     path: 'persona-fisica/modificar/:id',
-    component: ReposicionTarjetaCombustibleComponent,
-    data: { tipo: 'F', modo: 'modificar' }
+    component: PersonaFisicaComponent,
+    data: { modo: 'modificar' }
   },
   {
     path: 'persona-moral/modificar/:id',
-    component: ReposicionTarjetaCombustibleComponent,
-    data: { tipo: 'M', modo: 'modificar' }
+    component: PersonaMoralComponent,
+    data: { modo: 'modificar' }
   },
   {
     path: '',

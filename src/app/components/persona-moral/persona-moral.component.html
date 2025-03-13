@@ -5,11 +5,11 @@
       <div class="fondo-contenedor-principal rounded">
         <br />
         <div class="d-grid gap-1 d-md-flex fondo-stepper-encabezado rounded">
-          <h6 [ngClass]="esPersonaFisica ? 'tittle' : 'tittleMoral'" class="me-auto p-1 rounded"><span><i
-                class="bi bi-people-fill"></i>&nbsp;PERSONA: {{ esPersonaFisica ? 'FÍSICA' : 'MORAL' }} </span>
+          <h6 class="tittleMoral me-auto p-1 rounded"><span><i
+                class="bi bi-people-fill"></i>&nbsp;PERSONA: MORAL </span>
           </h6>
           <div>
-            <h6 [ngClass]="esPersonaFisica ? 'tittle' : 'tittleMoral'" class="me-auto p-1 rounded"><span><i
+            <h6 class="tittleMoral me-auto p-1 rounded"><span><i
                   class="bi bi-bus-front"></i>&nbsp;REPOSICIÓN TARJETA POR CAMBIO DE COMBUSTIBLE</span>
             </h6>
           </div>
@@ -19,7 +19,7 @@
           <!-- Step 1 - DATOS DE LA CONCESIÓN -->
           <mat-step [stepControl]="datosConcesionForm">
             <ng-template matStepLabel>
-              <h6 [ngClass]="esPersonaFisica ? 'tittle' : 'tittleMoral'" class="me-auto p-1 rounded">
+              <h6 class="tittleMoral me-auto p-1 rounded">
                 <span class="bi bi-bus-front stepper-icons"></span>
                 <span> DATOS DE LA CONCESIÓN </span>
               </h6>
@@ -142,7 +142,7 @@
           <!-- Step 2 - DATOS DEL CONCESIONARIO -->
           <mat-step [stepControl]="datosConcesionarioForm">
             <ng-template matStepLabel>
-              <h6 [ngClass]="esPersonaFisica ? 'tittle' : 'tittleMoral'" class="me-auto p-1 rounded">
+              <h6 class="tittleMoral me-auto p-1 rounded">
                 <span class="bi bi-person-vcard stepper-icons"></span>
                 <span> DATOS DEL CONCESIONARIO </span>
               </h6>
@@ -154,10 +154,10 @@
                   <div class="input-container">
                     <div class="input-group">
                       <button type="button" class="btn icono bi bi-info-circle-fill"
-                        (click)="muestraModalConImagen('strRfc')"></button>
+                        (click)="muestraModalConImagen()"></button>
                       <input appAlphanumeric formControlName="strRfc" type="text" id="strRfc" name="strRfc"
-                        autocomplete="off" [minlength]="esPersonaFisica ? 13 : 12"
-                        [maxlength]="esPersonaFisica ? 13 : 12" [placeholder]="rfcPlaceholder" [matTooltip]="rfcTooltip"
+                        autocomplete="off" [minlength]="12"
+                        [maxlength]="12" [placeholder]="rfcPlaceholder" [matTooltip]="rfcTooltip"
                         matTooltipPosition="above" [ngClass]="{
                           'is-invalid': datosConcesionarioForm.get('strRfc')?.invalid && (datosConcesionarioForm.get('strRfc')?.dirty || datosConcesionarioForm.get('strRfc')?.touched),
                           'is-valid': datosConcesionarioForm.get('strRfc')?.valid 
@@ -174,33 +174,10 @@
                     </div>
                   </div>
                 </div>
-                <div *ngIf="esPersonaFisica" class="col-12 col-md-12 col-lg-3">
-                  <label for="strCurp" class="form-label">CURP </label><input formControlName="strCurp" type="text"
-                    minlength="4" maxlength="4" id="strCurp" name="strCurp" autocomplete="off" class="form-control" />
-                </div>
                 <div class="col-12 col-md-12 col-lg-6">
-                  <label for="strNombre" class="form-label"> {{ esPersonaFisica ? 'NOMBRE' : 'RAZÓN SOCIAL' }}
+                  <label for="strNombre" class="form-label"> RAZÓN SOCIAL
                   </label><input formControlName="strNombre" type="text" minlength="4" maxlength="4" id="strNombre"
                     name="strNombre" autocomplete="off" class="form-control" />
-                </div>
-                <div *ngIf="esPersonaFisica" class="col-12 col-md-12 col-lg-4">
-                  <label for="strApPaterno" class="form-label">APELLIDO PATERNO </label><input
-                    formControlName="strApPaterno" type="text" minlength="4" maxlength="4" id="strApPaterno"
-                    name="strApPaterno" autocomplete="off" class="form-control" />
-                </div>
-                <div *ngIf="esPersonaFisica" class="col-12 col-md-12 col-lg-4">
-                  <label for="strApMaterno" class="form-label">APELLIDO MATERNO </label><input
-                    formControlName="strApMaterno" type="text" minlength="4" maxlength="4" id="strApMaterno"
-                    name="strApMaterno" autocomplete="off" class="form-control" />
-                </div>
-                <div *ngIf="esPersonaFisica" class="col-12 col-md-12 col-lg-2">
-                  <label for="strSexo" class="form-label">SEXO </label><input formControlName="strSexo" type="text"
-                    minlength="4" maxlength="4" id="strSexo" name="strSexo" autocomplete="off" class="form-control" />
-                </div>
-                <div *ngIf="esPersonaFisica" class="col-12 col-md-12 col-lg-2">
-                  <label for="dtFechaNacimiento" class="form-label">FECHA NACIMIENTO </label><input
-                    formControlName="dtFechaNacimiento" type="text" minlength="4" maxlength="4" id="dtFechaNacimiento"
-                    name="dtFechaNacimiento" autocomplete="off" class="form-control" />
                 </div>
                 <div class="col-12 col-md-12 col-lg-6">
                   <label for="strCalleProp" class="form-label">CALLE </label><input formControlName="strCalleProp"
@@ -242,7 +219,7 @@
               </div>
               <div class="mt-3 mat-step-label mat-step-label-active mat-step-label-selected">
                 <div class="mat-step-text-label ng-star-inserted">
-                  <h6 [ngClass]="esPersonaFisica ? 'tittle' : 'tittleMoral'" class="me-auto p-1 rounded">
+                  <h6 class="tittleMoral me-auto p-1 rounded">
                     <span class="bi bi-person-lines-fill stepper-icons"></span>
                     <span> MEDIOS DE CONTACTO </span>
                   </h6>
@@ -370,7 +347,7 @@
           <!-- Step 3 - DOCUMENTOS DE LA UNIDAD  -->
           <mat-step [stepControl]="documentosUnidadForm">
             <ng-template matStepLabel>
-              <h6 [ngClass]="esPersonaFisica ? 'tittle' : 'tittleMoral'" class="me-auto p-1 rounded">
+              <h6 class="tittleMoral me-auto p-1 rounded">
                 <span class="bi bi-file-earmark-pdf stepper-icons"></span>
                 <span> DOCUMENTOS DE LA UNIDAD </span>
               </h6>
@@ -436,7 +413,7 @@
                         </div>
                       </div>
                       <hr>
-                      <h6 [ngClass]="esPersonaFisica ? 'tittle' : 'tittleMoral'" class="card-title rounded">REFRENDO
+                      <h6 class="tittleMoral card-title rounded">REFRENDO
                         VIGENTE ANUAL</h6>
                     </div>
                   </div>
@@ -478,7 +455,7 @@
                         </div>
                       </div>
                       <hr>
-                      <h6 [ngClass]="esPersonaFisica ? 'tittle' : 'tittleMoral'" class="card-title rounded">TARJETA DE CIRCULACIÓN
+                      <h6 class="tittleMoral card-title rounded">TARJETA DE CIRCULACIÓN
                       </h6>
                     </div>
                   </div>
@@ -519,7 +496,7 @@
                         </div>
                       </div>
                       <hr>
-                      <h6 [ngClass]="esPersonaFisica ? 'tittle' : 'tittleMoral'" class="card-title rounded">DICTAMEN DE
+                      <h6 class="tittleMoral card-title rounded">DICTAMEN DE
                         GAS
                       </h6>
                     </div>
@@ -560,7 +537,7 @@
                         </div>
                       </div>
                       <hr>
-                      <h6 [ngClass]="esPersonaFisica ? 'tittle' : 'tittleMoral'" class="card-title rounded">INE
+                      <h6 class="tittleMoral card-title rounded">INE
                       </h6>
                     </div>
                   </div>
@@ -600,7 +577,7 @@
                         </div>
                       </div>
                       <hr>
-                      <h6 [ngClass]="esPersonaFisica ? 'tittle' : 'tittleMoral'" class="card-title rounded">PÓLIZA DE SEGURO
+                      <h6 class="tittleMoral card-title rounded">PÓLIZA DE SEGURO
                       </h6>
                     </div>
                   </div>

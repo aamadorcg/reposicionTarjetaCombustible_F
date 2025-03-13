@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://10.50.80.220:8088/reposiciontarjeta'
+  apiUrlFinanzas: 'https://api-reposiciontarjeta.sefintlax.gob.mx',
+  apiUrlSmyt: 'https://apis-movilidad.sefintlax.gob.mx/servpublico'
 };

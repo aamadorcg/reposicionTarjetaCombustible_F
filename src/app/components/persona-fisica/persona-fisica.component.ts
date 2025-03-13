@@ -17,12 +17,12 @@ import { switchMap, retryWhen, delayWhen, timer, of, throwError, catchError, map
 type ClavesFormulario = 'datosConcesionForm' | 'datosConcesionarioForm' | 'documentosUnidadForm';
 
 @Component({
-  selector: 'app-reposicion-tarjeta',
-  templateUrl: './reposicion-tarjeta-combustible.component.html',
-  styleUrls: ['./reposicion-tarjeta-combustible.component.css'],
+  selector: 'app-persona-fisica',
+  templateUrl: './persona-fisica.component.html',
+  styleUrls: ['./persona-fisica.component.css']
 })
 
-export class ReposicionTarjetaCombustibleComponent {
+export class PersonaFisicaComponent {
 
   @ViewChild(MatStepper) stepper!: MatStepper;
 
@@ -47,9 +47,6 @@ export class ReposicionTarjetaCombustibleComponent {
 
   ID_TRAMITE_REPOSICIONCOM = 11;
   RFC_FISICA_PATTERN = '^([A-ZÑ&]{4})(\\d{6})([A-Z\\d]{3})$';
-  RFC_MORAL_PATTERN = '^([A-ZÑ&]{3})(\\d{6})([A-Z\\d]{3})$';
-  esPersonaFisica = false;
-  esPersonaMoral = false;
   buscaRFC = false;
   tarjetaCircCargado: boolean = false;
   dictGasCargado: boolean = false;
@@ -88,7 +85,7 @@ export class ReposicionTarjetaCombustibleComponent {
   ngOnInit() {
     this.inicializarFormularios();
     this.detectarTipoTramite();
-    this.configurarRFCFisicaMoral();
+    this.configurarRFC();
     this.cargarDefaultPDFs();
     this.obtenerDocumentosTramite();
     this.servicios.cargarConfiguracionTramite(this.ID_TRAMITE_REPOSICIONCOM).subscribe({
@@ -333,56 +330,30 @@ export class ReposicionTarjetaCombustibleComponent {
 
   rfcValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      const esPersonaFisica = this.esPersonaFisica;
-      const esPersonaMoral = this.esPersonaMoral;
-
       const rfcValue = control.value;
-
-      if (esPersonaFisica) {
-        if (!rfcValue || rfcValue.length !== 13 || !new RegExp(this.RFC_FISICA_PATTERN).test(rfcValue)) {
-          return { rfcInvalido: true };
-        }
-      } else if (esPersonaMoral) {
-        if (!rfcValue || rfcValue.length !== 12 || !new RegExp(this.RFC_MORAL_PATTERN).test(rfcValue)) {
-          return { rfcInvalido: true };
-        }
+      if (!rfcValue || rfcValue.length !== 13 || !new RegExp(this.RFC_FISICA_PATTERN).test(rfcValue)) {
+        return { rfcInvalido: true };
       }
       return null;
     };
   }
 
   get rfcPlaceholder(): string {
-    return this.esPersonaFisica ? 'R.F.C. LLLL000000AAA' : 'R.F.C. LLL000000AAA';
+    return 'R.F.C. LLLL000000AAA';
   }
 
   get rfcTooltip(): string {
-    return this.esPersonaFisica
-      ? 'L = Letra, 0 = Número, A = Letra ó Número, Formato válido: LLLL000000AAA'
-      : 'L = Letra, 0 = Número, A = Letra ó Número, Formato válido: LLL000000AAA';
+    return 'L = Letra, 0 = Número, A = Letra ó Número, Formato válido: LLLL000000AAA';
   }
 
-  configurarRFCFisicaMoral() {
-    this.activatedRoute.data.subscribe((param: any) => {
-      if (param.tipo === 'F') {
-        this.formConcesionario['strRfc'].setValidators([
-          Validators.required,
-          Validators.minLength(13),
-          Validators.maxLength(13),
-          Validators.pattern(this.RFC_FISICA_PATTERN)
-        ]);
-        this.datosConcesionarioForm.get('strRfc')?.updateValueAndValidity();
-        this.esPersonaFisica = true;
-      } else if (param.tipo === 'M') {
-        this.formConcesionario['strRfc'].setValidators([
-          Validators.required,
-          Validators.minLength(12),
-          Validators.maxLength(12),
-          Validators.pattern(this.RFC_MORAL_PATTERN)
-        ]);
-        this.datosConcesionarioForm.get('strRfc')?.updateValueAndValidity();
-        this.esPersonaMoral = true;
-      }
-    });
+  configurarRFC() {
+    this.formConcesionario['strRfc'].setValidators([
+      Validators.required,
+      Validators.minLength(13),
+      Validators.maxLength(13),
+      Validators.pattern(this.RFC_FISICA_PATTERN)
+    ]);
+    this.datosConcesionarioForm.get('strRfc')?.updateValueAndValidity();
   }
 
   obtenerDocumentosTramite() {
@@ -413,8 +384,7 @@ export class ReposicionTarjetaCombustibleComponent {
     this.datosConcesionarioForm.get('strRfc')?.valueChanges.subscribe((strRfc) => {
       if (this.actualizarForm) return;
       setTimeout(() => {
-        if ((strRfc && strRfc.length === 13 && this.esPersonaFisica && this.formConcesionario['strRfc'].valid) ||
-          (strRfc && strRfc.length === 12 && this.esPersonaMoral && this.formConcesionario['strRfc'].valid)) {
+        if (strRfc && strRfc.length === 13 && this.formConcesionario['strRfc'].valid) {
           this.formularioCompleto = true;
           this.cargarDatosFormulario(this.datosConcesionarioForm, 'datosConcesionarioForm', false);
         }
@@ -490,7 +460,7 @@ export class ReposicionTarjetaCombustibleComponent {
         valores = {
           strNiv,
           strPlaca,
-          esPersonaFisica: this.esPersonaFisica,
+          esPersonaFisica: true,
           intIdTipoTramite: this.idTramiteRepoTarjetaCombustible,
           configTramite: this.configuracion
         }
@@ -635,7 +605,7 @@ export class ReposicionTarjetaCombustibleComponent {
         strTelefonoRepresentante: this.formConcesionario['strTelefonoRepresentante'].value,
         intIdTipoTramite: this.idTramiteRepoTarjetaCombustible,
         documentacionVo: this.listaArchivos,
-        bolPersonaFisica: this.esPersonaFisica,
+        bolPersonaFisica: true,
         concesion: {
           intIdPlaca: 0,
           strPlaca: this.formConcesion['strPlaca'].value,
@@ -885,12 +855,7 @@ export class ReposicionTarjetaCombustibleComponent {
     this.stepper.reset();
     this.cargarDefaultPDFs();
     this.bloqueaVerArchivos();
-    if (this.esPersonaFisica) {
-      this.router.navigate(['/persona-fisica'], { skipLocationChange: true });
-    } else if (this.esPersonaMoral) {
-      this.router.navigate(['/persona-moral'], { skipLocationChange: true });
-    }
-
+    this.router.navigate(['/persona-fisica'], { skipLocationChange: true });
   }
 
   /*
@@ -990,12 +955,7 @@ export class ReposicionTarjetaCombustibleComponent {
   }
 
   muestraModalConImagen(campo: string) {
-    let img = '';
-    if (campo === 'strRfc' && this.esPersonaFisica) {
-      img = '/assets/images/LogoTlaxFisica.png';
-    } else {
-      img = '/assets/images/LogoTlaxMoral.png';
-    }
+    let img = '/assets/images/LogoTlaxFisica.png';
     this.alertaUtility.mostrarAlerta({
       message: '',
       imageUrl: img,
