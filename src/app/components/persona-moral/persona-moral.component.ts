@@ -573,7 +573,7 @@ También maneja errores de conexión y respuestas del servicio.
           if (err.error instanceof ErrorEvent) {
             message = 'Ocurrió un problema con la conexión de red. Por favor, verifica tu conexión a internet.';
           } else if (err.status === 0) {
-            message = 'El servicio no está disponible en este momento.<br> Intente nuevamente más tarde.';
+            message = 'El servicio no está disponible en este momento.<p> Intente nuevamente más tarde.';
           } else {
             message = err.error.strMessage;
           }
@@ -787,7 +787,7 @@ de carga de cada documento y realizar acciones en la UI según corresponda.
               if (err.error instanceof ErrorEvent) {
                 message = 'Ocurrió un problema con la conexión de red. Por favor, verifica tu conexión a internet.';
               } else if (err.status === 0) {
-                message = 'El servicio no está disponible en este momento.<br> Intente nuevamente más tarde.';
+                message = 'El servicio no está disponible en este momento.<p> Intente nuevamente más tarde.';
               } else {
                 message = err.error.strMessage;
               }
@@ -839,7 +839,7 @@ de carga de cada documento y realizar acciones en la UI según corresponda.
                     En un lapso de 24 a 48 horas notificaremos a través de tu <b>correo electrónico:</b>
                     <b><p style="color: #a11a5c;">${email}</p></b>
                     la información sobre el seguimiento al trámite por parte de SMyT.
-                    <br>
+                    <p>
                     <h5><b>Folio Trámite: ${strCodigo}</b></h5>
                     Gracias.
                   </div>
@@ -1075,7 +1075,7 @@ de carga de cada documento y realizar acciones en la UI según corresponda.
     if (err.error instanceof ErrorEvent) {
       message = 'Ocurrió un problema con la conexión de red. Por favor, verifica tu conexión a internet.';
     } else if (err.status === 0) {
-      message = 'El servicio no está disponible en este momento.<br> Intente nuevamente más tarde.';
+      message = 'El servicio no está disponible en este momento.<p> Intente nuevamente más tarde.';
     } else {
       message = err.error.strMessage;
     }

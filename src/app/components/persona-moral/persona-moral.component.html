@@ -3,8 +3,7 @@
   <div class="container py-5 mx-auto">
     <div class="row d-flex justify-content-center">
       <div class="fondo-contenedor-principal rounded">
-        <br />
-        <div class="d-grid gap-1 d-md-flex fondo-stepper-encabezado rounded">
+        <div class="d-grid gap-1 d-md-flex fondo-stepper-encabezado rounded salto-linea-espacio-superior">
           <h6 class="tittleMoral me-auto p-1 rounded"><span><i
                 class="bi bi-people-fill"></i>&nbsp;PERSONA: MORAL </span>
           </h6>
@@ -15,7 +14,7 @@
           </div>
         </div>
         <mat-vertical-stepper [linear]="true" #stepper animationDuration="1500"
-          class="fondo-stepper rounded mat-stepper-vertical">
+          class="fondo-stepper rounded mat-stepper-vertical salto-linea-espacio-inferior">
           <!-- Step 1 - DATOS DE LA CONCESIÓN -->
           <mat-step [stepControl]="datosConcesionForm">
             <ng-template matStepLabel>
@@ -117,8 +116,7 @@
                     autocomplete="off" class="form-control" />
                 </div>
               </div>
-              <br />
-              <div class="col-12 d-grid gap-1 d-md-flex justify-content-md-end">
+              <div class="col-12 d-grid gap-1 d-md-flex justify-content-md-end salto-linea-espacio-superior salto-linea-espacio-inferior">
                 <button type="submit" mat-button
                   matTooltip="Siguiente paso" matTooltipPosition="above" class="text-white boton-siguiente"
                   aria-describedby="cdk-describedby-message-pdb-1-2" cdk-describedby-host="pdb-1">
@@ -132,7 +130,6 @@
                   </span>
                 </button>
               </div>
-              <br />
               <hr />
               <p class="texto-obligatorio">
                 Los campos con ( <b class="asteriscos">*</b> ) son obligatorios
@@ -313,8 +310,7 @@
                   </div>
                 </div>
               </div>
-              <br />
-              <div class="d-flex bd-highlight mb-3">
+              <div class="d-flex bd-highlight mb-3 salto-linea-espacio-superior salto-linea-espacio-inferior">
                 <button mat-button matStepperPrevious matTooltip="Paso anterior" matTooltipPosition="above"
                   class="mat-stepper-previous mat-mdc-tooltip-trigger btn boton-regresar text-white me-auto p-2 bd-highlight mdc-button mat-mdc-button mat-unthemed mat-mdc-button-base"
                   aria-describedby="cdk-describedby-message-ewh-1-5" cdk-describedby-host="ewh-1" type="button"><span
@@ -337,7 +333,6 @@
                     </svg></span>
                 </button>
               </div>
-              <br />
               <hr />
               <p class="texto-obligatorio">
                 Los campos con ( <b class="asteriscos">*</b> ) son obligatorios
@@ -353,10 +348,9 @@
               </h6>
             </ng-template>
             <form [formGroup]="documentosUnidadForm" (ngSubmit)="registraInformacion()">
-              <br><br>
-              <div class="container alert terminos shadow-lg rounded">
+              <div class="container alert terminos shadow-lg rounded salto-linea-espacio-superior">
                 <div class="row g-3 justify-content-center">
-                  <p> Adjunta los documentos solicitados en formato <b>.pdf</b><br> Has uso de las herramientas <svg
+                  <p> Adjunta los documentos solicitados en formato <b>.pdf</b><p> Has uso de las herramientas <svg
                       matTooltip="Seleccionar Documento" matTooltipPosition="left" xmlns="http://www.w3.org/2000/svg"
                       width="20" height="20" fill="currentColor" viewBox="0 0 16 16"
                       class="mat-mdc-tooltip-trigger bi bi-upload buton-subir-archivo"
@@ -586,8 +580,7 @@
               </div>
               <div class="row g-3  mt-3">
                 <div class="row g-3 alert terminos shadow-lg p-3 mb-5 rounded">
-                  <br />
-                  <figure>
+                  <figure class="salto-linea-espacio-superior">
                     <blockquote class="blockquote">
                       <p>
                         Acepto que los servicios que a través de este medio se
@@ -637,7 +630,6 @@
             </form>
           </mat-step>
         </mat-vertical-stepper>
-        <br />
       </div>
     </div>
   </div>

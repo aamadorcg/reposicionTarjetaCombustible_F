@@ -64,5 +64,15 @@ body {
      }
    }
 
+   .salto-linea-espacio-superior {
+     margin-top: 1em; 
+     display: block; 
+   }
+
+   .salto-linea-espacio-inferior {
+     margin-bottom: 1em; 
+     display: block; 
+   }
+   
 @import "~bootstrap-icons/font/bootstrap-icons.css";
 @import '~animate.css/animate.min.css';
