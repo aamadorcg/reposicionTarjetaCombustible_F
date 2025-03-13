@@ -82,6 +82,10 @@ export class PersonaMoralComponent {
     private readonly activatedRoute: ActivatedRoute
   ) { this.iniciarReintentos(); }
 
+/*
+ngOnInit() inicializa formularios, configura validaciones, carga PDFs y documentos, 
+obtiene la configuración del trámite y observa cambios en los formularios.
+*/
   ngOnInit() {
     this.inicializarFormularios();
     this.detectarTipoTramite();
@@ -96,6 +100,10 @@ export class PersonaMoralComponent {
     this.observarFormularios();
   }
 
+/*
+detectarTipoTramite() determina si el trámite es una modificación, obtiene el ID del trámite 
+de la URL y, si es necesario, carga sus datos.
+*/
   detectarTipoTramite() {
     this.activatedRoute.data.subscribe(data => {
       this.esModificacion = data['modo'] === 'modificar';
@@ -108,6 +116,11 @@ export class PersonaMoralComponent {
     });
   }
 
+/*
+cargarDatosDelTramite(idTramite) obtiene y carga los datos de un trámite específico, 
+actualiza los formularios con la información recibida, establece los documentos asociados 
+y maneja posibles errores redirigiendo a una página de "not found".
+*/
   cargarDatosDelTramite(idTramite: string) {
     this.cargarSpinner = true;
     this.servicios.obtenerTramiteParaCorregir(idTramite).subscribe({
@@ -142,6 +155,10 @@ export class PersonaMoralComponent {
     this.datosConcesionarioForm.disable();
   }
 
+  /*
+cargarArchivosPDFs asigna URLs seguras a los documentos PDF requeridos, 
+garantizando que cada tipo de archivo tenga una referencia válida antes de ser mostrado.
+*/
   cargarArchivosPDFs(
     refrendo: string,
     actaMinisterial: string,
@@ -164,6 +181,11 @@ export class PersonaMoralComponent {
     };
   }
 
+  /*
+obtenUrlSeguro genera una URL segura para visualizar archivos PDF. 
+Si no hay contenido, asigna un PDF por defecto; de lo contrario, 
+convierte la cadena Base64 en un Blob y crea un objeto URL seguro.
+*/
   obtenUrlSeguro(base64: string): SafeResourceUrl {
     if (!base64) {
       return this.sanitizer.bypassSecurityTrustResourceUrl('assets/documents/subirArchivo.pdf');
@@ -174,6 +196,11 @@ export class PersonaMoralComponent {
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
+/*
+creaBlobDeBase64 convierte una cadena Base64 en un Blob. 
+Decodifica la cadena, la transforma en un array de bytes 
+y genera un Blob con el tipo de contenido especificado.
+*/
   creaBlobDeBase64(base64: string, contentType: string): Blob {
     const byteCharacters = atob(base64);//Decodifica
     const byteNumbers = new Array(byteCharacters.length);
@@ -184,6 +211,10 @@ export class PersonaMoralComponent {
     return new Blob([byteArray], { type: contentType });
   }
 
+/*
+establecerCheckDocumentos actualiza el formulario con los documentos proporcionados. 
+Cada documento se asigna a su campo correspondiente junto con su estado de aceptación.
+*/
   establecerCheckDocumentos(documentos: any) {
     documentos.forEach((doc: any) => {
       const status = doc.strAceptado === 'A';
@@ -240,6 +271,10 @@ export class PersonaMoralComponent {
     });
   }
 
+/*
+inicializarFormularios configura los formularios de concesión, concesionario y documentos de la unidad.
+Define los campos, establece validaciones y deshabilita aquellos que no deben ser editables.
+*/
   private inicializarFormularios() {
     this.datosConcesionForm = this.formBuilder.group({
       intIdPlaca: 0,
@@ -319,6 +354,10 @@ export class PersonaMoralComponent {
     });
   }
 
+/*
+validaNoTodosIguales verifica si todos los dígitos de un número son iguales.
+Si el número tiene 10 caracteres y todos son idénticos, retorna un error de validación.
+*/
   validaNoTodosIguales(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
     if (!value || value.length !== 10) {
@@ -328,6 +367,10 @@ export class PersonaMoralComponent {
     return allCharactersAreSame ? { noTodosIguales: true } : null;
   }
 
+/*
+rfcValidator valida que el RFC ingresado cumpla con el formato esperado para personas morales.
+Si el RFC no tiene 12 caracteres o no coincide con el patrón definido, retorna un error de validación.
+*/
   rfcValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const rfcValue = control.value;
@@ -346,7 +389,11 @@ export class PersonaMoralComponent {
   get rfcTooltip(): string {
     return 'L = Letra, 0 = Número, A = Letra ó Número, Formato válido: LLL000000AAA';
   }
-
+/*
+configurarRFCFisicaMoral establece las validaciones para el campo RFC del formulario de concesionario.
+Se requiere que tenga exactamente 12 caracteres y coincida con el patrón RFC_MORAL_PATTERN.
+Luego, se actualiza la validez del campo.
+*/
   configurarRFCFisicaMoral() {
     this.formConcesionario['strRfc'].setValidators([
       Validators.required,
@@ -357,6 +404,11 @@ export class PersonaMoralComponent {
     this.datosConcesionarioForm.get('strRfc')?.updateValueAndValidity();
   }
 
+/*
+obtenerDocumentosTramite solicita los documentos necesarios para el trámite específico
+utilizando el identificador idTramiteRepoTarjetaCombustible. Los documentos obtenidos 
+se almacenan en listaArchivos. Si ocurre un error en la solicitud, se muestra un mensaje de error.
+*/
   obtenerDocumentosTramite() {
     let valores = {
       intIdTipoTramite: this.idTramiteRepoTarjetaCombustible
@@ -371,6 +423,12 @@ export class PersonaMoralComponent {
     });
   }
 
+/*
+observarFormularios monitorea los cambios en los formularios de concesión y concesionario. 
+Si el formulario no está en modo de modificación, detecta cuando los campos clave 
+(strNiv y strPlaca en datosConcesionForm, strRfc en datosConcesionarioForm) alcanzan la longitud esperada 
+y son válidos, lo que activa la carga automática de datos en el formulario correspondiente.
+*/
   private observarFormularios() {
     if (this.esModificacion) return;
     this.datosConcesionForm.valueChanges.subscribe((values) => {
@@ -393,10 +451,21 @@ export class PersonaMoralComponent {
     });
   }
 
+/*
+ngAfterViewInit se ejecuta después de que la vista y sus elementos hijos han sido inicializados. 
+En este caso, llama a validaCamposConAutocomplete para asegurar que los campos con autocompletado 
+se validen correctamente una vez que la vista está lista.
+*/
   ngAfterViewInit() {
     this.validaCamposConAutocomplete();
   }
 
+/*
+validaCamposConAutocomplete agrega un listener al campo de correo electrónico (strEmail) para detectar 
+cambios en su valor cuando el usuario escribe o cuando un navegador completa el campo automáticamente. 
+Esto fuerza la actualización de la validación del campo, asegurando que se reflejen cambios y errores 
+de manera inmediata.
+*/
   validaCamposConAutocomplete() {
     const strEmailElement = document.getElementById('strEmail') as HTMLInputElement;
     if (strEmailElement) {
@@ -411,6 +480,13 @@ export class PersonaMoralComponent {
     }
   }
 
+/*
+cargarDatosFormulario maneja la validación y carga de datos en los formularios, asegurando que 
+los campos requeridos estén completos antes de avanzar al siguiente paso del proceso. Si se accede 
+desde "NextStep", valida y muestra alertas en caso de errores. Si no, obtiene los datos desde un servicio 
+según el formulario, actualiza los valores y limpia los formularios siguientes en caso necesario. 
+También maneja errores de conexión y respuestas del servicio.
+*/
   cargarDatosFormulario(formulario: FormGroup, nombreFormulario: ClavesFormulario, desdeNextStep: boolean) {
     if (desdeNextStep) {
       if (this.esModificacion) {
@@ -509,6 +585,13 @@ export class PersonaMoralComponent {
     }
   }
 
+/*
+pdfSeleccionado maneja la validación y carga de archivos PDF en el formulario. 
+Verifica que el archivo sea de tipo 'application/pdf' y que no supere los 2MB. 
+Si el archivo es válido, lo convierte a Base64, actualiza el formulario y genera 
+una URL segura para su previsualización. En caso de error, muestra alertas 
+correspondientes y limpia el campo de entrada.
+*/
   pdfSeleccionado(event: Event, controlName: string) {
     const input = event.target as HTMLInputElement;
     if (input.files?.[0]) {
@@ -557,6 +640,12 @@ export class PersonaMoralComponent {
     }
   }
 
+/*
+actualizaCargaArchivos marca los documentos como cargados según el controlName recibido. 
+Se usa en la función pdfSeleccionado para actualizar indicadores de carga después de que 
+un archivo ha sido validado y agregado al formulario. Esto permite gestionar el estado 
+de carga de cada documento y realizar acciones en la UI según corresponda.
+*/
   actualizaCargaArchivos(controlName: string) {
     if (controlName) {
       switch (controlName) {
@@ -578,10 +667,19 @@ export class PersonaMoralComponent {
     }
   }
 
-  /**
-   * REGISTRO DE TRÁMITE
-   */
 
+/**
+ * Registra o actualiza un trámite de concesión dependiendo del estado del proceso.
+ * Si es una modificación, obtiene los documentos actualizados y envía la corrección.
+ * Si es un nuevo registro, recopila la información del concesionario y del vehículo,
+ * genera un JSON con los datos y lo envía al servicio correspondiente.
+ * 
+ * Muestra una alerta de confirmación antes de proceder. Si el trámite se registra
+ * exitosamente, se envía a otro servicio para su validación y procesamiento adicional.
+ * 
+ * En caso de error, maneja diferentes tipos de fallos, mostrando alertas informativas
+ * al usuario y reintentando la operación si es necesario.
+ */
   registraInformacion() {
     let urlPasarela: string;
     let json = {};
@@ -773,6 +871,15 @@ export class PersonaMoralComponent {
     });
   }
 
+/**
+ * Filtra y actualiza la lista de documentos que requieren modificación.
+ * Se eliminan los documentos aceptados previamente y se asignan los valores 
+ * actualizados desde el formulario correspondiente. 
+ * 
+ * Luego, normaliza la lista asegurando que los archivos sean correctamente 
+ * extraídos de sus valores anidados antes de almacenarlos en la variable 
+ * `documentosFiltrados`.
+ */
   obtenDocumentosParaModificar() {
     if (this.listaDocumentos) {
       const documentosFiltrados = this.listaDocumentos
@@ -826,10 +933,16 @@ export class PersonaMoralComponent {
     }
   }
 
-  /**
-   * REINICIO/LIMPIEZA FORMULARIO
-   */
 
+/**
+ * Reinicia los formularios siguientes al formulario actual, a menos que se trate de una modificación.
+ * 
+ * Si `esModificacion` es verdadero, la función no realiza ninguna acción.
+ * En caso contrario, obtiene la lista de formularios, encuentra la posición 
+ * del formulario actual y restablece todos los formularios posteriores en la lista.
+ * 
+ * @param formularioActual - Clave del formulario desde el cual se limpiarán los siguientes.
+ */
   private limpiarFormulariosSiguientes(formularioActual: ClavesFormulario) {
     if (this.esModificacion) return;
     const formularios: ClavesFormulario[] = [
@@ -843,6 +956,14 @@ export class PersonaMoralComponent {
     });
   }
 
+/**
+ * Restablece el formulario especificado a su estado inicial.
+ * 
+ * Si el formulario existe, se resetea, se marca como "prístino" (sin cambios) 
+ * y se marca como "no tocado" (sin interacción del usuario).
+ * 
+ * @param nombreFormulario - Clave del formulario a restablecer.
+ */
   private resetFormulario(nombreFormulario: ClavesFormulario) {
     const formulario = this[nombreFormulario];
     if (formulario) {
@@ -852,6 +973,14 @@ export class PersonaMoralComponent {
     }
   }
 
+  /**
+ * Reinicia el formulario y restablece el estado inicial de la vista.
+ * 
+ * - Resetea el stepper a su primer paso.
+ * - Carga los PDFs predeterminados.
+ * - Bloquea la visualización de archivos.
+ * - Redirige a la ruta '/persona-moral' sin afectar el historial de navegación.
+ */
   reiniciaFormulario() {
     this.stepper.reset();
     this.cargarDefaultPDFs();
@@ -859,10 +988,14 @@ export class PersonaMoralComponent {
     this.router.navigate(['/persona-moral'], { skipLocationChange: true });
   }
 
-  /*
-   * CONTROL ARCHIVOS
-   */
-
+ 
+/**
+ * Obtiene y procesa la lista de documentos asociados.
+ * 
+ * - Mapea la lista de archivos para crear un nuevo arreglo de documentos.
+ * - Asigna valores a los documentos según su tipo, extrayéndolos del formulario correspondiente.
+ * - Actualiza la lista de archivos con los documentos procesados.
+ */
   obtenDocumentos() {
     if (this.listaArchivos) {
       const nuevosDocumentos = this.listaArchivos.map((doc) => {
@@ -898,6 +1031,12 @@ export class PersonaMoralComponent {
     }
   }
 
+/**
+ * Deshabilita la visualización de los archivos cargados.
+ * 
+ * - Restablece los indicadores de carga de los documentos a `false`,
+ *   impidiendo su visualización hasta que sean cargados nuevamente.
+ */
   bloqueaVerArchivos() {
     this.tarjetaCircCargado = false;
     this.dictGasCargado = false;
@@ -906,10 +1045,14 @@ export class PersonaMoralComponent {
   }
 
 
-  /**
-   * UTILIDADES
-   */
 
+
+/**
+ * Obtiene el nombre del primer campo inválido dentro de un formulario.
+ * 
+ * @param formulario - FormGroup que contiene los controles a evaluar.
+ * @returns El nombre del primer campo inválido o una cadena vacía si todos son válidos.
+ */
   private obtenerPrimerCampoInvalido(formulario: FormGroup): string {
     const controles = formulario.controls;
     for (const campo in controles) {
@@ -920,6 +1063,11 @@ export class PersonaMoralComponent {
     return '';
   }
 
+/**
+ * Muestra un mensaje de error general basado en la respuesta HTTP recibida.
+ * 
+ * @param err - Objeto HttpErrorResponse que contiene la información del error.
+ */
   muestraErrorGeneral(err: HttpErrorResponse) {
     let message: string;
     if (err.error instanceof ErrorEvent) {
@@ -932,6 +1080,11 @@ export class PersonaMoralComponent {
     this.muestraError(message);
   }
 
+/**
+ * Muestra un mensaje de error en una alerta modal.
+ * 
+ * @param message - Texto del mensaje de error a mostrar.
+ */
   muestraError(message: string) {
     this.alertaUtility.mostrarAlerta({
       message: message,
@@ -944,6 +1097,10 @@ export class PersonaMoralComponent {
     });
   }
 
+/**
+ * Carga las URLs predeterminadas de los documentos PDF, asignando un archivo por defecto 
+ * a cada tipo de documento para su visualización en la interfaz.
+ */
   private cargarDefaultPDFs() {
     const defaultPdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl('assets/documents/subirArchivo.pdf');
     this.pdfUrls = {
@@ -955,6 +1112,11 @@ export class PersonaMoralComponent {
     };
   }
 
+/*
+  Muestra un modal con una imagen específica y configuraciones de animación para su aparición y desaparición.
+  No recibe parámetros y no retorna ningún valor.
+  Utiliza el servicio `alertaUtility` para gestionar la alerta, que no incluye botón de cierre y permite hacer clic fuera del modal.
+*/
   muestraModalConImagen() {
     let img = '/assets/images/LogoTlaxMoral.png';
     this.alertaUtility.mostrarAlerta({
@@ -979,6 +1141,11 @@ export class PersonaMoralComponent {
     });
   }
 
+/*
+  Obtiene la URL del endpoint correspondiente según el formulario proporcionado.
+  Recibe un parámetro `formulario` (string) y retorna un string con la URL del endpoint asociada.
+  Si el formulario no está definido, lanza un error indicando que no existe un endpoint para ese formulario.
+*/
   obtenerURLFormulario(formulario: string) {
     let endpoint = '';
     switch (formulario) {
@@ -997,16 +1164,32 @@ export class PersonaMoralComponent {
     return endpoint;
   }
 
+/*
+  Abre un modal que muestra el componente `TerminosCondicionesComponent`.
+  No recibe parámetros y no retorna ningún valor.
+  El modal se abre con un tamaño extra grande (`xl`) y centrado en la pantalla.
+*/
   openModal() {
     this.modalTerminosCondiciones.open(TerminosCondicionesComponent, { size: 'xl', centered: true });
   }
 
+/*
+  Guarda un nuevo trámite fallido en el almacenamiento local (`localStorage`).
+  Recibe un parámetro `nuevoJsonSmyt` (cualquier tipo) y lo agrega a la lista de trámites fallidos almacenada.
+  Si no existe una lista de trámites fallidos en el almacenamiento local, se crea una nueva.
+*/
   guardarTramiteFallido(nuevoJsonSmyt: any) {
     let tramitesFallidos = JSON.parse(localStorage.getItem('tramitesFallidos') || '[]');
     tramitesFallidos.push(nuevoJsonSmyt);
     localStorage.setItem('tramitesFallidos', JSON.stringify(tramitesFallidos));
   }
 
+/*
+  Reintenta registrar los trámites fallidos almacenados en `localStorage`.
+  Recupera la lista de trámites fallidos y, para cada uno, intenta registrarlo nuevamente.
+  Si el trámite se registra correctamente, se elimina de la lista de trámites fallidos en el almacenamiento local.
+  Si ocurre un error al intentar registrar un trámite, se muestra un mensaje de error en la consola.
+*/
   reintentarTramitesFallidos() {
     let tramitesFallidos = JSON.parse(localStorage.getItem('tramitesFallidos') || '[]');
     tramitesFallidos.forEach((tramite: any, index: any) => {
@@ -1022,7 +1205,11 @@ export class PersonaMoralComponent {
     });
   }
 
-  // Iniciar un intervalo que reintente los trámites cada 5 minutos
+/*
+  Inicia un proceso de reintento automático de trámites fallidos cada 5 minutos (300,000 ms).
+  Llama al método `reintentarTramitesFallidos` en intervalos regulares de tiempo.
+  No recibe parámetros y no retorna ningún valor.
+*/
   iniciarReintentos() {
     setInterval(() => {
       this.reintentarTramitesFallidos();
