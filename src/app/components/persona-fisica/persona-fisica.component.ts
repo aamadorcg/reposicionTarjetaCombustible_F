@@ -82,6 +82,9 @@ export class PersonaFisicaComponent {
     private readonly activatedRoute: ActivatedRoute
   ) { this.iniciarReintentos(); }
 
+  /**
+ * Método de inicialización del componente. Inicializa los formularios, detecta el tipo de trámite, configura el RFC, carga los PDFs por defecto, obtiene los documentos del trámite, carga la configuración del trámite desde el servicio y observa cambios en los formularios.
+ */
   ngOnInit() {
     this.inicializarFormularios();
     this.detectarTipoTramite();
@@ -96,6 +99,11 @@ export class PersonaFisicaComponent {
     this.observarFormularios();
   }
 
+  /**
+ * Detecta el tipo de trámite verificando los datos de la ruta. 
+ * Determina si es una modificación y obtiene el ID del trámite. 
+ * Si es una modificación y hay un ID válido, carga los datos del trámite.
+ */
   detectarTipoTramite() {
     this.activatedRoute.data.subscribe(data => {
       this.esModificacion = data['modo'] === 'modificar';
@@ -108,6 +116,11 @@ export class PersonaFisicaComponent {
     });
   }
 
+  /**
+ * Carga los datos del trámite a corregir. Activa el spinner, obtiene los datos del trámite desde el servicio 
+ * y asigna la información a los formularios correspondientes. Busca y carga los documentos asociados, 
+ * establece los checks de documentos y deshabilita los formularios. En caso de error, redirige a la página de no encontrado.
+ */
   cargarDatosDelTramite(idTramite: string) {
     this.cargarSpinner = true;
     this.servicios.obtenerTramiteParaCorregir(idTramite).subscribe({
@@ -142,6 +155,10 @@ export class PersonaFisicaComponent {
     this.datosConcesionarioForm.disable();
   }
 
+  /**
+ * Carga las URLs seguras de los archivos PDF correspondientes a los documentos requeridos del trámite 
+ * y los asigna a la estructura de datos para su visualización o descarga.
+ */
   cargarArchivosPDFs(
     refrendo: string,
     actaMinisterial: string,
@@ -164,6 +181,11 @@ export class PersonaFisicaComponent {
     };
   }
 
+  /**
+ * Genera una URL segura a partir de un archivo en base64. Si el archivo no está disponible, 
+ * devuelve un enlace a un archivo por defecto. Convierte el base64 en un Blob y crea una URL 
+ * segura utilizando el sanitizer.
+ */
   obtenUrlSeguro(base64: string): SafeResourceUrl {
     if (!base64) {
       return this.sanitizer.bypassSecurityTrustResourceUrl('assets/documents/subirArchivo.pdf');
@@ -174,8 +196,12 @@ export class PersonaFisicaComponent {
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
+  /**
+ * Convierte una cadena en base64 a un objeto Blob. Decodifica la cadena base64, 
+ * la transforma en un array de bytes y crea un Blob con el tipo de contenido especificado.
+ */
   creaBlobDeBase64(base64: string, contentType: string): Blob {
-    const byteCharacters = atob(base64);//Decodifica
+    const byteCharacters = atob(base64);
     const byteNumbers = new Array(byteCharacters.length);
     for (let i = 0; i < byteCharacters.length; i++) {
       byteNumbers[i] = byteCharacters.charCodeAt(i);
@@ -184,6 +210,11 @@ export class PersonaFisicaComponent {
     return new Blob([byteArray], { type: contentType });
   }
 
+  /**
+ * Establece los valores y el estado de aceptación de los documentos en el formulario. 
+ * Recorre la lista de documentos, asigna los archivos correspondientes y actualiza 
+ * los checkboxes según el estado de aceptación.
+ */
   establecerCheckDocumentos(documentos: any) {
     documentos.forEach((doc: any) => {
       const status = doc.strAceptado === 'A';
@@ -240,6 +271,12 @@ export class PersonaFisicaComponent {
     });
   }
 
+  /**
+ * Inicializa los formularios del componente. Define los controles y validaciones para 
+ * los datos de la concesión, el concesionario y los documentos de la unidad. 
+ * Algunos campos se configuran como deshabilitados y se aplican validaciones específicas 
+ * como formatos de RFC, correo electrónico y número de teléfono.
+ */
   private inicializarFormularios() {
     this.datosConcesionForm = this.formBuilder.group({
       intIdPlaca: 0,
@@ -319,6 +356,11 @@ export class PersonaFisicaComponent {
     });
   }
 
+  /**
+ * Valida que un número no tenga todos sus dígitos iguales. 
+ * Si el valor tiene 10 caracteres idénticos, devuelve un error de validación; 
+ * de lo contrario, retorna null.
+ */
   validaNoTodosIguales(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
     if (!value || value.length !== 10) {
@@ -328,6 +370,11 @@ export class PersonaFisicaComponent {
     return allCharactersAreSame ? { noTodosIguales: true } : null;
   }
 
+  /**
+ * Valida que el RFC ingresado cumpla con el formato correcto. 
+ * Verifica que tenga 13 caracteres y coincida con el patrón definido para personas físicas. 
+ * Retorna un error si el RFC es inválido, de lo contrario, retorna null.
+ */
   rfcValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const rfcValue = control.value;
@@ -346,6 +393,11 @@ export class PersonaFisicaComponent {
     return 'L = Letra, 0 = Número, A = Letra ó Número, Formato válido: LLLL000000AAA';
   }
 
+  /**
+ * Configura las validaciones del campo RFC en el formulario del concesionario. 
+ * Establece como obligatorio, define la longitud exacta de 13 caracteres y aplica 
+ * un patrón de validación para personas físicas. Luego, actualiza la validez del campo.
+ */
   configurarRFC() {
     this.formConcesionario['strRfc'].setValidators([
       Validators.required,
@@ -356,6 +408,11 @@ export class PersonaFisicaComponent {
     this.datosConcesionarioForm.get('strRfc')?.updateValueAndValidity();
   }
 
+  /**
+ * Obtiene la lista de documentos requeridos para el trámite. 
+ * Envía el ID del tipo de trámite al servicio y asigna la respuesta a la lista de archivos. 
+ * En caso de error, muestra un mensaje de error general.
+ */
   obtenerDocumentosTramite() {
     let valores = {
       intIdTipoTramite: this.idTramiteRepoTarjetaCombustible
@@ -370,6 +427,12 @@ export class PersonaFisicaComponent {
     });
   }
 
+  /**
+ * Observa los cambios en los formularios para detectar cuando están completos. 
+ * Si no es una modificación, verifica la longitud del NIV y la placa en el formulario de concesión, 
+ * y la validez del RFC en el formulario del concesionario. Si los datos son válidos, 
+ * marca el formulario como completo y carga los datos correspondientes.
+ */
   private observarFormularios() {
     if (this.esModificacion) return;
     this.datosConcesionForm.valueChanges.subscribe((values) => {
@@ -392,10 +455,19 @@ export class PersonaFisicaComponent {
     });
   }
 
+  /**
+ * Método que se ejecuta después de que la vista ha sido inicializada. 
+ * Llama a la función para validar los campos que tienen autocompletado.
+ */
   ngAfterViewInit() {
     this.validaCamposConAutocomplete();
   }
 
+  /**
+ * Agrega un evento de escucha al campo de correo electrónico para detectar cambios 
+ * cuando el usuario ingresa o modifica el valor. Marca el campo como modificado y tocado, 
+ * y actualiza su validez en el formulario del concesionario.
+ */
   validaCamposConAutocomplete() {
     const strEmailElement = document.getElementById('strEmail') as HTMLInputElement;
     if (strEmailElement) {
@@ -410,6 +482,13 @@ export class PersonaFisicaComponent {
     }
   }
 
+  /**
+ * Carga los datos en un formulario específico y gestiona la validación y navegación entre pasos. 
+ * Si se accede desde `nextStep`, valida el formulario y, en caso de ser válido, avanza al siguiente paso. 
+ * Para el formulario de concesión, muestra una alerta de confirmación antes de continuar. 
+ * Si se accede sin `nextStep`, obtiene los valores del formulario y los envía al servicio correspondiente. 
+ * Maneja errores de conexión y restablece los formularios en caso de fallo.
+ */
   cargarDatosFormulario(formulario: FormGroup, nombreFormulario: ClavesFormulario, desdeNextStep: boolean) {
     if (desdeNextStep) {
       if (this.esModificacion) {
@@ -508,6 +587,14 @@ export class PersonaFisicaComponent {
     }
   }
 
+  /**
+ * Maneja la selección de un archivo PDF en un formulario.
+ * - Verifica que el archivo sea de tipo PDF.
+ * - Valida que el tamaño no supere los 2MB.
+ * - Convierte el archivo a base64 y lo asigna al formulario.
+ * - Genera una URL segura para previsualización.
+ * - Maneja errores de validación y conversión del archivo.
+ */
   pdfSeleccionado(event: Event, controlName: string) {
     const input = event.target as HTMLInputElement;
     if (input.files?.[0]) {
@@ -556,6 +643,11 @@ export class PersonaFisicaComponent {
     }
   }
 
+  /**
+ * Actualiza el estado de carga de archivos en el formulario.
+ * - Cambia el estado de una variable booleana según el archivo cargado.
+ * - Permite rastrear qué documentos han sido subidos correctamente.
+ */
   actualizaCargaArchivos(controlName: string) {
     if (controlName) {
       switch (controlName) {
@@ -577,10 +669,15 @@ export class PersonaFisicaComponent {
     }
   }
 
-  /**
-   * REGISTRO DE TRÁMITE
-   */
 
+/*  
+   Este código maneja el registro y actualización de trámites para concesionarios.  
+   Si es una modificación, obtiene y actualiza los documentos existentes.  
+   Si es un nuevo registro, recopila datos de la concesión y del concesionario, valida la información y la envía para su procesamiento.  
+   Se implementa una confirmación antes de proceder con el registro o actualización.  
+   También maneja la carga de documentos en PDF con validaciones de formato y tamaño.  
+   En caso de error, se aplican reintentos automáticos y se muestra un mensaje al usuario.  
+*/
   registraInformacion() {
     let urlPasarela: string;
     let json = {};
@@ -772,6 +869,13 @@ export class PersonaFisicaComponent {
     });
   }
 
+  /*  
+   Función que filtra y actualiza los documentos a modificar.  
+   - Filtra los documentos que no han sido aceptados.  
+   - Asigna los archivos correspondientes desde el formulario según su descripción.  
+   - Normaliza la lista de documentos para asegurar que los valores sean correctos.  
+   - Almacena los documentos procesados en una variable para su uso posterior.  
+*/
   obtenDocumentosParaModificar() {
     if (this.listaDocumentos) {
       const documentosFiltrados = this.listaDocumentos
@@ -825,10 +929,14 @@ export class PersonaFisicaComponent {
     }
   }
 
-  /**
-   * REINICIO/LIMPIEZA FORMULARIO
-   */
 
+/*  
+   Función para limpiar los formularios siguientes al formulario actual.  
+   - No realiza ninguna acción si es una modificación.  
+   - Define una lista de formularios en orden de flujo.  
+   - Encuentra el índice del formulario actual en la lista.  
+   - Restablece todos los formularios que vienen después del formulario actual.  
+*/
   private limpiarFormulariosSiguientes(formularioActual: ClavesFormulario) {
     if (this.esModificacion) return;
     const formularios: ClavesFormulario[] = [
@@ -842,6 +950,12 @@ export class PersonaFisicaComponent {
     });
   }
 
+  /*  
+   Función para restablecer un formulario específico.  
+   - Obtiene el formulario basado en su nombre.  
+   - Si el formulario existe, lo resetea a su estado inicial.  
+   - Marca el formulario como "pristine" (sin cambios) y "untouched" (sin interacción).  
+*/
   private resetFormulario(nombreFormulario: ClavesFormulario) {
     const formulario = this[nombreFormulario];
     if (formulario) {
@@ -851,6 +965,13 @@ export class PersonaFisicaComponent {
     }
   }
 
+  /*  
+   Función para reiniciar el formulario y restablecer el estado de la interfaz.  
+   - Reinicia el stepper para volver al primer paso.  
+   - Carga los PDFs predeterminados.  
+   - Bloquea la visualización de archivos.  
+   - Redirige a la página de "persona-fisica" sin afectar el historial de navegación.  
+*/
   reiniciaFormulario() {
     this.stepper.reset();
     this.cargarDefaultPDFs();
@@ -858,10 +979,13 @@ export class PersonaFisicaComponent {
     this.router.navigate(['/persona-fisica'], { skipLocationChange: true });
   }
 
-  /*
-   * CONTROL ARCHIVOS
-   */
-
+ 
+/*  
+   Función para obtener documentos y asignar los valores correspondientes.  
+   - Crea una nueva lista de documentos con identificador y nombre, inicializando el campo de archivo vacío.  
+   - Recorre cada documento y asigna el archivo correspondiente según su nombre.  
+   - Actualiza la lista de archivos con la nueva información.  
+*/
   obtenDocumentos() {
     if (this.listaArchivos) {
       const nuevosDocumentos = this.listaArchivos.map((doc) => {
@@ -897,6 +1021,7 @@ export class PersonaFisicaComponent {
     }
   }
 
+  /* Función para bloquear la visualización de archivos cargados, reiniciando los indicadores de carga. */
   bloqueaVerArchivos() {
     this.tarjetaCircCargado = false;
     this.dictGasCargado = false;
@@ -905,10 +1030,12 @@ export class PersonaFisicaComponent {
   }
 
 
-  /**
-   * UTILIDADES
-   */
 
+/*  
+   Función para obtener el primer campo inválido de un formulario.  
+   - Recorre los controles del formulario y devuelve el nombre del primer campo inválido.  
+   - Si todos los campos son válidos, retorna una cadena vacía.  
+*/
   private obtenerPrimerCampoInvalido(formulario: FormGroup): string {
     const controles = formulario.controls;
     for (const campo in controles) {
@@ -919,6 +1046,12 @@ export class PersonaFisicaComponent {
     return '';
   }
 
+  /*  
+   Manejo de errores generales en solicitudes HTTP.  
+   - Si es un error de red, muestra un mensaje de conexión fallida.  
+   - Si el servicio no está disponible, informa al usuario.  
+   - Si hay un mensaje de error específico del servidor, lo muestra.  
+*/
   muestraErrorGeneral(err: HttpErrorResponse) {
     let message: string;
     if (err.error instanceof ErrorEvent) {
@@ -931,6 +1064,12 @@ export class PersonaFisicaComponent {
     this.muestraError(message);
   }
 
+/*  
+   Muestra un mensaje de error en una alerta modal.  
+   - Personaliza el mensaje de error.  
+   - Incluye un botón de confirmación para cerrar la alerta.  
+   - Impide que la alerta se cierre haciendo clic fuera de ella.  
+*/
   muestraError(message: string) {
     this.alertaUtility.mostrarAlerta({
       message: message,
@@ -943,6 +1082,12 @@ export class PersonaFisicaComponent {
     });
   }
 
+  /*  
+   Carga un PDF predeterminado para cada documento requerido.  
+   - Se utiliza un archivo PDF base como plantilla.  
+   - Se asigna la misma URL segura a todos los documentos iniciales.  
+   - Garantiza que los campos tengan un valor por defecto antes de la carga de archivos reales.  
+*/
   private cargarDefaultPDFs() {
     const defaultPdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl('assets/documents/subirArchivo.pdf');
     this.pdfUrls = {
@@ -954,6 +1099,13 @@ export class PersonaFisicaComponent {
     };
   }
 
+  /*  
+   Muestra un modal con una imagen específica.  
+   - Se usa una imagen predeterminada ubicada en los assets.  
+   - Se desactiva el botón de cierre para obligar interacción con la alerta.  
+   - Se permiten clics fuera del modal para cerrarlo.  
+   - Se aplican animaciones de entrada y salida para mejorar la experiencia visual.  
+*/
   muestraModalConImagen(campo: string) {
     let img = '/assets/images/LogoTlaxFisica.png';
     this.alertaUtility.mostrarAlerta({
@@ -978,6 +1130,12 @@ export class PersonaFisicaComponent {
     });
   }
 
+  /*  
+   Obtiene la URL del endpoint correspondiente a cada formulario.  
+   - Asigna la URL según el formulario recibido.  
+   - Lanza un error si el formulario no tiene un endpoint definido.  
+   - Retorna la URL correspondiente o una cadena vacía si no aplica.  
+*/
   obtenerURLFormulario(formulario: string) {
     let endpoint = '';
     switch (formulario) {
@@ -996,16 +1154,34 @@ export class PersonaFisicaComponent {
     return endpoint;
   }
 
+  /*  
+   Abre un modal con los términos y condiciones.  
+   - Utiliza el componente `TerminosCondicionesComponent`.  
+   - Configura el tamaño como extra grande ('xl') y lo centra en la pantalla.  
+*/
   openModal() {
     this.modalTerminosCondiciones.open(TerminosCondicionesComponent, { size: 'xl', centered: true });
   }
 
+  /*  
+   Función para almacenar un trámite fallido en `localStorage`.  
+   - Recupera la lista actual de trámites fallidos.  
+   - Agrega el nuevo trámite fallido a la lista.  
+   - Guarda la lista actualizada en `localStorage` para su reintento posterior.  
+*/
   guardarTramiteFallido(nuevoJsonSmyt: any) {
     let tramitesFallidos = JSON.parse(localStorage.getItem('tramitesFallidos') || '[]');
     tramitesFallidos.push(nuevoJsonSmyt);
     localStorage.setItem('tramitesFallidos', JSON.stringify(tramitesFallidos));
   }
 
+/*  
+   Función para reintentar el envío de trámites fallidos almacenados en `localStorage`.  
+   - Recupera la lista de trámites fallidos.  
+   - Intenta reenviar cada trámite mediante `registrarTramiteSmyt()`.  
+   - Si el envío es exitoso, elimina el trámite de la lista y actualiza `localStorage`.  
+   - Si falla, muestra un mensaje de error en la consola.  
+*/
   reintentarTramitesFallidos() {
     let tramitesFallidos = JSON.parse(localStorage.getItem('tramitesFallidos') || '[]');
     tramitesFallidos.forEach((tramite: any, index: any) => {
@@ -1021,7 +1197,11 @@ export class PersonaFisicaComponent {
     });
   }
 
-  // Iniciar un intervalo que reintente los trámites cada 5 minutos
+  /*   
+   Función para iniciar intentos automáticos de reenvío de trámites fallidos.  
+   - Ejecuta `reintentarTramitesFallidos()` cada 5 minutos (300,000 ms).  
+   - Permite recuperar trámites no enviados sin intervención manual.  
+*/
   iniciarReintentos() {
     setInterval(() => {
       this.reintentarTramitesFallidos();
