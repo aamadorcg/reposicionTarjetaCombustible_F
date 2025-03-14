@@ -16,6 +16,7 @@ import { RestrictedAlphanumericDirective } from './core/directives/restricted-al
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { PersonaFisicaComponent } from './components/persona-fisica/persona-fisica.component';
 import { PersonaMoralComponent } from './components/persona-moral/persona-moral.component';
+import { FieldValidateDirective } from './core/directives/field-validate.directive';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { PersonaMoralComponent } from './components/persona-moral/persona-moral.
     RestrictedAlphanumericDirective,
     NotFoundComponent,
     PersonaFisicaComponent,
-    PersonaMoralComponent
+    PersonaMoralComponent,
+    FieldValidateDirective
   ],
   imports: [
     BrowserModule,

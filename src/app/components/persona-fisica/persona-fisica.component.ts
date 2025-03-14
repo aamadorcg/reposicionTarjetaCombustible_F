@@ -328,7 +328,7 @@ export class PersonaFisicaComponent {
         Validators.minLength(10),
         Validators.maxLength(10),
         Validators.pattern(/^\d+$/),
-        this.validaNoTodosIguales.bind(this)
+        this.validarDigitosRepetidos.bind(this)
       ]
       ],
       strEmail: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]],
@@ -337,7 +337,7 @@ export class PersonaFisicaComponent {
         Validators.minLength(10),
         Validators.maxLength(10),
         Validators.pattern(/^\d+$/),
-        this.validaNoTodosIguales.bind(this)
+        this.validarDigitosRepetidos.bind(this)
       ]
       ]
 
@@ -363,13 +363,14 @@ export class PersonaFisicaComponent {
  * Si el valor tiene 10 caracteres idénticos, devuelve un error de validación; 
  * de lo contrario, retorna null.
  */
-  validaNoTodosIguales(control: AbstractControl): ValidationErrors | null {
+  validarDigitosRepetidos(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
-    if (!value || value.length !== 10) {
-      return null;
-    }
-    const allCharactersAreSame = /^(\d)\1*$/.test(value);
-    return allCharactersAreSame ? { noTodosIguales: true } : null;
+    if (!value || value.length !== 10) return null;
+  
+    const primerDigito = value[0];
+    const todosIguales = value.split('').every((char: string) => char === primerDigito);
+  
+    return todosIguales ? { uniqueDigits: true } : null;
   }
 
   /**

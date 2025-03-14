@@ -28,42 +28,20 @@
                 <div class="campo-formulario-mediano">
                   <label for="strNiv" class="form-label">NIV <b class="asteriscos">*</b></label>
                   <div class="input-container">
-                    <input appRestrictedAlphanumeric type="text" minlength="17" maxlength="17" id="strNiv"
+                    <input appRestrictedAlphanumeric type="text" id="strNiv"
                       placeholder="Escribe NIV" formControlName="strNiv" name="strNiv" autocomplete="off"
-                      class="form-control" [ngClass]="{
-                       'is-invalid': datosConcesionForm.get('strNiv')?.invalid && (datosConcesionForm.get('strNiv')?.touched || datosConcesionForm.get('strNiv')?.dirty), 
-                       'is-valid': datosConcesionForm.get('strNiv')?.valid && (datosConcesionForm.get('strNiv')?.touched || datosConcesionForm.get('strNiv')?.dirty),
-                        }" />
-                    <div class="invalid-feedback"
-                      *ngIf="datosConcesionForm.get('strNiv')?.invalid && (datosConcesionForm.get('strNiv')?.touched || datosConcesionForm.get('strNiv')?.dirty)">
-                      <ng-container *ngIf="datosConcesionForm.get('strNiv')?.hasError('required')"> Campo Obligatorio
-                      </ng-container>
-                      <ng-container *ngIf="datosConcesionForm.get('strNiv')?.hasError('minlength')"> Debe tener al menos
-                        17 caracteres </ng-container>
-                      <ng-container *ngIf="datosConcesionForm.get('strNiv')?.hasError('maxlength')"> No puede tener más
-                        de 17 caracteres </ng-container>
-                    </div>
+                      class="form-control" 
+                      [appFieldValidate]="datosConcesionForm.get('strNiv')" [minlength]="17" [maxlength]="17" [required]="true"  />
                   </div>
                 </div>
 
                 <div class="campo-formulario-mediano">
                   <label for="strPlaca" class="form-label">PLACA <b class="asteriscos">*</b></label>
                   <div class="input-container">
-                    <input appAlphanumeric type="text" minlength="7" maxlength="7" id="strPlaca"
+                    <input appAlphanumeric type="text" id="strPlaca"
                       placeholder="Escribe placa" formControlName="strPlaca" name="strPlaca" autocomplete="off"
-                      class="form-control" [ngClass]="{
-                        'is-invalid': datosConcesionForm.get('strPlaca')?.invalid && (datosConcesionForm.get('strPlaca')?.touched || datosConcesionForm.get('strPlaca')?.dirty),
-                        'is-valid': datosConcesionForm.get('strPlaca')?.valid && (datosConcesionForm.get('strPlaca')?.touched || datosConcesionForm.get('strPlaca')?.dirty)
-                      }" />
-                    <div class="invalid-feedback"
-                      *ngIf="datosConcesionForm.get('strPlaca')?.errors && (datosConcesionForm.get('strPlaca')?.touched || datosConcesionForm.get('strPlaca')?.dirty)">
-                      <ng-container *ngIf="datosConcesionForm.get('strPlaca')?.hasError('required')">Campo
-                        Obligatorio</ng-container>
-                      <ng-container *ngIf="datosConcesionForm.get('strPlaca')?.hasError('minlength')">Debe tener al
-                        menos 7 caracteres</ng-container>
-                      <ng-container *ngIf="datosConcesionForm.get('strPlaca')?.hasError('maxlength')">No puede tener más
-                        de 7 caracteres</ng-container>
-                    </div>
+                      class="form-control"
+                      [appFieldValidate]="datosConcesionForm.get('strPlaca')" [minlength]="7" [maxlength]="7" [required]="true"/>
                   </div>
                 </div>
                 <div class="campo-formulario-mediano">
@@ -153,21 +131,10 @@
                       <button type="button" class="btn icono bi bi-info-circle-fill"
                         (click)="muestraModalConImagen()"></button>
                       <input appAlphanumeric formControlName="strRfc" type="text" id="strRfc" name="strRfc"
-                        autocomplete="off" [minlength]="12"
-                        [maxlength]="12" [placeholder]="rfcPlaceholder" [matTooltip]="rfcTooltip"
-                        matTooltipPosition="above" [ngClass]="{
-                          'is-invalid': datosConcesionarioForm.get('strRfc')?.invalid && (datosConcesionarioForm.get('strRfc')?.dirty || datosConcesionarioForm.get('strRfc')?.touched),
-                          'is-valid': datosConcesionarioForm.get('strRfc')?.valid 
-                          }" class="form-control">
-                      <div class="invalid-feedback"
-                        *ngIf="datosConcesionarioForm.get('strRfc')?.errors && (datosConcesionarioForm.get('strRfc')?.dirty || datosConcesionarioForm.get('strRfc')?.touched)">
-                        <ng-container *ngIf="datosConcesionarioForm.get('strRfc')?.hasError('required')">Campo
-                          Obligatorio</ng-container>
-                        <ng-container *ngIf="datosConcesionarioForm.get('strRfc')?.hasError('minlength')">Debe tener 13
-                          caracteres</ng-container>
-                        <ng-container *ngIf="datosConcesionarioForm.get('strRfc')?.hasError('pattern')">Formato
-                          inválido</ng-container>
-                      </div>
+                        autocomplete="off" [placeholder]="rfcPlaceholder" [matTooltip]="rfcTooltip"
+                        matTooltipPosition="above" class="form-control"
+                        [appFieldValidate]="datosConcesionarioForm.get('strRfc')" [required]="true"
+                        [pattern]="'^([A-ZÑ&]{3})(\\d{6})([A-Z\\d]{3})$'" [minlength]="12" [maxlength]="12">
                     </div>
                   </div>
                 </div>
@@ -226,53 +193,22 @@
                 <div class="campo-formulario-mediano">
                   <label for="strTelefonoRepresentante" class="form-label">TELÉFONO REPRESENTANTE <b
                       class="asteriscos">*</b></label>
-                  <input appNumeric formControlName="strTelefonoRepresentante" type="text" minlength="10" maxlength="10"
+                  <input appNumeric formControlName="strTelefonoRepresentante" type="text"
                     matTooltip="Tu número de teléfono debe contener 10 números" matTooltipPosition="above"
                     id="strTelefonoRepresentante" placeholder="Escribe teléfono representante"
-                    name="strTelefonoRepresentante" autocomplete="off" class="form-control" [ngClass]="{
-                      'is-invalid': datosConcesionarioForm.get('strTelefonoRepresentante')?.invalid && (datosConcesionarioForm.get('strTelefonoRepresentante')?.dirty || datosConcesionarioForm.get('strTelefonoRepresentante')?.touched),
-                      'is-valid': datosConcesionarioForm.get('strTelefonoRepresentante')?.valid 
-                      }" />
-                  <small
-                    *ngIf="datosConcesionarioForm.get('strTelefonoRepresentante')?.hasError('required') && (datosConcesionarioForm.get('strTelefonoRepresentante')?.dirty || datosConcesionarioForm.get('strTelefonoRepresentante')?.touched)"
-                    class="text-danger error-message">
-                    Campo Obligatorio
-                  </small>
-                  <small
-                    *ngIf="datosConcesionarioForm.get('strTelefonoRepresentante')?.hasError('minlength') && (datosConcesionarioForm.get('strTelefonoRepresentante')?.dirty || datosConcesionarioForm.get('strTelefonoRepresentante')?.touched)"
-                    class="text-danger error-message">
-                    Debe tener 10 números
-                  </small>
-                  <small
-                    *ngIf="datosConcesionarioForm.get('strTelefonoRepresentante')?.hasError('maxlength') && (datosConcesionarioForm.get('strTelefonoRepresentante')?.dirty || datosConcesionarioForm.get('strTelefonoRepresentante')?.touched)"
-                    class="text-danger error-message">
-                    No puede tener más de 10 números
-                  </small>
-                  <small *ngIf="datosConcesionarioForm.get('strTelefonoRepresentante')?.hasError('noTodosIguales') && (datosConcesionarioForm.get('strTelefonoRepresentante')?.dirty || datosConcesionarioForm.get('strTelefonoRepresentante')?.touched)" 
-                  class="text-danger error-message">
-                    No puede contener los mismos dígitos
-                  </small>
+                    name="strTelefonoRepresentante" autocomplete="off" class="form-control"
+                    [appFieldValidate]="datosConcesionarioForm.get('strTelefonoRepresentante')" [required]="true"
+                    [pattern]="'^\\d{10}$'" [minlength]="10" [maxlength]="10" [validateUniqueDigits]="true"   />
                 </div>
 
                 <div class="campo-formulario-mediano">
                   <label for="strEmail" class="form-label">CORREO <b class="asteriscos">*</b></label>
                   <div class="input-container">
-                    <input appMail type="email" formControlName="strEmail" id="strEmail" [ngClass]="{
-                          'is-invalid': datosConcesionarioForm.get('strEmail')?.invalid && (datosConcesionarioForm.get('strEmail')?.dirty || datosConcesionarioForm.get('strEmail')?.touched),
-                          'is-valid': datosConcesionarioForm.get('strEmail')?.valid 
-                          }" placeholder="Escribe tu correo electrónico" name="strEmail"
-                      matTooltip="Formato correo: nombre@ejemplo.com" matTooltipPosition="above" class="form-control" />
-                      <i class="fa fa-check"></i>
-                      <small
-                      *ngIf="datosConcesionarioForm.get('strEmail')?.hasError('required') && (datosConcesionarioForm.get('strEmail')?.dirty || datosConcesionarioForm.get('strEmail')?.touched)"
-                      class="text-danger error-message">
-                      Campo Obligatorio
-                    </small>
-                    <small
-                      *ngIf="datosConcesionarioForm.get('strEmail')?.hasError('email') && (datosConcesionarioForm.get('strEmail')?.dirty || datosConcesionarioForm.get('strEmail')?.touched)"
-                      class="text-danger error-message">
-                      Correo electrónico inválido
-                    </small>
+                    <input appMail type="email" formControlName="strEmail" id="strEmail" 
+                      placeholder="Escribe tu correo electrónico" name="strEmail"
+                      matTooltip="Formato correo: nombre@ejemplo.com" matTooltipPosition="above" class="form-control"
+                      [appFieldValidate]="datosConcesionarioForm.get('strEmail')" [required]="true"
+                      [pattern]="'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'" />
                   </div>
                 </div>
 
@@ -281,32 +217,11 @@
                       class="asteriscos">*</b></label>
                   <div class="input-container">
                     <input appNumeric formControlName="strTelefonoContacto" name="strTelefonoContacto" type="text"
-                      minlength="10" maxlength="10" matTooltip="Tu número de teléfono debe contener 10 números"
+                      matTooltip="Tu número de teléfono debe contener 10 números"
                       matTooltipPosition="above" id="strTelefonoContacto" placeholder="Escribe teléfono concesionario"
-                      autocomplete="off" class="form-control" [ngClass]="{
-                        'is-invalid': datosConcesionarioForm.get('strTelefonoContacto')?.invalid && (datosConcesionarioForm.get('strTelefonoContacto')?.dirty || datosConcesionarioForm.get('strTelefonoContacto')?.touched),
-                        'is-valid': datosConcesionarioForm.get('strTelefonoContacto')?.valid 
-                        }" />
-                    <i class="fa fa-check"></i>
-                    <small
-                      *ngIf="datosConcesionarioForm.get('strTelefonoContacto')?.hasError('required') && (datosConcesionarioForm.get('strTelefonoContacto')?.dirty || datosConcesionarioForm.get('strTelefonoContacto')?.touched)"
-                      class="text-danger error-message">
-                      Campo Obligatorio
-                    </small>
-                    <small
-                      *ngIf="datosConcesionarioForm.get('strTelefonoContacto')?.hasError('minlength') && (datosConcesionarioForm.get('strTelefonoContacto')?.dirty || datosConcesionarioForm.get('strTelefonoContacto')?.touched)"
-                      class="text-danger error-message">
-                      Debe tener 10 números
-                    </small>
-                    <small
-                      *ngIf="datosConcesionarioForm.get('strTelefonoContacto')?.hasError('maxlength') && (datosConcesionarioForm.get('strTelefonoContacto')?.dirty || datosConcesionarioForm.get('strTelefonoContacto')?.touched)"
-                      class="text-danger error-message">
-                      No puede tener más de 10 números
-                    </small>
-                    <small *ngIf="datosConcesionarioForm.get('strTelefonoContacto')?.hasError('noTodosIguales') && (datosConcesionarioForm.get('strTelefonoContacto')?.dirty || datosConcesionarioForm.get('strTelefonoContacto')?.touched)" 
-                  class="text-danger error-message">
-                    No puede contener los mismos dígitos
-                  </small>
+                      autocomplete="off" class="form-control"
+                      [appFieldValidate]="datosConcesionarioForm.get('strTelefonoContacto')" [required]="true"
+                      [pattern]="'^\\d{10}$'" [minlength]="10" [maxlength]="10" [validateUniqueDigits]="true"/>
                   </div>
                 </div>
               </div>

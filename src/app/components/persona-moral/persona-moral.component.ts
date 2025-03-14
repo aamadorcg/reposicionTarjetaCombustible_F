@@ -326,7 +326,7 @@ Define los campos, establece validaciones y deshabilita aquellos que no deben se
         Validators.minLength(10),
         Validators.maxLength(10),
         Validators.pattern(/^\d+$/),
-        this.validaNoTodosIguales.bind(this)
+        this.validarDigitosRepetidos.bind(this)
       ]
       ],
       strEmail: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]],
@@ -335,7 +335,7 @@ Define los campos, establece validaciones y deshabilita aquellos que no deben se
         Validators.minLength(10),
         Validators.maxLength(10),
         Validators.pattern(/^\d+$/),
-        this.validaNoTodosIguales.bind(this)
+        this.validarDigitosRepetidos.bind(this)
       ]
       ]
 
@@ -360,14 +360,15 @@ Define los campos, establece validaciones y deshabilita aquellos que no deben se
 validaNoTodosIguales verifica si todos los dígitos de un número son iguales.
 Si el número tiene 10 caracteres y todos son idénticos, retorna un error de validación.
 */
-  validaNoTodosIguales(control: AbstractControl): ValidationErrors | null {
-    const value = control.value;
-    if (!value || value.length !== 10) {
-      return null;
-    }
-    const allCharactersAreSame = /^(\d)\1*$/.test(value);
-    return allCharactersAreSame ? { noTodosIguales: true } : null;
-  }
+validarDigitosRepetidos(control: AbstractControl): ValidationErrors | null {
+  const value = control.value;
+  if (!value || value.length !== 10) return null;
+
+  const primerDigito = value[0];
+  const todosIguales = value.split('').every((char: string) => char === primerDigito);
+
+  return todosIguales ? { uniqueDigits: true } : null;
+}
 
 /*
 rfcValidator valida que el RFC ingresado cumpla con el formato esperado para personas morales.
