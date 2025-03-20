@@ -56,6 +56,7 @@ export class PersonaFisicaComponent {
   idTramiteRepoTarjetaCombustible: number = 11;
   idTramite = "";
   configuracion: any[] = [];
+  mostrarDictamenGas = false;
 
 
   datosConcesionForm!: FormGroup;
@@ -280,8 +281,8 @@ export class PersonaFisicaComponent {
   private inicializarFormularios() {
     this.datosConcesionForm = this.formBuilder.group({
       intIdPlaca: 0,
-      strNiv: ['', [Validators.required,Validators.minLength(17), Validators.maxLength(17)]],
-      strPlaca: ['', [Validators.required,Validators.minLength(7), Validators.maxLength(7)]],
+      strNiv: ['', [Validators.required, Validators.minLength(17), Validators.maxLength(17)]],
+      strPlaca: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(7)]],
       strCveVeh: [{ value: '', disabled: true }],
       strMotor: [{ value: '', disabled: true }],
       strMarca: [{ value: '', disabled: true }],
@@ -366,10 +367,10 @@ export class PersonaFisicaComponent {
   validarDigitosRepetidos(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
     if (!value || value.length !== 10) return null;
-  
+
     const primerDigito = value[0];
     const todosIguales = value.split('').every((char: string) => char === primerDigito);
-  
+
     return todosIguales ? { uniqueDigits: true } : null;
   }
 
@@ -562,6 +563,9 @@ export class PersonaFisicaComponent {
       this.cargarSpinner = true;
       this.servicios.obtenerDatosFormulario(url, valores).subscribe({
         next: (value: any) => {
+          if (url === '/tramites/obtenerPlacaNiv') {
+            this.ocultarDocDictamenGas(value);
+          }
           this.actualizarForm = true;
           formulario.patchValue(value.data, { emitEvent: false });
           if (nombreFormulario === 'datosConcesionarioForm') {
@@ -589,6 +593,14 @@ export class PersonaFisicaComponent {
       });
     }
   }
+
+  ocultarDocDictamenGas(response: RespuestaGenerica) {
+    this.mostrarDictamenGas = response.data.strCombustible !== 'GASOLINA';
+    const control = this.formDocumentos['dictamenGas'];
+    control.setValidators(this.mostrarDictamenGas ? Validators.required : null);
+    control.updateValueAndValidity();
+  }
+
 
   /**
  * Maneja la selección de un archivo PDF en un formulario.
@@ -673,14 +685,14 @@ export class PersonaFisicaComponent {
   }
 
 
-/*  
-   Este código maneja el registro y actualización de trámites para concesionarios.  
-   Si es una modificación, obtiene y actualiza los documentos existentes.  
-   Si es un nuevo registro, recopila datos de la concesión y del concesionario, valida la información y la envía para su procesamiento.  
-   Se implementa una confirmación antes de proceder con el registro o actualización.  
-   También maneja la carga de documentos en PDF con validaciones de formato y tamaño.  
-   En caso de error, se aplican reintentos automáticos y se muestra un mensaje al usuario.  
-*/
+  /*  
+     Este código maneja el registro y actualización de trámites para concesionarios.  
+     Si es una modificación, obtiene y actualiza los documentos existentes.  
+     Si es un nuevo registro, recopila datos de la concesión y del concesionario, valida la información y la envía para su procesamiento.  
+     Se implementa una confirmación antes de proceder con el registro o actualización.  
+     También maneja la carga de documentos en PDF con validaciones de formato y tamaño.  
+     En caso de error, se aplican reintentos automáticos y se muestra un mensaje al usuario.  
+  */
   registraInformacion() {
     let urlPasarela: string;
     let json = {};
@@ -933,13 +945,13 @@ export class PersonaFisicaComponent {
   }
 
 
-/*  
-   Función para limpiar los formularios siguientes al formulario actual.  
-   - No realiza ninguna acción si es una modificación.  
-   - Define una lista de formularios en orden de flujo.  
-   - Encuentra el índice del formulario actual en la lista.  
-   - Restablece todos los formularios que vienen después del formulario actual.  
-*/
+  /*  
+     Función para limpiar los formularios siguientes al formulario actual.  
+     - No realiza ninguna acción si es una modificación.  
+     - Define una lista de formularios en orden de flujo.  
+     - Encuentra el índice del formulario actual en la lista.  
+     - Restablece todos los formularios que vienen después del formulario actual.  
+  */
   private limpiarFormulariosSiguientes(formularioActual: ClavesFormulario) {
     if (this.esModificacion) return;
     const formularios: ClavesFormulario[] = [
@@ -982,13 +994,13 @@ export class PersonaFisicaComponent {
     this.router.navigate(['/persona-fisica'], { skipLocationChange: true });
   }
 
- 
-/*  
-   Función para obtener documentos y asignar los valores correspondientes.  
-   - Crea una nueva lista de documentos con identificador y nombre, inicializando el campo de archivo vacío.  
-   - Recorre cada documento y asigna el archivo correspondiente según su nombre.  
-   - Actualiza la lista de archivos con la nueva información.  
-*/
+
+  /*  
+     Función para obtener documentos y asignar los valores correspondientes.  
+     - Crea una nueva lista de documentos con identificador y nombre, inicializando el campo de archivo vacío.  
+     - Recorre cada documento y asigna el archivo correspondiente según su nombre.  
+     - Actualiza la lista de archivos con la nueva información.  
+  */
   obtenDocumentos() {
     if (this.listaArchivos) {
       const nuevosDocumentos = this.listaArchivos.map((doc) => {
@@ -1007,7 +1019,9 @@ export class PersonaFisicaComponent {
             doc.strArchivo = this.formDocumentos['tarjetaCirculacion'].value;
             break;
           case "DICTAMEN DE GAS":
-            doc.strArchivo = this.formDocumentos['dictamenGas'].value;
+            if (this.mostrarDictamenGas) {
+              doc.strArchivo = this.formDocumentos['dictamenGas'].value;
+            }
             break;
           case "INE":
             doc.strArchivo = this.formDocumentos['ine'].value;
@@ -1034,11 +1048,11 @@ export class PersonaFisicaComponent {
 
 
 
-/*  
-   Función para obtener el primer campo inválido de un formulario.  
-   - Recorre los controles del formulario y devuelve el nombre del primer campo inválido.  
-   - Si todos los campos son válidos, retorna una cadena vacía.  
-*/
+  /*  
+     Función para obtener el primer campo inválido de un formulario.  
+     - Recorre los controles del formulario y devuelve el nombre del primer campo inválido.  
+     - Si todos los campos son válidos, retorna una cadena vacía.  
+  */
   private obtenerPrimerCampoInvalido(formulario: FormGroup): string {
     const controles = formulario.controls;
     for (const campo in controles) {
@@ -1067,12 +1081,12 @@ export class PersonaFisicaComponent {
     this.muestraError(message);
   }
 
-/*  
-   Muestra un mensaje de error en una alerta modal.  
-   - Personaliza el mensaje de error.  
-   - Incluye un botón de confirmación para cerrar la alerta.  
-   - Impide que la alerta se cierre haciendo clic fuera de ella.  
-*/
+  /*  
+     Muestra un mensaje de error en una alerta modal.  
+     - Personaliza el mensaje de error.  
+     - Incluye un botón de confirmación para cerrar la alerta.  
+     - Impide que la alerta se cierre haciendo clic fuera de ella.  
+  */
   muestraError(message: string) {
     this.alertaUtility.mostrarAlerta({
       message: message,
@@ -1178,13 +1192,13 @@ export class PersonaFisicaComponent {
     localStorage.setItem('tramitesFallidos', JSON.stringify(tramitesFallidos));
   }
 
-/*  
-   Función para reintentar el envío de trámites fallidos almacenados en `localStorage`.  
-   - Recupera la lista de trámites fallidos.  
-   - Intenta reenviar cada trámite mediante `registrarTramiteSmyt()`.  
-   - Si el envío es exitoso, elimina el trámite de la lista y actualiza `localStorage`.  
-   - Si falla, muestra un mensaje de error en la consola.  
-*/
+  /*  
+     Función para reintentar el envío de trámites fallidos almacenados en `localStorage`.  
+     - Recupera la lista de trámites fallidos.  
+     - Intenta reenviar cada trámite mediante `registrarTramiteSmyt()`.  
+     - Si el envío es exitoso, elimina el trámite de la lista y actualiza `localStorage`.  
+     - Si falla, muestra un mensaje de error en la consola.  
+  */
   reintentarTramitesFallidos() {
     let tramitesFallidos = JSON.parse(localStorage.getItem('tramitesFallidos') || '[]');
     tramitesFallidos.forEach((tramite: any, index: any) => {
