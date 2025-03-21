@@ -595,7 +595,7 @@ export class PersonaFisicaComponent {
   }
 
   ocultarDocDictamenGas(response: RespuestaGenerica) {
-    this.mostrarDictamenGas = response.data.strCombustible !== 'GASOLINA';
+    this.mostrarDictamenGas = response.data.strCombustible === 'GASOLINA';
     const control = this.formDocumentos['dictamenGas'];
     control.setValidators(this.mostrarDictamenGas ? Validators.required : null);
     control.updateValueAndValidity();
