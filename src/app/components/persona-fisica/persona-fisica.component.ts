@@ -594,6 +594,15 @@ export class PersonaFisicaComponent {
     }
   }
 
+  /**
+ * Controla la visibilidad y validación del campo `dictamenGas` en el formulario.
+ *
+ * Este método verifica si el combustible en la respuesta es "GASOLINA".
+ * Si es así, muestra el campo `dictamenGas` y lo hace obligatorio.
+ * De lo contrario, lo oculta y elimina la validación requerida.
+ *
+ * @param {RespuestaGenerica} response - Objeto de respuesta que contiene la información del combustible.
+ */
   ocultarDocDictamenGas(response: RespuestaGenerica) {
     this.mostrarDictamenGas = response.data.strCombustible === 'GASOLINA';
     const control = this.formDocumentos['dictamenGas'];
