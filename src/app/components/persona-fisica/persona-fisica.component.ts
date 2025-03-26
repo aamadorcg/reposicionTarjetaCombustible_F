@@ -653,7 +653,6 @@ export class PersonaFisicaComponent {
         input.value = '';
         return;
       }
-
       convertirPDFbase64(file).then((base64: string) => {
         this.documentosUnidadForm.patchValue({
           [controlName]: base64
@@ -661,6 +660,7 @@ export class PersonaFisicaComponent {
         const fileURL = URL.createObjectURL(file);
         this.pdfUrls[controlName] = this.sanitizer.bypassSecurityTrustResourceUrl(fileURL);
         this.actualizaCargaArchivos(controlName);
+        input.value = '';
       }).catch(() => {
         this.muestraError('Error al procesar el archivo PDF.');
         input.value = '';
@@ -687,6 +687,9 @@ export class PersonaFisicaComponent {
           break;
         case 'ine':
           this.ineCargado = true;
+          break;
+        case 'polizaSeguro':
+          this.polizaCargado = true;
           break;
         default:
           break;
@@ -999,11 +1002,21 @@ export class PersonaFisicaComponent {
 */
   reiniciaFormulario() {
     this.stepper.reset();
+    this.limpiarPdfUrls();
     this.cargarDefaultPDFs();
     this.bloqueaVerArchivos();
     this.router.navigate(['/persona-fisica'], { skipLocationChange: true });
   }
 
+
+  private limpiarPdfUrls() {
+    for (const key in this.pdfUrls) {
+      if (this.pdfUrls[key]) {
+        URL.revokeObjectURL(this.pdfUrls[key]);
+      }
+    }
+    this.pdfUrls = {};
+  }
 
   /*  
      Función para obtener documentos y asignar los valores correspondientes.  
@@ -1054,6 +1067,7 @@ export class PersonaFisicaComponent {
     this.dictGasCargado = false;
     this.pagoRefCargado = false;
     this.ineCargado = false;
+    this.polizaCargado = false;
   }
 
 
