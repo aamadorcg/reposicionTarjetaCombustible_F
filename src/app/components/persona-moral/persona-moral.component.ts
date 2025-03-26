@@ -656,6 +656,7 @@ convierte la cadena Base64 en un Blob y crea un objeto URL seguro.
         const fileURL = URL.createObjectURL(file);
         this.pdfUrls[controlName] = this.sanitizer.bypassSecurityTrustResourceUrl(fileURL);
         this.actualizaCargaArchivos(controlName);
+        input.value = '';
       }).catch(() => {
         this.muestraError('Error al procesar el archivo PDF.');
         input.value = '';
@@ -683,6 +684,9 @@ convierte la cadena Base64 en un Blob y crea un objeto URL seguro.
           break;
         case 'ine':
           this.ineCargado = true;
+          break;
+        case 'polizaSeguro':
+          this.polizaCargado = true;
           break;
         default:
           break;
@@ -1006,9 +1010,19 @@ convierte la cadena Base64 en un Blob y crea un objeto URL seguro.
  */
   reiniciaFormulario() {
     this.stepper.reset();
+    this.limpiarPdfUrls();
     this.cargarDefaultPDFs();
     this.bloqueaVerArchivos();
     this.router.navigate(['/persona-moral'], { skipLocationChange: true });
+  }
+
+  private limpiarPdfUrls() {
+    for (const key in this.pdfUrls) {
+      if (this.pdfUrls[key]) {
+        URL.revokeObjectURL(this.pdfUrls[key]);
+      }
+    }
+    this.pdfUrls = {};
   }
 
 
@@ -1065,6 +1079,7 @@ convierte la cadena Base64 en un Blob y crea un objeto URL seguro.
     this.dictGasCargado = false;
     this.pagoRefCargado = false;
     this.ineCargado = false;
+    this.polizaCargado = false;
   }
 
 
