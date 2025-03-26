@@ -126,6 +126,7 @@ export class PersonaFisicaComponent {
     this.cargarSpinner = true;
     this.servicios.obtenerTramiteParaCorregir(idTramite).subscribe({
       next: (json: RespuestaGenerica) => {
+        this.ocultarDocDictamenGas(json);
         const {
           concesionariosVo, concesionesVo, documentos
         } = json.data;

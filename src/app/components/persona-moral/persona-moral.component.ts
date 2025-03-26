@@ -125,6 +125,7 @@ export class PersonaMoralComponent {
     this.cargarSpinner = true;
     this.servicios.obtenerTramiteParaCorregir(idTramite).subscribe({
       next: (json: RespuestaGenerica) => {
+        this.ocultarDocDictamenGas(json);
         const {
           concesionariosVo, concesionesVo, documentos
         } = json.data;
@@ -1248,5 +1249,9 @@ convierte la cadena Base64 en un Blob y crea un objeto URL seguro.
 
   get formDocumentos() {
     return this.documentosUnidadForm.controls;
+  }
+
+  mostrarForm(){
+    console.log(this.formDocumentos)
   }
 }
