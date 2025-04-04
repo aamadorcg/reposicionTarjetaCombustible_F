@@ -28,7 +28,7 @@
                 <div class="campo-formulario-mediano">
                   <label for="strNiv" class="form-label">NIV <b class="asteriscos">*</b></label>
                   <div class="input-container">
-                    <input appRestrictedAlphanumeric type="text" id="strNiv"
+                    <input (input)="detectarCambio($event)" appRestrictedAlphanumeric type="text" id="strNiv"
                       placeholder="Escribe NIV" formControlName="strNiv" name="strNiv" autocomplete="off"
                       class="form-control"
                       [appFieldValidate]="datosConcesionForm.get('strNiv')" [minlength]="17" [maxlength]="17" [required]="true" />
@@ -38,7 +38,7 @@
                 <div class="campo-formulario-mediano">
                   <label for="strPlaca" class="form-label">PLACA <b class="asteriscos">*</b></label>
                   <div class="input-container">
-                    <input appAlphanumeric type="text" id="strPlaca"
+                    <input (input)="detectarCambio($event)" appAlphanumeric type="text" id="strPlaca"
                       placeholder="Escribe placa" formControlName="strPlaca" name="strPlaca" autocomplete="off"
                       class="form-control" 
                       [appFieldValidate]="datosConcesionForm.get('strPlaca')" [minlength]="7" [maxlength]="7" [required]="true"/>

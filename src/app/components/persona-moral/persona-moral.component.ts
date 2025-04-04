@@ -435,14 +435,6 @@ convierte la cadena Base64 en un Blob y crea un objeto URL seguro.
   */
   private observarFormularios() {
     if (this.esModificacion) return;
-    this.datosConcesionForm.valueChanges.subscribe((values) => {
-      if (this.actualizarForm) return;
-      const { strNiv, strPlaca } = values;
-      if (strNiv?.length === 17 && strPlaca?.length === 7) {
-        this.formularioCompleto = true;
-        this.cargarDatosFormulario(this.datosConcesionForm, 'datosConcesionForm', false);
-      }
-    });
 
     this.datosConcesionarioForm.get('strRfc')?.valueChanges.subscribe((strRfc) => {
       if (this.actualizarForm) return;
@@ -1254,6 +1246,33 @@ convierte la cadena Base64 en un Blob y crea un objeto URL seguro.
     }, 300000);
   }
 
+  /**
+* Detecta cambios en los campos del formulario y ejecuta una acción cuando se cumplen ciertas condiciones.
+*
+* @param {InputEvent} event - Evento de entrada del usuario en un campo del formulario.
+*
+* @returns {void} No retorna ningún valor.
+*
+* @description
+* - Ignora eventos no confiables (`!event.isTrusted`), evitando eventos manualmente disparados por el código.
+* - Obtiene los valores de `strNiv` y `strPlaca` del formulario `datosConcesionForm`.
+* - Verifica si:
+*   - `strNiv` tiene exactamente 17 caracteres.
+*   - `strPlaca` tiene exactamente 7 caracteres.
+* - Si ambas condiciones se cumplen, llama al método `cargarDatosFormulario` con los parámetros correspondientes.
+*/
+  detectarCambio(event: any): void {
+    if (!event.isTrusted) return;
+
+    const { strNiv, strPlaca } = this.datosConcesionForm.controls;
+    const nivLength = strNiv?.value?.length ?? 0;
+    const placaLength = strPlaca?.value?.length ?? 0;
+
+    if (nivLength === 17 && placaLength === 7) {
+      this.cargarDatosFormulario(this.datosConcesionForm, 'datosConcesionForm', false);
+    }
+  }
+
   get formConcesion() {
     return this.datosConcesionForm.controls;
   }
@@ -1266,7 +1285,7 @@ convierte la cadena Base64 en un Blob y crea un objeto URL seguro.
     return this.documentosUnidadForm.controls;
   }
 
-  mostrarForm(){
+  mostrarForm() {
     console.log(this.formDocumentos)
   }
 }
