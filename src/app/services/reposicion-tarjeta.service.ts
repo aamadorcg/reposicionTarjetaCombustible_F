@@ -26,7 +26,7 @@ export class ReposicionTarjetaService {
   Retorna la respuesta de la solicitud HTTP.
 */
   obtenerDatosFormulario(url: string, body: any) {
-    return this.http.post(`${this.apiUrlSmyt + url}`, body);
+    return this.http.post<RespuestaGenerica>(`${this.apiUrlSmyt + url}`, body);
   }
 
 /*

@@ -3,8 +3,7 @@
   <div class="container py-5 mx-auto">
     <div class="row d-flex justify-content-center">
       <div class="fondo-contenedor-principal rounded">
-        <br />
-        <div class="d-grid gap-1 d-md-flex fondo-stepper-encabezado rounded">
+        <div class="d-grid gap-1 d-md-flex fondo-stepper-encabezado rounded salto-linea-espacio-superior">
           <h6 class="tittleMoral me-auto p-1 rounded"><span><i
                 class="bi bi-people-fill"></i>&nbsp;PERSONA: MORAL </span>
           </h6>
@@ -15,7 +14,7 @@
           </div>
         </div>
         <mat-vertical-stepper [linear]="true" #stepper animationDuration="1500"
-          class="fondo-stepper rounded mat-stepper-vertical">
+          class="fondo-stepper rounded mat-stepper-vertical salto-linea-espacio-inferior">
           <!-- Step 1 - DATOS DE LA CONCESIÓN -->
           <mat-step [stepControl]="datosConcesionForm">
             <ng-template matStepLabel>
@@ -24,55 +23,33 @@
                 <span> DATOS DE LA CONCESIÓN </span>
               </h6>
             </ng-template>
-            <form [formGroup]="datosConcesionForm">
+            <form [formGroup]="datosConcesionForm" (ngSubmit)="cargarDatosFormulario(datosConcesionForm, 'datosConcesionForm',true)">
               <div class="row g-3">
-                <div class="col-12 col-md-12 col-lg-4">
+                <div class="campo-formulario-mediano">
                   <label for="strNiv" class="form-label">NIV <b class="asteriscos">*</b></label>
                   <div class="input-container">
-                    <input appRestrictedAlphanumeric type="text" minlength="17" maxlength="17" id="strNiv"
+                    <input (input)="detectarCambio($event)" appRestrictedAlphanumeric type="text" id="strNiv"
                       placeholder="Escribe NIV" formControlName="strNiv" name="strNiv" autocomplete="off"
-                      class="form-control" [ngClass]="{
-                       'is-invalid': datosConcesionForm.get('strNiv')?.invalid && (datosConcesionForm.get('strNiv')?.touched || datosConcesionForm.get('strNiv')?.dirty), 
-                       'is-valid': datosConcesionForm.get('strNiv')?.valid && (datosConcesionForm.get('strNiv')?.touched || datosConcesionForm.get('strNiv')?.dirty),
-                        }" />
-                    <div class="invalid-feedback"
-                      *ngIf="datosConcesionForm.get('strNiv')?.invalid && (datosConcesionForm.get('strNiv')?.touched || datosConcesionForm.get('strNiv')?.dirty)">
-                      <ng-container *ngIf="datosConcesionForm.get('strNiv')?.hasError('required')"> Campo Obligatorio
-                      </ng-container>
-                      <ng-container *ngIf="datosConcesionForm.get('strNiv')?.hasError('minlength')"> Debe tener al menos
-                        17 caracteres </ng-container>
-                      <ng-container *ngIf="datosConcesionForm.get('strNiv')?.hasError('maxlength')"> No puede tener más
-                        de 17 caracteres </ng-container>
-                    </div>
+                      class="form-control" 
+                      [appFieldValidate]="datosConcesionForm.get('strNiv')" [minlength]="17" [maxlength]="17" [required]="true"  />
                   </div>
                 </div>
 
-                <div class="col-12 col-md-12 col-lg-4">
+                <div class="campo-formulario-mediano">
                   <label for="strPlaca" class="form-label">PLACA <b class="asteriscos">*</b></label>
                   <div class="input-container">
-                    <input appAlphanumeric type="text" minlength="7" maxlength="7" id="strPlaca"
+                    <input (input)="detectarCambio($event)" appAlphanumeric type="text" id="strPlaca"
                       placeholder="Escribe placa" formControlName="strPlaca" name="strPlaca" autocomplete="off"
-                      class="form-control" [ngClass]="{
-                        'is-invalid': datosConcesionForm.get('strPlaca')?.invalid && (datosConcesionForm.get('strPlaca')?.touched || datosConcesionForm.get('strPlaca')?.dirty),
-                        'is-valid': datosConcesionForm.get('strPlaca')?.valid && (datosConcesionForm.get('strPlaca')?.touched || datosConcesionForm.get('strPlaca')?.dirty)
-                      }" />
-                    <div class="invalid-feedback"
-                      *ngIf="datosConcesionForm.get('strPlaca')?.errors && (datosConcesionForm.get('strPlaca')?.touched || datosConcesionForm.get('strPlaca')?.dirty)">
-                      <ng-container *ngIf="datosConcesionForm.get('strPlaca')?.hasError('required')">Campo
-                        Obligatorio</ng-container>
-                      <ng-container *ngIf="datosConcesionForm.get('strPlaca')?.hasError('minlength')">Debe tener al
-                        menos 7 caracteres</ng-container>
-                      <ng-container *ngIf="datosConcesionForm.get('strPlaca')?.hasError('maxlength')">No puede tener más
-                        de 7 caracteres</ng-container>
-                    </div>
+                      class="form-control"
+                      [appFieldValidate]="datosConcesionForm.get('strPlaca')" [minlength]="7" [maxlength]="7" [required]="true"/>
                   </div>
                 </div>
-                <div class="col-12 col-md-12 col-lg-4">
+                <div class="campo-formulario-mediano">
                   <label for="strCveVeh" class="form-label">CLAVE VEHICULAR </label><input type="text" minlength="1"
                     maxlength="7" id="strCveVeh" formControlName="strCveVeh" name="strCveVeh" autocomplete="off"
                     class="form-control" />
                 </div>
-                <div class="col-12 col-md-12 col-lg-4">
+                <div class="campo-formulario-mediano">
                   <label for="strMotor" class="form-label">NÚMERO DE MOTOR </label><input type="text" minlength="1"
                     maxlength="20" formControlName="strMotor" id="strMotor" name="strMotor" autocomplete="off"
                     class="form-control" />
@@ -81,45 +58,44 @@
                   <label for="strMarca" class="form-label">MARCA </label><input type="text" formControlName="strMarca"
                     id="strMarca" name="strMarca" autocomplete="off" class="form-control" />
                 </div>
-                <div class="col-12 col-md-12 col-lg-3">
+                <div class="campo-formulario-sm">
                   <label for="intModelo" class="form-label">MODELO </label><input type="text" minlength="4"
                     maxlength="4" formControlName="intModelo" id="intModelo" name="intModelo" autocomplete="off"
                     class="form-control" />
                 </div>
-                <div class="col-12 col-md-12 col-lg-3">
+                <div class="campo-formulario-sm">
                   <label for="strTipoVeh" class="form-label">TIPO </label><input type="text" minlength="4" maxlength="4"
                     formControlName="strTipoVeh" id="strTipoVeh" name="strTipoVeh" autocomplete="off"
                     class="form-control" />
                 </div>
-                <div class="col-12 col-md-12 col-lg-2">
+                <div class="campo-formulario-min">
                   <label for="intCapacidad" class="form-label">CAPACIDAD </label><input type="text" minlength="4"
                     maxlength="4" formControlName="intCapacidad" id="intCapacidad" name="intCapacidad"
                     autocomplete="off" class="form-control" />
                 </div>
-                <div class="col-12 col-md-12 col-lg-2">
+                <div class="campo-formulario-min">
                   <label for="intCilindros" class="form-label">CILINDROS </label><input type="text" minlength="4"
                     maxlength="4" formControlName="intCilindros" id="intCilindros" name="intCilindros"
                     autocomplete="off" class="form-control" />
                 </div>
-                <div class="col-12 col-md-12 col-lg-2">
+                <div class="campo-formulario-min">
                   <label for="strCombustible" class="form-label">COMBUSTIBLE </label><input type="text" minlength="4"
                     maxlength="4" formControlName="strCombustible" id="strCombustible" name="strCombustible"
                     autocomplete="off" class="form-control" />
                 </div>
-                <div class="col-12 col-md-12 col-lg-3">
+                <div class="campo-formulario-sm">
                   <label for="intRefrendo" class="form-label">ÚLTIMO REFRENDO PAGADO </label><input type="text"
                     minlength="4" maxlength="4" formControlName="intRefrendo" id="intRefrendo" name="intRefrendo"
                     autocomplete="off" class="form-control" />
                 </div>
-                <div class="col-12 col-md-12 col-lg-3">
+                <div class="campo-formulario-sm">
                   <label for="strNoTarjeta" class="form-label">TARJETA DE CIRCULACIÓN </label><input type="text"
                     minlength="4" maxlength="4" formControlName="strNoTarjeta" id="strNoTarjeta" name="strNoTarjeta"
                     autocomplete="off" class="form-control" />
                 </div>
               </div>
-              <br />
-              <div class="col-12 d-grid gap-1 d-md-flex justify-content-md-end">
-                <button (click)="cargarDatosFormulario(datosConcesionForm, 'datosConcesionForm',true)" mat-button
+              <div class="col-12 d-grid gap-1 d-md-flex justify-content-md-end salto-linea-espacio-superior salto-linea-espacio-inferior">
+                <button type="submit" mat-button
                   matTooltip="Siguiente paso" matTooltipPosition="above" class="text-white boton-siguiente"
                   aria-describedby="cdk-describedby-message-pdb-1-2" cdk-describedby-host="pdb-1">
                   <span class="mdc-button__label">Siguiente
@@ -132,7 +108,6 @@
                   </span>
                 </button>
               </div>
-              <br />
               <hr />
               <p class="texto-obligatorio">
                 Los campos con ( <b class="asteriscos">*</b> ) son obligatorios
@@ -147,30 +122,19 @@
                 <span> DATOS DEL CONCESIONARIO </span>
               </h6>
             </ng-template>
-            <form [formGroup]="datosConcesionarioForm">
+            <form [formGroup]="datosConcesionarioForm" (ngSubmit)="cargarDatosFormulario(datosConcesionarioForm, 'datosConcesionarioForm',true)">
               <div class="row g-3 ">
-                <div class="col-12 col-md-12 col-lg-3">
+                <div class="campo-formulario-sm">
                   <label for="strRfc" class="form-label">RFC <b class="asteriscos">*</b></label>
                   <div class="input-container">
                     <div class="input-group">
                       <button type="button" class="btn icono bi bi-info-circle-fill"
                         (click)="muestraModalConImagen()"></button>
                       <input appAlphanumeric formControlName="strRfc" type="text" id="strRfc" name="strRfc"
-                        autocomplete="off" [minlength]="12"
-                        [maxlength]="12" [placeholder]="rfcPlaceholder" [matTooltip]="rfcTooltip"
-                        matTooltipPosition="above" [ngClass]="{
-                          'is-invalid': datosConcesionarioForm.get('strRfc')?.invalid && (datosConcesionarioForm.get('strRfc')?.dirty || datosConcesionarioForm.get('strRfc')?.touched),
-                          'is-valid': datosConcesionarioForm.get('strRfc')?.valid 
-                          }" class="form-control">
-                      <div class="invalid-feedback"
-                        *ngIf="datosConcesionarioForm.get('strRfc')?.errors && (datosConcesionarioForm.get('strRfc')?.dirty || datosConcesionarioForm.get('strRfc')?.touched)">
-                        <ng-container *ngIf="datosConcesionarioForm.get('strRfc')?.hasError('required')">Campo
-                          Obligatorio</ng-container>
-                        <ng-container *ngIf="datosConcesionarioForm.get('strRfc')?.hasError('minlength')">Debe tener 13
-                          caracteres</ng-container>
-                        <ng-container *ngIf="datosConcesionarioForm.get('strRfc')?.hasError('pattern')">Formato
-                          inválido</ng-container>
-                      </div>
+                        autocomplete="off" [placeholder]="rfcPlaceholder" [matTooltip]="rfcTooltip"
+                        matTooltipPosition="above" class="form-control"
+                        [appFieldValidate]="datosConcesionarioForm.get('strRfc')" [required]="true"
+                        [pattern]="'^([A-ZÑ&]{3})(\\d{6})([A-Z\\d]{3})$'" [minlength]="12" [maxlength]="12">
                     </div>
                   </div>
                 </div>
@@ -184,34 +148,34 @@
                     type="text" minlength="4" maxlength="4" id="strCalleProp" name="strCalleProp" autocomplete="off"
                     class="form-control" />
                 </div>
-                <div class="col-12 col-md-12 col-lg-3">
+                <div class="campo-formulario-sm">
                   <label for="strNumExt" class="form-label">NÚMERO EXTERIOR </label><input formControlName="strNumExt"
                     type="text" minlength="4" maxlength="4" id="strNumExt" name="strNumExt" autocomplete="off"
                     class="form-control" />
                 </div>
-                <div class="col-12 col-md-12 col-lg-3">
+                <div class="campo-formulario-sm">
                   <label for="strNumInt" class="form-label">NÚMERO INTERIOR </label><input formControlName="strNumInt"
                     type="text" minlength="4" maxlength="4" id="strNumInt" name="strNumInt" autocomplete="off"
                     class="form-control" />
                 </div>
-                <div class="col-12 col-md-12 col-lg-4">
+                <div class="campo-formulario-mediano">
                   <label for="strEstado" class="form-label">ESTADO </label><input formControlName="strEstado"
                     type="text" minlength="4" maxlength="4" id="strEstado" name="strEstado" value="Tlaxcala"
                     autocomplete="off" class="form-control" />
                 </div>
-                <div class="col-12 col-md-12 col-lg-4">
+                <div class="campo-formulario-mediano">
                   <label for="strMunicipio" class="form-label">MUNICIPIO </label><input formControlName="strMunicipio"
                     type="text" id="strMunicipio" name="strMunicipio" autocomplete="off" class="form-control" />
                 </div>
-                <div class="col-12 col-md-12 col-lg-4">
+                <div class="campo-formulario-mediano">
                   <label for="strLocalidad" class="form-label">LOCALIDAD </label><input formControlName="strLocalidad"
                     type="text" id="strLocalidad" name="strLocalidad" autocomplete="off" class="form-control" />
                 </div>
-                <div class="col-12 col-md-12 col-lg-3">
+                <div class="campo-formulario-sm">
                   <label for="strCp" class="form-label">CÓDIGO POSTAL </label><input formControlName="strCp" type="text"
                     id="strCp" name="strCp" autocomplete="off" class="form-control" />
                 </div>
-                <div class="col-12 col-md-12 col-lg-3">
+                <div class="campo-formulario-sm">
                   <label for="strColonia" class="form-label">COLONIA </label><input formControlName="strColonia"
                     type="text" minlength="4" maxlength="4" id="strColonia" name="strColonia" autocomplete="off"
                     class="form-control" />
@@ -226,95 +190,42 @@
                 </div>
               </div>
               <div class="row g-3 ">
-                <div class="col-12 col-md-12 col-lg-4">
+                <div class="campo-formulario-mediano">
                   <label for="strTelefonoRepresentante" class="form-label">TELÉFONO REPRESENTANTE <b
                       class="asteriscos">*</b></label>
-                  <input appNumeric formControlName="strTelefonoRepresentante" type="text" minlength="10" maxlength="10"
+                  <input appNumeric formControlName="strTelefonoRepresentante" type="text"
                     matTooltip="Tu número de teléfono debe contener 10 números" matTooltipPosition="above"
                     id="strTelefonoRepresentante" placeholder="Escribe teléfono representante"
-                    name="strTelefonoRepresentante" autocomplete="off" class="form-control" [ngClass]="{
-                      'is-invalid': datosConcesionarioForm.get('strTelefonoRepresentante')?.invalid && (datosConcesionarioForm.get('strTelefonoRepresentante')?.dirty || datosConcesionarioForm.get('strTelefonoRepresentante')?.touched),
-                      'is-valid': datosConcesionarioForm.get('strTelefonoRepresentante')?.valid 
-                      }" />
-                  <small
-                    *ngIf="datosConcesionarioForm.get('strTelefonoRepresentante')?.hasError('required') && (datosConcesionarioForm.get('strTelefonoRepresentante')?.dirty || datosConcesionarioForm.get('strTelefonoRepresentante')?.touched)"
-                    class="text-danger error-message">
-                    Campo Obligatorio
-                  </small>
-                  <small
-                    *ngIf="datosConcesionarioForm.get('strTelefonoRepresentante')?.hasError('minlength') && (datosConcesionarioForm.get('strTelefonoRepresentante')?.dirty || datosConcesionarioForm.get('strTelefonoRepresentante')?.touched)"
-                    class="text-danger error-message">
-                    Debe tener 10 números
-                  </small>
-                  <small
-                    *ngIf="datosConcesionarioForm.get('strTelefonoRepresentante')?.hasError('maxlength') && (datosConcesionarioForm.get('strTelefonoRepresentante')?.dirty || datosConcesionarioForm.get('strTelefonoRepresentante')?.touched)"
-                    class="text-danger error-message">
-                    No puede tener más de 10 números
-                  </small>
-                  <small *ngIf="datosConcesionarioForm.get('strTelefonoRepresentante')?.hasError('noTodosIguales') && (datosConcesionarioForm.get('strTelefonoRepresentante')?.dirty || datosConcesionarioForm.get('strTelefonoRepresentante')?.touched)" 
-                  class="text-danger error-message">
-                    No puede contener los mismos dígitos
-                  </small>
+                    name="strTelefonoRepresentante" autocomplete="off" class="form-control"
+                    [appFieldValidate]="datosConcesionarioForm.get('strTelefonoRepresentante')" [required]="true"
+                    [pattern]="'^\\d{10}$'" [minlength]="10" [maxlength]="10" [validateUniqueDigits]="true"   />
                 </div>
 
-                <div class="col-12 col-md-12 col-lg-4">
+                <div class="campo-formulario-mediano">
                   <label for="strEmail" class="form-label">CORREO <b class="asteriscos">*</b></label>
                   <div class="input-container">
-                    <input appMail type="email" formControlName="strEmail" id="strEmail" [ngClass]="{
-                          'is-invalid': datosConcesionarioForm.get('strEmail')?.invalid && (datosConcesionarioForm.get('strEmail')?.dirty || datosConcesionarioForm.get('strEmail')?.touched),
-                          'is-valid': datosConcesionarioForm.get('strEmail')?.valid 
-                          }" placeholder="Escribe tu correo electrónico" name="strEmail"
-                      matTooltip="Formato correo: nombre@ejemplo.com" matTooltipPosition="above" class="form-control" />
-                      <i class="fa fa-check"></i>
-                      <small
-                      *ngIf="datosConcesionarioForm.get('strEmail')?.hasError('required') && (datosConcesionarioForm.get('strEmail')?.dirty || datosConcesionarioForm.get('strEmail')?.touched)"
-                      class="text-danger error-message">
-                      Campo Obligatorio
-                    </small>
-                    <small
-                      *ngIf="datosConcesionarioForm.get('strEmail')?.hasError('email') && (datosConcesionarioForm.get('strEmail')?.dirty || datosConcesionarioForm.get('strEmail')?.touched)"
-                      class="text-danger error-message">
-                      Correo electrónico inválido
-                    </small>
+                    <input appMail type="email" formControlName="strEmail" id="strEmail" 
+                      placeholder="Escribe tu correo electrónico" name="strEmail"
+                      matTooltip="Formato correo: nombre@ejemplo.com" matTooltipPosition="above" class="form-control"
+                      [appFieldValidate]="datosConcesionarioForm.get('strEmail')" [required]="true"
+                      [pattern]="'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'" />
                   </div>
                 </div>
 
-                <div class="col-12 col-md-12 col-lg-4">
+                <div class="campo-formulario-mediano">
                   <label for="strTelefonoContacto" class="form-label">TELÉFONO CONCESIONARIO <b
                       class="asteriscos">*</b></label>
                   <div class="input-container">
                     <input appNumeric formControlName="strTelefonoContacto" name="strTelefonoContacto" type="text"
-                      minlength="10" maxlength="10" matTooltip="Tu número de teléfono debe contener 10 números"
+                      matTooltip="Tu número de teléfono debe contener 10 números"
                       matTooltipPosition="above" id="strTelefonoContacto" placeholder="Escribe teléfono concesionario"
-                      autocomplete="off" class="form-control" [ngClass]="{
-                        'is-invalid': datosConcesionarioForm.get('strTelefonoContacto')?.invalid && (datosConcesionarioForm.get('strTelefonoContacto')?.dirty || datosConcesionarioForm.get('strTelefonoContacto')?.touched),
-                        'is-valid': datosConcesionarioForm.get('strTelefonoContacto')?.valid 
-                        }" />
-                    <i class="fa fa-check"></i>
-                    <small
-                      *ngIf="datosConcesionarioForm.get('strTelefonoContacto')?.hasError('required') && (datosConcesionarioForm.get('strTelefonoContacto')?.dirty || datosConcesionarioForm.get('strTelefonoContacto')?.touched)"
-                      class="text-danger error-message">
-                      Campo Obligatorio
-                    </small>
-                    <small
-                      *ngIf="datosConcesionarioForm.get('strTelefonoContacto')?.hasError('minlength') && (datosConcesionarioForm.get('strTelefonoContacto')?.dirty || datosConcesionarioForm.get('strTelefonoContacto')?.touched)"
-                      class="text-danger error-message">
-                      Debe tener 10 números
-                    </small>
-                    <small
-                      *ngIf="datosConcesionarioForm.get('strTelefonoContacto')?.hasError('maxlength') && (datosConcesionarioForm.get('strTelefonoContacto')?.dirty || datosConcesionarioForm.get('strTelefonoContacto')?.touched)"
-                      class="text-danger error-message">
-                      No puede tener más de 10 números
-                    </small>
-                    <small *ngIf="datosConcesionarioForm.get('strTelefonoContacto')?.hasError('noTodosIguales') && (datosConcesionarioForm.get('strTelefonoContacto')?.dirty || datosConcesionarioForm.get('strTelefonoContacto')?.touched)" 
-                  class="text-danger error-message">
-                    No puede contener los mismos dígitos
-                  </small>
+                      autocomplete="off" class="form-control"
+                      [appFieldValidate]="datosConcesionarioForm.get('strTelefonoContacto')" [required]="true"
+                      [pattern]="'^\\d{10}$'" [minlength]="10" [maxlength]="10" [validateUniqueDigits]="true"/>
                   </div>
                 </div>
               </div>
-              <br />
-              <div class="d-flex bd-highlight mb-3">
+              <div class="d-flex bd-highlight mb-3 salto-linea-espacio-superior salto-linea-espacio-inferior">
                 <button mat-button matStepperPrevious matTooltip="Paso anterior" matTooltipPosition="above"
                   class="mat-stepper-previous mat-mdc-tooltip-trigger btn boton-regresar text-white me-auto p-2 bd-highlight mdc-button mat-mdc-button mat-unthemed mat-mdc-button-base"
                   aria-describedby="cdk-describedby-message-ewh-1-5" cdk-describedby-host="ewh-1" type="button"><span
@@ -325,7 +236,7 @@
                         d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z">
                       </path>
                     </svg> Regresar</span></button>
-                <button (click)="cargarDatosFormulario(datosConcesionarioForm, 'datosConcesionarioForm',true)"
+                <button type="submit"
                   mat-button matTooltip="Siguiente paso" matTooltipPosition="above"
                   class="mat-mdc-tooltip-trigger btn boton-siguiente me-md-2 text-white mdc-button mat-mdc-button mat-unthemed mat-mdc-button-base"
                   aria-describedby="cdk-describedby-message-ewh-1-2" cdk-describedby-host="ewh-1">
@@ -337,7 +248,6 @@
                     </svg></span>
                 </button>
               </div>
-              <br />
               <hr />
               <p class="texto-obligatorio">
                 Los campos con ( <b class="asteriscos">*</b> ) son obligatorios
@@ -352,10 +262,10 @@
                 <span> DOCUMENTOS DE LA UNIDAD </span>
               </h6>
             </ng-template>
-            <form [formGroup]="documentosUnidadForm"><br><br>
-              <div class="container alert terminos shadow-lg rounded">
+            <form [formGroup]="documentosUnidadForm" (ngSubmit)="registraInformacion()">
+              <div class="container alert terminos shadow-lg rounded salto-linea-espacio-superior">
                 <div class="row g-3 justify-content-center">
-                  <p> Adjunta los documentos solicitados en formato <b>.pdf</b><br> Has uso de las herramientas <svg
+                  <p> Adjunta los documentos solicitados en formato <b>.pdf</b><p> Haz uso de las herramientas <svg
                       matTooltip="Seleccionar Documento" matTooltipPosition="left" xmlns="http://www.w3.org/2000/svg"
                       width="20" height="20" fill="currentColor" viewBox="0 0 16 16"
                       class="mat-mdc-tooltip-trigger bi bi-upload buton-subir-archivo"
@@ -460,7 +370,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="card cards me-2 mt-2" style="width: 18rem;">
+                <div *ngIf="mostrarDictamenGas" class="card cards me-2 mt-2" style="width: 18rem;">
                   <div class="card-body">
                     <iframe width="100%" height="300" class="rounded" [src]="pdfUrls['dictamenGas']"></iframe>
                     <div class="text-center">
@@ -585,8 +495,7 @@
               </div>
               <div class="row g-3  mt-3">
                 <div class="row g-3 alert terminos shadow-lg p-3 mb-5 rounded">
-                  <br />
-                  <figure>
+                  <figure class="salto-linea-espacio-superior">
                     <blockquote class="blockquote">
                       <p>
                         Acepto que los servicios que a través de este medio se
@@ -623,7 +532,7 @@
                     Regresar</span><span class="mat-mdc-focus-indicator"></span><span matRipple
                     class="mat-ripple mat-mdc-button-ripple"></span><span
                     class="mat-mdc-button-touch-target"></span></button><button
-                  [disabled]="this.documentosUnidadForm.invalid" (click)="registraInformacion()"
+                  [disabled]="this.documentosUnidadForm.invalid" type="submit"
                   matTooltip="Siguiente paso" matTooltipPosition="above"
                   class="mat-mdc-tooltip-trigger btn boton-siguiente me-md-2 text-white mdc-button mat-mdc-button mat-unthemed mat-mdc-button-base"
                   aria-describedby="cdk-describedby-message-hnv-1-2" cdk-describedby-host="hnv-1">
@@ -636,7 +545,6 @@
             </form>
           </mat-step>
         </mat-vertical-stepper>
-        <br />
       </div>
     </div>
   </div>

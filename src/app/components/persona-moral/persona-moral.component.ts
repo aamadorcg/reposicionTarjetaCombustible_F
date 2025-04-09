@@ -56,7 +56,7 @@ export class PersonaMoralComponent {
   idTramiteRepoTarjetaCombustible: number = 11;
   idTramite = "";
   configuracion: any[] = [];
-
+  mostrarDictamenGas = false;
 
   datosConcesionForm!: FormGroup;
   datosConcesionarioForm!: FormGroup;
@@ -82,10 +82,10 @@ export class PersonaMoralComponent {
     private readonly activatedRoute: ActivatedRoute
   ) { this.iniciarReintentos(); }
 
-/*
-ngOnInit() inicializa formularios, configura validaciones, carga PDFs y documentos, 
-obtiene la configuración del trámite y observa cambios en los formularios.
-*/
+  /*
+  ngOnInit() inicializa formularios, configura validaciones, carga PDFs y documentos, 
+  obtiene la configuración del trámite y observa cambios en los formularios.
+  */
   ngOnInit() {
     this.inicializarFormularios();
     this.detectarTipoTramite();
@@ -100,10 +100,10 @@ obtiene la configuración del trámite y observa cambios en los formularios.
     this.observarFormularios();
   }
 
-/*
-detectarTipoTramite() determina si el trámite es una modificación, obtiene el ID del trámite 
-de la URL y, si es necesario, carga sus datos.
-*/
+  /*
+  detectarTipoTramite() determina si el trámite es una modificación, obtiene el ID del trámite 
+  de la URL y, si es necesario, carga sus datos.
+  */
   detectarTipoTramite() {
     this.activatedRoute.data.subscribe(data => {
       this.esModificacion = data['modo'] === 'modificar';
@@ -116,15 +116,16 @@ de la URL y, si es necesario, carga sus datos.
     });
   }
 
-/*
-cargarDatosDelTramite(idTramite) obtiene y carga los datos de un trámite específico, 
-actualiza los formularios con la información recibida, establece los documentos asociados 
-y maneja posibles errores redirigiendo a una página de "not found".
-*/
+  /*
+  cargarDatosDelTramite(idTramite) obtiene y carga los datos de un trámite específico, 
+  actualiza los formularios con la información recibida, establece los documentos asociados 
+  y maneja posibles errores redirigiendo a una página de "not found".
+  */
   cargarDatosDelTramite(idTramite: string) {
     this.cargarSpinner = true;
     this.servicios.obtenerTramiteParaCorregir(idTramite).subscribe({
       next: (json: RespuestaGenerica) => {
+        this.ocultarDocDictamenGas(json);
         const {
           concesionariosVo, concesionesVo, documentos
         } = json.data;
@@ -196,11 +197,11 @@ convierte la cadena Base64 en un Blob y crea un objeto URL seguro.
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
-/*
-creaBlobDeBase64 convierte una cadena Base64 en un Blob. 
-Decodifica la cadena, la transforma en un array de bytes 
-y genera un Blob con el tipo de contenido especificado.
-*/
+  /*
+  creaBlobDeBase64 convierte una cadena Base64 en un Blob. 
+  Decodifica la cadena, la transforma en un array de bytes 
+  y genera un Blob con el tipo de contenido especificado.
+  */
   creaBlobDeBase64(base64: string, contentType: string): Blob {
     const byteCharacters = atob(base64);//Decodifica
     const byteNumbers = new Array(byteCharacters.length);
@@ -211,10 +212,10 @@ y genera un Blob con el tipo de contenido especificado.
     return new Blob([byteArray], { type: contentType });
   }
 
-/*
-establecerCheckDocumentos actualiza el formulario con los documentos proporcionados. 
-Cada documento se asigna a su campo correspondiente junto con su estado de aceptación.
-*/
+  /*
+  establecerCheckDocumentos actualiza el formulario con los documentos proporcionados. 
+  Cada documento se asigna a su campo correspondiente junto con su estado de aceptación.
+  */
   establecerCheckDocumentos(documentos: any) {
     documentos.forEach((doc: any) => {
       const status = doc.strAceptado === 'A';
@@ -271,15 +272,15 @@ Cada documento se asigna a su campo correspondiente junto con su estado de acept
     });
   }
 
-/*
-inicializarFormularios configura los formularios de concesión, concesionario y documentos de la unidad.
-Define los campos, establece validaciones y deshabilita aquellos que no deben ser editables.
-*/
+  /*
+  inicializarFormularios configura los formularios de concesión, concesionario y documentos de la unidad.
+  Define los campos, establece validaciones y deshabilita aquellos que no deben ser editables.
+  */
   private inicializarFormularios() {
     this.datosConcesionForm = this.formBuilder.group({
       intIdPlaca: 0,
-      strNiv: ['', Validators.required],
-      strPlaca: ['', Validators.required],
+      strNiv: ['', [Validators.required, Validators.minLength(17), Validators.maxLength(17)]],
+      strPlaca: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(7)]],
       strCveVeh: [{ value: '', disabled: true }],
       strMotor: [{ value: '', disabled: true }],
       strMarca: [{ value: '', disabled: true }],
@@ -324,16 +325,18 @@ Define los campos, establece validaciones y deshabilita aquellos que no deben se
       strTelefonoRepresentante: ['', [
         Validators.required,
         Validators.minLength(10),
+        Validators.maxLength(10),
         Validators.pattern(/^\d+$/),
-        this.validaNoTodosIguales.bind(this)
+        this.validarDigitosRepetidos.bind(this)
       ]
       ],
       strEmail: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]],
       strTelefonoContacto: ['', [
         Validators.required,
         Validators.minLength(10),
+        Validators.maxLength(10),
         Validators.pattern(/^\d+$/),
-        this.validaNoTodosIguales.bind(this)
+        this.validarDigitosRepetidos.bind(this)
       ]
       ]
 
@@ -354,23 +357,24 @@ Define los campos, establece validaciones y deshabilita aquellos que no deben se
     });
   }
 
-/*
-validaNoTodosIguales verifica si todos los dígitos de un número son iguales.
-Si el número tiene 10 caracteres y todos son idénticos, retorna un error de validación.
-*/
-  validaNoTodosIguales(control: AbstractControl): ValidationErrors | null {
+  /*
+  validaNoTodosIguales verifica si todos los dígitos de un número son iguales.
+  Si el número tiene 10 caracteres y todos son idénticos, retorna un error de validación.
+  */
+  validarDigitosRepetidos(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
-    if (!value || value.length !== 10) {
-      return null;
-    }
-    const allCharactersAreSame = /^(\d)\1*$/.test(value);
-    return allCharactersAreSame ? { noTodosIguales: true } : null;
+    if (!value || value.length !== 10) return null;
+
+    const primerDigito = value[0];
+    const todosIguales = value.split('').every((char: string) => char === primerDigito);
+
+    return todosIguales ? { uniqueDigits: true } : null;
   }
 
-/*
-rfcValidator valida que el RFC ingresado cumpla con el formato esperado para personas morales.
-Si el RFC no tiene 12 caracteres o no coincide con el patrón definido, retorna un error de validación.
-*/
+  /*
+  rfcValidator valida que el RFC ingresado cumpla con el formato esperado para personas morales.
+  Si el RFC no tiene 12 caracteres o no coincide con el patrón definido, retorna un error de validación.
+  */
   rfcValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const rfcValue = control.value;
@@ -389,11 +393,11 @@ Si el RFC no tiene 12 caracteres o no coincide con el patrón definido, retorna 
   get rfcTooltip(): string {
     return 'L = Letra, 0 = Número, A = Letra ó Número, Formato válido: LLL000000AAA';
   }
-/*
-configurarRFCFisicaMoral establece las validaciones para el campo RFC del formulario de concesionario.
-Se requiere que tenga exactamente 12 caracteres y coincida con el patrón RFC_MORAL_PATTERN.
-Luego, se actualiza la validez del campo.
-*/
+  /*
+  configurarRFCFisicaMoral establece las validaciones para el campo RFC del formulario de concesionario.
+  Se requiere que tenga exactamente 12 caracteres y coincida con el patrón RFC_MORAL_PATTERN.
+  Luego, se actualiza la validez del campo.
+  */
   configurarRFCFisicaMoral() {
     this.formConcesionario['strRfc'].setValidators([
       Validators.required,
@@ -404,11 +408,11 @@ Luego, se actualiza la validez del campo.
     this.datosConcesionarioForm.get('strRfc')?.updateValueAndValidity();
   }
 
-/*
-obtenerDocumentosTramite solicita los documentos necesarios para el trámite específico
-utilizando el identificador idTramiteRepoTarjetaCombustible. Los documentos obtenidos 
-se almacenan en listaArchivos. Si ocurre un error en la solicitud, se muestra un mensaje de error.
-*/
+  /*
+  obtenerDocumentosTramite solicita los documentos necesarios para el trámite específico
+  utilizando el identificador idTramiteRepoTarjetaCombustible. Los documentos obtenidos 
+  se almacenan en listaArchivos. Si ocurre un error en la solicitud, se muestra un mensaje de error.
+  */
   obtenerDocumentosTramite() {
     let valores = {
       intIdTipoTramite: this.idTramiteRepoTarjetaCombustible
@@ -423,22 +427,14 @@ se almacenan en listaArchivos. Si ocurre un error en la solicitud, se muestra un
     });
   }
 
-/*
-observarFormularios monitorea los cambios en los formularios de concesión y concesionario. 
-Si el formulario no está en modo de modificación, detecta cuando los campos clave 
-(strNiv y strPlaca en datosConcesionForm, strRfc en datosConcesionarioForm) alcanzan la longitud esperada 
-y son válidos, lo que activa la carga automática de datos en el formulario correspondiente.
-*/
+  /*
+  observarFormularios monitorea los cambios en los formularios de concesión y concesionario. 
+  Si el formulario no está en modo de modificación, detecta cuando los campos clave 
+  (strNiv y strPlaca en datosConcesionForm, strRfc en datosConcesionarioForm) alcanzan la longitud esperada 
+  y son válidos, lo que activa la carga automática de datos en el formulario correspondiente.
+  */
   private observarFormularios() {
     if (this.esModificacion) return;
-    this.datosConcesionForm.valueChanges.subscribe((values) => {
-      if (this.actualizarForm) return;
-      const { strNiv, strPlaca } = values;
-      if (strNiv?.length === 17 && strPlaca?.length === 7) {
-        this.formularioCompleto = true;
-        this.cargarDatosFormulario(this.datosConcesionForm, 'datosConcesionForm', false);
-      }
-    });
 
     this.datosConcesionarioForm.get('strRfc')?.valueChanges.subscribe((strRfc) => {
       if (this.actualizarForm) return;
@@ -451,21 +447,21 @@ y son válidos, lo que activa la carga automática de datos en el formulario cor
     });
   }
 
-/*
-ngAfterViewInit se ejecuta después de que la vista y sus elementos hijos han sido inicializados. 
-En este caso, llama a validaCamposConAutocomplete para asegurar que los campos con autocompletado 
-se validen correctamente una vez que la vista está lista.
-*/
+  /*
+  ngAfterViewInit se ejecuta después de que la vista y sus elementos hijos han sido inicializados. 
+  En este caso, llama a validaCamposConAutocomplete para asegurar que los campos con autocompletado 
+  se validen correctamente una vez que la vista está lista.
+  */
   ngAfterViewInit() {
     this.validaCamposConAutocomplete();
   }
 
-/*
-validaCamposConAutocomplete agrega un listener al campo de correo electrónico (strEmail) para detectar 
-cambios en su valor cuando el usuario escribe o cuando un navegador completa el campo automáticamente. 
-Esto fuerza la actualización de la validación del campo, asegurando que se reflejen cambios y errores 
-de manera inmediata.
-*/
+  /*
+  validaCamposConAutocomplete agrega un listener al campo de correo electrónico (strEmail) para detectar 
+  cambios en su valor cuando el usuario escribe o cuando un navegador completa el campo automáticamente. 
+  Esto fuerza la actualización de la validación del campo, asegurando que se reflejen cambios y errores 
+  de manera inmediata.
+  */
   validaCamposConAutocomplete() {
     const strEmailElement = document.getElementById('strEmail') as HTMLInputElement;
     if (strEmailElement) {
@@ -480,13 +476,13 @@ de manera inmediata.
     }
   }
 
-/*
-cargarDatosFormulario maneja la validación y carga de datos en los formularios, asegurando que 
-los campos requeridos estén completos antes de avanzar al siguiente paso del proceso. Si se accede 
-desde "NextStep", valida y muestra alertas en caso de errores. Si no, obtiene los datos desde un servicio 
-según el formulario, actualiza los valores y limpia los formularios siguientes en caso necesario. 
-También maneja errores de conexión y respuestas del servicio.
-*/
+  /*
+  cargarDatosFormulario maneja la validación y carga de datos en los formularios, asegurando que 
+  los campos requeridos estén completos antes de avanzar al siguiente paso del proceso. Si se accede 
+  desde "NextStep", valida y muestra alertas en caso de errores. Si no, obtiene los datos desde un servicio 
+  según el formulario, actualiza los valores y limpia los formularios siguientes en caso necesario. 
+  También maneja errores de conexión y respuestas del servicio.
+  */
   cargarDatosFormulario(formulario: FormGroup, nombreFormulario: ClavesFormulario, desdeNextStep: boolean) {
     if (desdeNextStep) {
       if (this.esModificacion) {
@@ -557,6 +553,9 @@ También maneja errores de conexión y respuestas del servicio.
       this.cargarSpinner = true;
       this.servicios.obtenerDatosFormulario(url, valores).subscribe({
         next: (value: any) => {
+          if (url === '/tramites/obtenerPlacaNiv') {
+            this.ocultarDocDictamenGas(value);
+          }
           this.actualizarForm = true;
           formulario.patchValue(value.data, { emitEvent: false });
           if (nombreFormulario === 'datosConcesionarioForm') {
@@ -571,7 +570,7 @@ También maneja errores de conexión y respuestas del servicio.
           if (err.error instanceof ErrorEvent) {
             message = 'Ocurrió un problema con la conexión de red. Por favor, verifica tu conexión a internet.';
           } else if (err.status === 0) {
-            message = 'El servicio no está disponible en este momento.<br> Intente nuevamente más tarde.';
+            message = 'El servicio no está disponible en este momento.<p> Intente nuevamente más tarde.';
           } else {
             message = err.error.strMessage;
           }
@@ -585,13 +584,29 @@ También maneja errores de conexión y respuestas del servicio.
     }
   }
 
-/*
-pdfSeleccionado maneja la validación y carga de archivos PDF en el formulario. 
-Verifica que el archivo sea de tipo 'application/pdf' y que no supere los 2MB. 
-Si el archivo es válido, lo convierte a Base64, actualiza el formulario y genera 
-una URL segura para su previsualización. En caso de error, muestra alertas 
-correspondientes y limpia el campo de entrada.
-*/
+  /**
+ * Controla la visibilidad y validación del campo `dictamenGas` en el formulario.
+ *
+ * Este método verifica si el combustible en la respuesta es "GASOLINA".
+ * Si es así, muestra el campo `dictamenGas` y lo hace obligatorio.
+ * De lo contrario, lo oculta y elimina la validación requerida.
+ *
+ * @param {RespuestaGenerica} response - Objeto de respuesta que contiene la información del combustible.
+ */
+  ocultarDocDictamenGas(response: RespuestaGenerica) {
+    this.mostrarDictamenGas = response.data.strCombustible === 'GASOLINA';
+    const control = this.formDocumentos['dictamenGas'];
+    control.setValidators(this.mostrarDictamenGas ? Validators.required : null);
+    control.updateValueAndValidity();
+  }
+
+  /*
+  pdfSeleccionado maneja la validación y carga de archivos PDF en el formulario. 
+  Verifica que el archivo sea de tipo 'application/pdf' y que no supere los 2MB. 
+  Si el archivo es válido, lo convierte a Base64, actualiza el formulario y genera 
+  una URL segura para su previsualización. En caso de error, muestra alertas 
+  correspondientes y limpia el campo de entrada.
+  */
   pdfSeleccionado(event: Event, controlName: string) {
     const input = event.target as HTMLInputElement;
     if (input.files?.[0]) {
@@ -633,6 +648,7 @@ correspondientes y limpia el campo de entrada.
         const fileURL = URL.createObjectURL(file);
         this.pdfUrls[controlName] = this.sanitizer.bypassSecurityTrustResourceUrl(fileURL);
         this.actualizaCargaArchivos(controlName);
+        input.value = '';
       }).catch(() => {
         this.muestraError('Error al procesar el archivo PDF.');
         input.value = '';
@@ -640,12 +656,12 @@ correspondientes y limpia el campo de entrada.
     }
   }
 
-/*
-actualizaCargaArchivos marca los documentos como cargados según el controlName recibido. 
-Se usa en la función pdfSeleccionado para actualizar indicadores de carga después de que 
-un archivo ha sido validado y agregado al formulario. Esto permite gestionar el estado 
-de carga de cada documento y realizar acciones en la UI según corresponda.
-*/
+  /*
+  actualizaCargaArchivos marca los documentos como cargados según el controlName recibido. 
+  Se usa en la función pdfSeleccionado para actualizar indicadores de carga después de que 
+  un archivo ha sido validado y agregado al formulario. Esto permite gestionar el estado 
+  de carga de cada documento y realizar acciones en la UI según corresponda.
+  */
   actualizaCargaArchivos(controlName: string) {
     if (controlName) {
       switch (controlName) {
@@ -661,6 +677,9 @@ de carga de cada documento y realizar acciones en la UI según corresponda.
         case 'ine':
           this.ineCargado = true;
           break;
+        case 'polizaSeguro':
+          this.polizaCargado = true;
+          break;
         default:
           break;
       }
@@ -668,18 +687,18 @@ de carga de cada documento y realizar acciones en la UI según corresponda.
   }
 
 
-/**
- * Registra o actualiza un trámite de concesión dependiendo del estado del proceso.
- * Si es una modificación, obtiene los documentos actualizados y envía la corrección.
- * Si es un nuevo registro, recopila la información del concesionario y del vehículo,
- * genera un JSON con los datos y lo envía al servicio correspondiente.
- * 
- * Muestra una alerta de confirmación antes de proceder. Si el trámite se registra
- * exitosamente, se envía a otro servicio para su validación y procesamiento adicional.
- * 
- * En caso de error, maneja diferentes tipos de fallos, mostrando alertas informativas
- * al usuario y reintentando la operación si es necesario.
- */
+  /**
+   * Registra o actualiza un trámite de concesión dependiendo del estado del proceso.
+   * Si es una modificación, obtiene los documentos actualizados y envía la corrección.
+   * Si es un nuevo registro, recopila la información del concesionario y del vehículo,
+   * genera un JSON con los datos y lo envía al servicio correspondiente.
+   * 
+   * Muestra una alerta de confirmación antes de proceder. Si el trámite se registra
+   * exitosamente, se envía a otro servicio para su validación y procesamiento adicional.
+   * 
+   * En caso de error, maneja diferentes tipos de fallos, mostrando alertas informativas
+   * al usuario y reintentando la operación si es necesario.
+   */
   registraInformacion() {
     let urlPasarela: string;
     let json = {};
@@ -785,7 +804,7 @@ de carga de cada documento y realizar acciones en la UI según corresponda.
               if (err.error instanceof ErrorEvent) {
                 message = 'Ocurrió un problema con la conexión de red. Por favor, verifica tu conexión a internet.';
               } else if (err.status === 0) {
-                message = 'El servicio no está disponible en este momento.<br> Intente nuevamente más tarde.';
+                message = 'El servicio no está disponible en este momento.<p> Intente nuevamente más tarde.';
               } else {
                 message = err.error.strMessage;
               }
@@ -837,7 +856,7 @@ de carga de cada documento y realizar acciones en la UI según corresponda.
                     En un lapso de 24 a 48 horas notificaremos a través de tu <b>correo electrónico:</b>
                     <b><p style="color: #a11a5c;">${email}</p></b>
                     la información sobre el seguimiento al trámite por parte de SMyT.
-                    <br>
+                    <p>
                     <h5><b>Folio Trámite: ${strCodigo}</b></h5>
                     Gracias.
                   </div>
@@ -871,15 +890,15 @@ de carga de cada documento y realizar acciones en la UI según corresponda.
     });
   }
 
-/**
- * Filtra y actualiza la lista de documentos que requieren modificación.
- * Se eliminan los documentos aceptados previamente y se asignan los valores 
- * actualizados desde el formulario correspondiente. 
- * 
- * Luego, normaliza la lista asegurando que los archivos sean correctamente 
- * extraídos de sus valores anidados antes de almacenarlos en la variable 
- * `documentosFiltrados`.
- */
+  /**
+   * Filtra y actualiza la lista de documentos que requieren modificación.
+   * Se eliminan los documentos aceptados previamente y se asignan los valores 
+   * actualizados desde el formulario correspondiente. 
+   * 
+   * Luego, normaliza la lista asegurando que los archivos sean correctamente 
+   * extraídos de sus valores anidados antes de almacenarlos en la variable 
+   * `documentosFiltrados`.
+   */
   obtenDocumentosParaModificar() {
     if (this.listaDocumentos) {
       const documentosFiltrados = this.listaDocumentos
@@ -934,15 +953,15 @@ de carga de cada documento y realizar acciones en la UI según corresponda.
   }
 
 
-/**
- * Reinicia los formularios siguientes al formulario actual, a menos que se trate de una modificación.
- * 
- * Si `esModificacion` es verdadero, la función no realiza ninguna acción.
- * En caso contrario, obtiene la lista de formularios, encuentra la posición 
- * del formulario actual y restablece todos los formularios posteriores en la lista.
- * 
- * @param formularioActual - Clave del formulario desde el cual se limpiarán los siguientes.
- */
+  /**
+   * Reinicia los formularios siguientes al formulario actual, a menos que se trate de una modificación.
+   * 
+   * Si `esModificacion` es verdadero, la función no realiza ninguna acción.
+   * En caso contrario, obtiene la lista de formularios, encuentra la posición 
+   * del formulario actual y restablece todos los formularios posteriores en la lista.
+   * 
+   * @param formularioActual - Clave del formulario desde el cual se limpiarán los siguientes.
+   */
   private limpiarFormulariosSiguientes(formularioActual: ClavesFormulario) {
     if (this.esModificacion) return;
     const formularios: ClavesFormulario[] = [
@@ -956,14 +975,14 @@ de carga de cada documento y realizar acciones en la UI según corresponda.
     });
   }
 
-/**
- * Restablece el formulario especificado a su estado inicial.
- * 
- * Si el formulario existe, se resetea, se marca como "prístino" (sin cambios) 
- * y se marca como "no tocado" (sin interacción del usuario).
- * 
- * @param nombreFormulario - Clave del formulario a restablecer.
- */
+  /**
+   * Restablece el formulario especificado a su estado inicial.
+   * 
+   * Si el formulario existe, se resetea, se marca como "prístino" (sin cambios) 
+   * y se marca como "no tocado" (sin interacción del usuario).
+   * 
+   * @param nombreFormulario - Clave del formulario a restablecer.
+   */
   private resetFormulario(nombreFormulario: ClavesFormulario) {
     const formulario = this[nombreFormulario];
     if (formulario) {
@@ -983,19 +1002,29 @@ de carga de cada documento y realizar acciones en la UI según corresponda.
  */
   reiniciaFormulario() {
     this.stepper.reset();
+    this.limpiarPdfUrls();
     this.cargarDefaultPDFs();
     this.bloqueaVerArchivos();
     this.router.navigate(['/persona-moral'], { skipLocationChange: true });
   }
 
- 
-/**
- * Obtiene y procesa la lista de documentos asociados.
- * 
- * - Mapea la lista de archivos para crear un nuevo arreglo de documentos.
- * - Asigna valores a los documentos según su tipo, extrayéndolos del formulario correspondiente.
- * - Actualiza la lista de archivos con los documentos procesados.
- */
+  private limpiarPdfUrls() {
+    for (const key in this.pdfUrls) {
+      if (this.pdfUrls[key]) {
+        URL.revokeObjectURL(this.pdfUrls[key]);
+      }
+    }
+    this.pdfUrls = {};
+  }
+
+
+  /**
+   * Obtiene y procesa la lista de documentos asociados.
+   * 
+   * - Mapea la lista de archivos para crear un nuevo arreglo de documentos.
+   * - Asigna valores a los documentos según su tipo, extrayéndolos del formulario correspondiente.
+   * - Actualiza la lista de archivos con los documentos procesados.
+   */
   obtenDocumentos() {
     if (this.listaArchivos) {
       const nuevosDocumentos = this.listaArchivos.map((doc) => {
@@ -1031,28 +1060,29 @@ de carga de cada documento y realizar acciones en la UI según corresponda.
     }
   }
 
-/**
- * Deshabilita la visualización de los archivos cargados.
- * 
- * - Restablece los indicadores de carga de los documentos a `false`,
- *   impidiendo su visualización hasta que sean cargados nuevamente.
- */
+  /**
+   * Deshabilita la visualización de los archivos cargados.
+   * 
+   * - Restablece los indicadores de carga de los documentos a `false`,
+   *   impidiendo su visualización hasta que sean cargados nuevamente.
+   */
   bloqueaVerArchivos() {
     this.tarjetaCircCargado = false;
     this.dictGasCargado = false;
     this.pagoRefCargado = false;
     this.ineCargado = false;
+    this.polizaCargado = false;
   }
 
 
 
 
-/**
- * Obtiene el nombre del primer campo inválido dentro de un formulario.
- * 
- * @param formulario - FormGroup que contiene los controles a evaluar.
- * @returns El nombre del primer campo inválido o una cadena vacía si todos son válidos.
- */
+  /**
+   * Obtiene el nombre del primer campo inválido dentro de un formulario.
+   * 
+   * @param formulario - FormGroup que contiene los controles a evaluar.
+   * @returns El nombre del primer campo inválido o una cadena vacía si todos son válidos.
+   */
   private obtenerPrimerCampoInvalido(formulario: FormGroup): string {
     const controles = formulario.controls;
     for (const campo in controles) {
@@ -1063,28 +1093,28 @@ de carga de cada documento y realizar acciones en la UI según corresponda.
     return '';
   }
 
-/**
- * Muestra un mensaje de error general basado en la respuesta HTTP recibida.
- * 
- * @param err - Objeto HttpErrorResponse que contiene la información del error.
- */
+  /**
+   * Muestra un mensaje de error general basado en la respuesta HTTP recibida.
+   * 
+   * @param err - Objeto HttpErrorResponse que contiene la información del error.
+   */
   muestraErrorGeneral(err: HttpErrorResponse) {
     let message: string;
     if (err.error instanceof ErrorEvent) {
       message = 'Ocurrió un problema con la conexión de red. Por favor, verifica tu conexión a internet.';
     } else if (err.status === 0) {
-      message = 'El servicio no está disponible en este momento.<br> Intente nuevamente más tarde.';
+      message = 'El servicio no está disponible en este momento.<p> Intente nuevamente más tarde.';
     } else {
       message = err.error.strMessage;
     }
     this.muestraError(message);
   }
 
-/**
- * Muestra un mensaje de error en una alerta modal.
- * 
- * @param message - Texto del mensaje de error a mostrar.
- */
+  /**
+   * Muestra un mensaje de error en una alerta modal.
+   * 
+   * @param message - Texto del mensaje de error a mostrar.
+   */
   muestraError(message: string) {
     this.alertaUtility.mostrarAlerta({
       message: message,
@@ -1097,10 +1127,10 @@ de carga de cada documento y realizar acciones en la UI según corresponda.
     });
   }
 
-/**
- * Carga las URLs predeterminadas de los documentos PDF, asignando un archivo por defecto 
- * a cada tipo de documento para su visualización en la interfaz.
- */
+  /**
+   * Carga las URLs predeterminadas de los documentos PDF, asignando un archivo por defecto 
+   * a cada tipo de documento para su visualización en la interfaz.
+   */
   private cargarDefaultPDFs() {
     const defaultPdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl('assets/documents/subirArchivo.pdf');
     this.pdfUrls = {
@@ -1112,11 +1142,11 @@ de carga de cada documento y realizar acciones en la UI según corresponda.
     };
   }
 
-/*
-  Muestra un modal con una imagen específica y configuraciones de animación para su aparición y desaparición.
-  No recibe parámetros y no retorna ningún valor.
-  Utiliza el servicio `alertaUtility` para gestionar la alerta, que no incluye botón de cierre y permite hacer clic fuera del modal.
-*/
+  /*
+    Muestra un modal con una imagen específica y configuraciones de animación para su aparición y desaparición.
+    No recibe parámetros y no retorna ningún valor.
+    Utiliza el servicio `alertaUtility` para gestionar la alerta, que no incluye botón de cierre y permite hacer clic fuera del modal.
+  */
   muestraModalConImagen() {
     let img = '/assets/images/LogoTlaxMoral.png';
     this.alertaUtility.mostrarAlerta({
@@ -1141,11 +1171,11 @@ de carga de cada documento y realizar acciones en la UI según corresponda.
     });
   }
 
-/*
-  Obtiene la URL del endpoint correspondiente según el formulario proporcionado.
-  Recibe un parámetro `formulario` (string) y retorna un string con la URL del endpoint asociada.
-  Si el formulario no está definido, lanza un error indicando que no existe un endpoint para ese formulario.
-*/
+  /*
+    Obtiene la URL del endpoint correspondiente según el formulario proporcionado.
+    Recibe un parámetro `formulario` (string) y retorna un string con la URL del endpoint asociada.
+    Si el formulario no está definido, lanza un error indicando que no existe un endpoint para ese formulario.
+  */
   obtenerURLFormulario(formulario: string) {
     let endpoint = '';
     switch (formulario) {
@@ -1164,32 +1194,32 @@ de carga de cada documento y realizar acciones en la UI según corresponda.
     return endpoint;
   }
 
-/*
-  Abre un modal que muestra el componente `TerminosCondicionesComponent`.
-  No recibe parámetros y no retorna ningún valor.
-  El modal se abre con un tamaño extra grande (`xl`) y centrado en la pantalla.
-*/
+  /*
+    Abre un modal que muestra el componente `TerminosCondicionesComponent`.
+    No recibe parámetros y no retorna ningún valor.
+    El modal se abre con un tamaño extra grande (`xl`) y centrado en la pantalla.
+  */
   openModal() {
     this.modalTerminosCondiciones.open(TerminosCondicionesComponent, { size: 'xl', centered: true });
   }
 
-/*
-  Guarda un nuevo trámite fallido en el almacenamiento local (`localStorage`).
-  Recibe un parámetro `nuevoJsonSmyt` (cualquier tipo) y lo agrega a la lista de trámites fallidos almacenada.
-  Si no existe una lista de trámites fallidos en el almacenamiento local, se crea una nueva.
-*/
+  /*
+    Guarda un nuevo trámite fallido en el almacenamiento local (`localStorage`).
+    Recibe un parámetro `nuevoJsonSmyt` (cualquier tipo) y lo agrega a la lista de trámites fallidos almacenada.
+    Si no existe una lista de trámites fallidos en el almacenamiento local, se crea una nueva.
+  */
   guardarTramiteFallido(nuevoJsonSmyt: any) {
     let tramitesFallidos = JSON.parse(localStorage.getItem('tramitesFallidos') || '[]');
     tramitesFallidos.push(nuevoJsonSmyt);
     localStorage.setItem('tramitesFallidos', JSON.stringify(tramitesFallidos));
   }
 
-/*
-  Reintenta registrar los trámites fallidos almacenados en `localStorage`.
-  Recupera la lista de trámites fallidos y, para cada uno, intenta registrarlo nuevamente.
-  Si el trámite se registra correctamente, se elimina de la lista de trámites fallidos en el almacenamiento local.
-  Si ocurre un error al intentar registrar un trámite, se muestra un mensaje de error en la consola.
-*/
+  /*
+    Reintenta registrar los trámites fallidos almacenados en `localStorage`.
+    Recupera la lista de trámites fallidos y, para cada uno, intenta registrarlo nuevamente.
+    Si el trámite se registra correctamente, se elimina de la lista de trámites fallidos en el almacenamiento local.
+    Si ocurre un error al intentar registrar un trámite, se muestra un mensaje de error en la consola.
+  */
   reintentarTramitesFallidos() {
     let tramitesFallidos = JSON.parse(localStorage.getItem('tramitesFallidos') || '[]');
     tramitesFallidos.forEach((tramite: any, index: any) => {
@@ -1205,15 +1235,42 @@ de carga de cada documento y realizar acciones en la UI según corresponda.
     });
   }
 
-/*
-  Inicia un proceso de reintento automático de trámites fallidos cada 5 minutos (300,000 ms).
-  Llama al método `reintentarTramitesFallidos` en intervalos regulares de tiempo.
-  No recibe parámetros y no retorna ningún valor.
-*/
+  /*
+    Inicia un proceso de reintento automático de trámites fallidos cada 5 minutos (300,000 ms).
+    Llama al método `reintentarTramitesFallidos` en intervalos regulares de tiempo.
+    No recibe parámetros y no retorna ningún valor.
+  */
   iniciarReintentos() {
     setInterval(() => {
       this.reintentarTramitesFallidos();
     }, 300000);
+  }
+
+  /**
+* Detecta cambios en los campos del formulario y ejecuta una acción cuando se cumplen ciertas condiciones.
+*
+* @param {InputEvent} event - Evento de entrada del usuario en un campo del formulario.
+*
+* @returns {void} No retorna ningún valor.
+*
+* @description
+* - Ignora eventos no confiables (`!event.isTrusted`), evitando eventos manualmente disparados por el código.
+* - Obtiene los valores de `strNiv` y `strPlaca` del formulario `datosConcesionForm`.
+* - Verifica si:
+*   - `strNiv` tiene exactamente 17 caracteres.
+*   - `strPlaca` tiene exactamente 7 caracteres.
+* - Si ambas condiciones se cumplen, llama al método `cargarDatosFormulario` con los parámetros correspondientes.
+*/
+  detectarCambio(event: any): void {
+    if (!event.isTrusted) return;
+
+    const { strNiv, strPlaca } = this.datosConcesionForm.controls;
+    const nivLength = strNiv?.value?.length ?? 0;
+    const placaLength = strPlaca?.value?.length ?? 0;
+
+    if (nivLength === 17 && placaLength === 7) {
+      this.cargarDatosFormulario(this.datosConcesionForm, 'datosConcesionForm', false);
+    }
   }
 
   get formConcesion() {
@@ -1226,5 +1283,9 @@ de carga de cada documento y realizar acciones en la UI según corresponda.
 
   get formDocumentos() {
     return this.documentosUnidadForm.controls;
+  }
+
+  mostrarForm() {
+    console.log(this.formDocumentos)
   }
 }
