@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { PersonaFisicaComponent } from './components/persona-fisica/persona-fisica.component';
 import { PersonaMoralComponent } from './components/persona-moral/persona-moral.component';
+import { VersionComponent } from './components/version/version.component';
 
 
 const routes: Routes = [
@@ -37,6 +38,7 @@ const routes: Routes = [
     path: '**',
     redirectTo: 'persona-fisica'
   },
+  { path: 'version', component: VersionComponent }
 ];
 
 @NgModule({
