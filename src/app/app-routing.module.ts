@@ -30,6 +30,7 @@ const routes: Routes = [
     pathMatch: 'full',
     redirectTo: 'persona-fisica'
   },
+  { path: 'version', component: VersionComponent },
   {
     path: 'not-found',
     component: NotFoundComponent,
@@ -38,7 +39,7 @@ const routes: Routes = [
     path: '**',
     redirectTo: 'persona-fisica'
   },
-  { path: 'version', component: VersionComponent }
+ 
 ];
 
 @NgModule({
