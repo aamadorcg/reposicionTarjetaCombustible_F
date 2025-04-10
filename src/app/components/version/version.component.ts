@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   template: `
     <div class="d-flex flex-column justify-content-center align-items-center">
       <h2>Versión</h2>
-      <p>1.25032025.1</p>
+      <p>1.100425.1</p>
     </div>
   `
 })
