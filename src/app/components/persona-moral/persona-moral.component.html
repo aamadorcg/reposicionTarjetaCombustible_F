@@ -4,12 +4,12 @@
     <div class="row d-flex justify-content-center">
       <div class="fondo-contenedor-principal rounded">
         <div class="d-grid gap-1 d-md-flex fondo-stepper-encabezado rounded salto-linea-espacio-superior">
-          <h6 class="tittleMoral me-auto p-1 rounded"><span><i
-                class="bi bi-people-fill"></i>&nbsp;PERSONA: MORAL </span>
+          <h6 class="tittleMoral me-auto p-1 rounded"><span><i class="bi bi-people-fill"></i>&nbsp;PERSONA: MORAL
+            </span>
           </h6>
           <div>
-            <h6 class="tittleMoral me-auto p-1 rounded"><span><i
-                  class="bi bi-bus-front"></i>&nbsp;REPOSICIÓN TARJETA POR CAMBIO DE COMBUSTIBLE</span>
+            <h6 class="tittleMoral me-auto p-1 rounded"><span><i class="bi bi-bus-front"></i>&nbsp;REPOSICIÓN TARJETA
+                POR CAMBIO DE COMBUSTIBLE</span>
             </h6>
           </div>
         </div>
@@ -23,15 +23,16 @@
                 <span> DATOS DE LA CONCESIÓN </span>
               </h6>
             </ng-template>
-            <form [formGroup]="datosConcesionForm" (ngSubmit)="cargarDatosFormulario(datosConcesionForm, 'datosConcesionForm',true)">
+            <form [formGroup]="datosConcesionForm"
+              (ngSubmit)="cargarDatosFormulario(datosConcesionForm, 'datosConcesionForm',true)">
               <div class="row g-3">
                 <div class="campo-formulario-mediano">
                   <label for="strNiv" class="form-label">NIV <b class="asteriscos">*</b></label>
                   <div class="input-container">
                     <input (input)="detectarCambio($event)" appRestrictedAlphanumeric type="text" id="strNiv"
                       placeholder="Escribe NIV" formControlName="strNiv" name="strNiv" autocomplete="off"
-                      class="form-control" 
-                      [appFieldValidate]="datosConcesionForm.get('strNiv')" [minlength]="17" [maxlength]="17" [required]="true"  />
+                      class="form-control" [appFieldValidate]="datosConcesionForm.get('strNiv')" [minlength]="17"
+                      [maxlength]="17" [required]="true" />
                   </div>
                 </div>
 
@@ -40,8 +41,8 @@
                   <div class="input-container">
                     <input (input)="detectarCambio($event)" appAlphanumeric type="text" id="strPlaca"
                       placeholder="Escribe placa" formControlName="strPlaca" name="strPlaca" autocomplete="off"
-                      class="form-control"
-                      [appFieldValidate]="datosConcesionForm.get('strPlaca')" [minlength]="7" [maxlength]="7" [required]="true"/>
+                      class="form-control" [appFieldValidate]="datosConcesionForm.get('strPlaca')" [minlength]="7"
+                      [maxlength]="7" [required]="true" />
                   </div>
                 </div>
                 <div class="campo-formulario-mediano">
@@ -94,10 +95,11 @@
                     autocomplete="off" class="form-control" />
                 </div>
               </div>
-              <div class="col-12 d-grid gap-1 d-md-flex justify-content-md-end salto-linea-espacio-superior salto-linea-espacio-inferior">
-                <button type="submit" mat-button
-                  matTooltip="Siguiente paso" matTooltipPosition="above" class="text-white boton-siguiente"
-                  aria-describedby="cdk-describedby-message-pdb-1-2" cdk-describedby-host="pdb-1">
+              <div
+                class="col-12 d-grid gap-1 d-md-flex justify-content-md-end salto-linea-espacio-superior salto-linea-espacio-inferior">
+                <button type="submit" mat-button matTooltip="Siguiente paso" matTooltipPosition="above"
+                  class="text-white boton-siguiente" aria-describedby="cdk-describedby-message-pdb-1-2"
+                  cdk-describedby-host="pdb-1">
                   <span class="mdc-button__label">Siguiente
                     <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor"
                       viewBox="0 0 16 17" class="bi bi-caret-right-fill">
@@ -122,7 +124,8 @@
                 <span> DATOS DEL CONCESIONARIO </span>
               </h6>
             </ng-template>
-            <form [formGroup]="datosConcesionarioForm" (ngSubmit)="cargarDatosFormulario(datosConcesionarioForm, 'datosConcesionarioForm',true)">
+            <form [formGroup]="datosConcesionarioForm"
+              (ngSubmit)="cargarDatosFormulario(datosConcesionarioForm, 'datosConcesionarioForm',true)">
               <div class="row g-3 ">
                 <div class="campo-formulario-sm">
                   <label for="strRfc" class="form-label">RFC <b class="asteriscos">*</b></label>
@@ -198,13 +201,13 @@
                     id="strTelefonoRepresentante" placeholder="Escribe teléfono representante"
                     name="strTelefonoRepresentante" autocomplete="off" class="form-control"
                     [appFieldValidate]="datosConcesionarioForm.get('strTelefonoRepresentante')" [required]="true"
-                    [pattern]="'^\\d{10}$'" [minlength]="10" [maxlength]="10" [validateUniqueDigits]="true"   />
+                    [pattern]="'^\\d{10}$'" [minlength]="10" [maxlength]="10" [validateUniqueDigits]="true" />
                 </div>
 
                 <div class="campo-formulario-mediano">
                   <label for="strEmail" class="form-label">CORREO <b class="asteriscos">*</b></label>
                   <div class="input-container">
-                    <input appMail type="email" formControlName="strEmail" id="strEmail" 
+                    <input appMail type="email" formControlName="strEmail" id="strEmail"
                       placeholder="Escribe tu correo electrónico" name="strEmail"
                       matTooltip="Formato correo: nombre@ejemplo.com" matTooltipPosition="above" class="form-control"
                       [appFieldValidate]="datosConcesionarioForm.get('strEmail')" [required]="true"
@@ -217,11 +220,11 @@
                       class="asteriscos">*</b></label>
                   <div class="input-container">
                     <input appNumeric formControlName="strTelefonoContacto" name="strTelefonoContacto" type="text"
-                      matTooltip="Tu número de teléfono debe contener 10 números"
-                      matTooltipPosition="above" id="strTelefonoContacto" placeholder="Escribe teléfono concesionario"
-                      autocomplete="off" class="form-control"
-                      [appFieldValidate]="datosConcesionarioForm.get('strTelefonoContacto')" [required]="true"
-                      [pattern]="'^\\d{10}$'" [minlength]="10" [maxlength]="10" [validateUniqueDigits]="true"/>
+                      matTooltip="Tu número de teléfono debe contener 10 números" matTooltipPosition="above"
+                      id="strTelefonoContacto" placeholder="Escribe teléfono concesionario" autocomplete="off"
+                      class="form-control" [appFieldValidate]="datosConcesionarioForm.get('strTelefonoContacto')"
+                      [required]="true" [pattern]="'^\\d{10}$'" [minlength]="10" [maxlength]="10"
+                      [validateUniqueDigits]="true" />
                   </div>
                 </div>
               </div>
@@ -236,8 +239,7 @@
                         d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z">
                       </path>
                     </svg> Regresar</span></button>
-                <button type="submit"
-                  mat-button matTooltip="Siguiente paso" matTooltipPosition="above"
+                <button type="submit" mat-button matTooltip="Siguiente paso" matTooltipPosition="above"
                   class="mat-mdc-tooltip-trigger btn boton-siguiente me-md-2 text-white mdc-button mat-mdc-button mat-unthemed mat-mdc-button-base"
                   aria-describedby="cdk-describedby-message-ewh-1-2" cdk-describedby-host="ewh-1">
                   <span class="mdc-button__label">Siguiente <svg xmlns="http://www.w3.org/2000/svg" width="17"
@@ -264,10 +266,11 @@
             </ng-template>
             <form [formGroup]="documentosUnidadForm" (ngSubmit)="registraInformacion()">
               <div class="container alert terminos shadow-lg rounded salto-linea-espacio-superior">
-                <div class="row g-3 justify-content-center">
-                  <p> Adjunta los documentos solicitados en formato <b>.pdf</b><p> Haz uso de las herramientas <svg
-                      matTooltip="Seleccionar Documento" matTooltipPosition="left" xmlns="http://www.w3.org/2000/svg"
-                      width="20" height="20" fill="currentColor" viewBox="0 0 16 16"
+                <div class="row g-3 justify-content-center my-1">
+                  <p class="m-0"> Adjunta los documentos solicitados en formato <b>.pdf</b> </p>
+                  <p class="m-0">Haz uso de las herramientas <svg matTooltip="Seleccionar Documento"
+                      matTooltipPosition="left" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                      fill="currentColor" viewBox="0 0 16 16"
                       class="mat-mdc-tooltip-trigger bi bi-upload buton-subir-archivo"
                       aria-describedby="cdk-describedby-message-bxa-1-9" cdk-describedby-host="bxa-1">
                       <path
@@ -294,7 +297,8 @@
                       <div class="input-group mb-3 justify-content-center">
                         <input type="file" accept=".pdf" (change)="pdfSeleccionado($event, 'pagoRefrendo')"
                           style="display: none;" #pagoRefrendoInput>
-                        <button [disabled]="documentosUnidadForm.get('pagoRefrendoCheckbox')?.value" type="button" matTooltip="Seleccionar Documento" matTooltipPosition="left"
+                        <button [disabled]="documentosUnidadForm.get('pagoRefrendoCheckbox')?.value" type="button"
+                          matTooltip="Seleccionar Documento" matTooltipPosition="left"
                           class="mat-mdc-tooltip-trigger btn buton-subir-archivo" (click)="pagoRefrendoInput.click()">
                           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
                             viewBox="0 0 16 16" class="bi bi-upload">
@@ -335,7 +339,8 @@
                       <div class="input-group mb-3 justify-content-center">
                         <input type="file" accept=".pdf" (change)="pdfSeleccionado($event, 'tarjetaCirculacion')"
                           style="display: none;" #tarjetaCirculacionInput>
-                        <button [disabled]="documentosUnidadForm.get('tarjetaCirculacionCheckbox')?.value" type="button" matTooltip="Seleccionar Documento" matTooltipPosition="left"
+                        <button [disabled]="documentosUnidadForm.get('tarjetaCirculacionCheckbox')?.value" type="button"
+                          matTooltip="Seleccionar Documento" matTooltipPosition="left"
                           class="mat-mdc-tooltip-trigger btn buton-subir-archivo"
                           (click)="tarjetaCirculacionInput.click()">
                           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
@@ -361,7 +366,8 @@
                         </a>
                         <div matTooltip="Validación de Documento" matTooltipPosition="right"
                           class="mat-mdc-tooltip-trigger input-group-text">
-                          <input formControlName="tarjetaCirculacionCheckbox" type="checkbox" class="form-check-input mt-0">
+                          <input formControlName="tarjetaCirculacionCheckbox" type="checkbox"
+                            class="form-check-input mt-0">
                         </div>
                       </div>
                       <hr>
@@ -377,7 +383,8 @@
                       <div class="input-group mb-3 justify-content-center">
                         <input type="file" accept=".pdf" (change)="pdfSeleccionado($event, 'dictamenGas')"
                           style="display: none;" #dictamenGasInput>
-                        <button [disabled]="documentosUnidadForm.get('dictamenGasCheckbox')?.value" type="button" matTooltip="Seleccionar Documento" matTooltipPosition="left"
+                        <button [disabled]="documentosUnidadForm.get('dictamenGasCheckbox')?.value" type="button"
+                          matTooltip="Seleccionar Documento" matTooltipPosition="left"
                           class="mat-mdc-tooltip-trigger btn buton-subir-archivo" (click)="dictamenGasInput.click()">
                           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
                             viewBox="0 0 16 16" class="bi bi-upload">
@@ -419,7 +426,8 @@
                       <div class="input-group mb-3 justify-content-center">
                         <input type="file" accept=".pdf" (change)="pdfSeleccionado($event, 'ine')"
                           style="display: none;" #ineInput>
-                        <button [disabled]="documentosUnidadForm.get('ineCheckbox')?.value" type="button" matTooltip="Seleccionar Documento" matTooltipPosition="left"
+                        <button [disabled]="documentosUnidadForm.get('ineCheckbox')?.value" type="button"
+                          matTooltip="Seleccionar Documento" matTooltipPosition="left"
                           class="mat-mdc-tooltip-trigger btn buton-subir-archivo" (click)="ineInput.click()">
                           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
                             viewBox="0 0 16 16" class="bi bi-upload">
@@ -459,7 +467,8 @@
                       <div class="input-group mb-3 justify-content-center">
                         <input type="file" accept=".pdf" (change)="pdfSeleccionado($event, 'polizaSeguro')"
                           style="display: none;" #polizaInput>
-                        <button [disabled]="documentosUnidadForm.get('polizaSeguroCheckbox')?.value" type="button" matTooltip="Seleccionar Documento" matTooltipPosition="left"
+                        <button [disabled]="documentosUnidadForm.get('polizaSeguroCheckbox')?.value" type="button"
+                          matTooltip="Seleccionar Documento" matTooltipPosition="left"
                           class="mat-mdc-tooltip-trigger btn buton-subir-archivo" (click)="polizaInput.click()">
                           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
                             viewBox="0 0 16 16" class="bi bi-upload">
@@ -473,7 +482,8 @@
                         </button>
                         <a matTooltip="Ver Documento" matTooltipPosition="above" target="_blank" type="button"
                           class="mat-mdc-tooltip-trigger btn buton-ver-archivo text-white"
-                          [href]="polizaCargado ? pdfUrls['polizaSeguro'] : null" [ngClass]="{'disabled-link': !polizaCargado}">
+                          [href]="polizaCargado ? pdfUrls['polizaSeguro'] : null"
+                          [ngClass]="{'disabled-link': !polizaCargado}">
                           <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor"
                             viewBox="0 0 16 16" class="bi bi-eyeglasses">
                             <path
