@@ -73,6 +73,10 @@ body {
      margin-bottom: 1em; 
      display: block; 
    }
+
+   .texto-justificado {
+    text-align: justify
+   }
    
 @import "~bootstrap-icons/font/bootstrap-icons.css";
 @import '~animate.css/animate.min.css';
