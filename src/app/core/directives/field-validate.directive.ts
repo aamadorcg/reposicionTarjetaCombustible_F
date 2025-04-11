@@ -75,7 +75,7 @@ export class FieldValidateDirective implements OnInit {
     if (errors['required'] && this.required) errorMessage = 'Campo obligatorio';
     if (errors['minlength'] && this.minlength > 0) errorMessage = `Debe tener al menos ${errors['minlength'].requiredLength} caracteres`;
     if (errors['maxlength'] && this.maxlength > 0) errorMessage = `No puede tener más de ${errors['maxlength'].requiredLength} caracteres`;
-    if (errors['pattern'] && this.pattern) errorMessage = 'Formato inválido'; 
+    if (errors['pattern'] && this.pattern) errorMessage = 'Formato no válido'; 
     if (errors['uniqueDigits']) errorMessage = 'El número no puede contener todos los dígitos iguales';
 
     this.errorContainer.innerText = errorMessage;
