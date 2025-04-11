@@ -38,20 +38,6 @@
      color: #fff;
 }
 
-.tittleMoral {
-     background-color: #422b7c;
-     color: #fff;
-}
-
-.mat-stepper-header {
-     overflow: hidden;
-     outline: none;
-     cursor: pointer;
-     position: relative;
-     box-sizing: content-box;
-     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-}
-
 .mat-stepper-vertical {
      margin-top: 8px;
      display: block;
@@ -134,12 +120,6 @@
      overflow: hidden;
 }
 
-.mat-vertical-content-container {
-     margin-left: 36px;
-     border: 0;
-     position: relative;
-}
-
 .mat-stepper-vertical-line::before {
      content: "";
      position: absolute;
@@ -150,10 +130,6 @@
 
 .mat-vertical-stepper-content:not(.mat-vertical-stepper-content-inactive) {
      visibility: inherit !important;
-}
-
-.mat-vertical-content {
-     padding: 0 24px 24px 24px;
 }
 
 .asteriscos {
@@ -317,33 +293,6 @@
      100% {
           transform: rotate(360deg);
      }
-}
-
-.swal-wide {
-     width: 80%;
-}
-
-.modal-body {
-     background-image: url('/assets/images/florIcon.png');
-     background-size: 30%;
-     background-position: left;
-     background-repeat: no-repeat;
-}
-
-.titulo-parrafo {
-     font-size: 16px;
-}
-
-.parrafo {
-     font-size: 13px;
-     text-align: justify;
-}
-
-.custom-title {
-     background-color: #ffcc00 !important;
-     padding: 10px;
-     border-radius: 5px;
-     color: #000;
 }
 
 .input-group .form-control.is-invalid {
