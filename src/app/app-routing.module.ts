@@ -4,16 +4,21 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
 import { PersonaFisicaComponent } from './components/persona-fisica/persona-fisica.component';
 import { PersonaMoralComponent } from './components/persona-moral/persona-moral.component';
 import { VersionComponent } from './components/version/version.component';
+import { VerificacionCorreoComponent } from './components/verificacion-correo/verificacion-correo.component';
+import { VerificacionCorreoGuard } from './core/guards/verificacion-correo.guard';
 
 
 const routes: Routes = [
+  { path: 'verificar-correo/:tipo', component: VerificacionCorreoComponent },
   {
     path: 'persona-fisica',
-    component: PersonaFisicaComponent
+    component: PersonaFisicaComponent,
+    canActivate: [VerificacionCorreoGuard]
   },
   {
     path: 'persona-moral',
-    component: PersonaMoralComponent
+    component: PersonaMoralComponent,
+    canActivate: [VerificacionCorreoGuard]
   },
   {
     path: 'persona-fisica/modificar/:id',
@@ -28,7 +33,7 @@ const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'persona-fisica'
+    redirectTo: 'verificar-correo/fisica'
   },
   { path: 'version', component: VersionComponent },
   {
@@ -37,9 +42,9 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'persona-fisica'
+    redirectTo: 'verificar-correo/fisica'
   },
- 
+  
 ];
 
 @NgModule({

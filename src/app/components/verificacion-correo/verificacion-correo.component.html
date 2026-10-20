@@ -1,0 +1,55 @@
+<app-nav></app-nav>
+<div class="contenedor-principal" [class.persona-moral]="tipo === 'moral'">
+  <div class="container py-5 mx-auto">
+    <div class="row d-flex justify-content-center">
+      <div class="fondo-contenedor-principal rounded">
+        <div class="d-grid gap-1 d-md-flex fondo-stepper-encabezado rounded salto-linea-espacio-superior">
+          <h6 class="me-auto p-1 rounded" [ngClass]="tipo === 'fisica' ? 'tittle' : 'tittleMoral'">
+            <i class="bi bi-people-fill"></i>&nbsp;PERSONA: {{ tipo === 'fisica' ? 'FÍSICA' : 'MORAL' }}
+          </h6>
+          <div><h6 class="p-1 rounded" [ngClass]="tipo === 'fisica' ? 'tittle' : 'tittleMoral'">
+            <i class="bi bi-bus-front"></i>&nbsp;PERMISO FUERA DE RUTA
+          </h6></div>
+        </div>
+        <div class="fondo-stepper rounded salto-linea-espacio-inferior contenido-verificacion">
+          <h6 class="p-2 rounded titulo-seccion" [ngClass]="tipo === 'fisica' ? 'tittle' : 'tittleMoral'">
+            <i class="bi bi-envelope-check"></i>&nbsp;VERIFICACIÓN DE CORREO ELECTRÓNICO
+          </h6>
+          <p>Para iniciar tu trámite, verifica tu correo electrónico. A esta dirección se enviará la información relacionada con tu trámite.</p>
+          <form *ngIf="!solicitudId" [formGroup]="correoForm" (ngSubmit)="solicitar()">
+            <div class="campo-formulario-mediano">
+              <label class="form-label" for="correo">CORREO <b class="asteriscos">*</b></label>
+              <input id="correo" type="email" class="form-control" formControlName="correo"
+                     autocomplete="email" placeholder="Escribe tu correo electrónico"
+                     [class.is-invalid]="correoForm.controls.correo.touched && correoForm.controls.correo.invalid">
+              <small *ngIf="correoForm.controls.correo.touched && correoForm.controls.correo.invalid" class="text-danger">Escribe un correo válido.</small>
+            </div>
+            <div class="acciones"><button type="submit" class="btn boton-siguiente text-white" [disabled]="procesando">Enviar código <i class="bi bi-caret-right-fill"></i></button></div>
+          </form>
+          <form *ngIf="solicitudId" [formGroup]="codigoForm" (ngSubmit)="verificar()">
+            <p>{{ mensaje }}</p>
+            <div class="temporizador" [class.vencido]="segundosRestantes === 0"><i class="bi bi-clock"></i> {{ tiempo }}</div>
+            <div class="campo-formulario-mediano">
+              <label class="form-label" for="codigo">CÓDIGO DE VERIFICACIÓN <b class="asteriscos">*</b></label>
+              <input id="codigo" type="text" class="form-control codigo" formControlName="codigo" inputmode="numeric"
+                     maxlength="6" autocomplete="one-time-code" placeholder="000000">
+            </div>
+            <div class="acciones">
+              <button type="button" class="btn boton-regresar text-white" (click)="cambiarCorreo()">{{ segundosRestantes ? 'Cambiar correo' : 'Solicitar otro código' }}</button>
+              <button type="submit" class="btn boton-siguiente text-white" [disabled]="procesando || !segundosRestantes || codigoForm.invalid">Verificar y continuar <i class="bi bi-caret-right-fill"></i></button>
+            </div>
+          </form>
+          <p *ngIf="error" class="alert alert-danger mt-3" role="alert">{{ error }}</p>
+          <hr><p class="texto-obligatorio">Los campos con ( <b class="asteriscos">*</b> ) son obligatorios</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="procesando" class="blur-container">
+  <div class="spinner-container">
+    <img src="assets/images/Logotipo.png" alt="Cargando" class="rotating-image">
+    <p class="loading-text">Procesando verificación de correo...</p>
+  </div>
+</div>

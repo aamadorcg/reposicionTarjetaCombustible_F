@@ -14,10 +14,11 @@ import { TerminosCondicionesComponent } from './components/terminos-condiciones/
 import { CardPdfComponent } from './components/card-pdf/card-pdf.component';
 import { RestrictedAlphanumericDirective } from './core/directives/restricted-alphanumeric.directive';
 import { NotFoundComponent } from './components/not-found/not-found.component';
-import { PersonaFisicaComponent } from './components/persona-fisica/persona-fisica.component';
 import { PersonaMoralComponent } from './components/persona-moral/persona-moral.component';
+import { PersonaFisicaComponent } from './components/persona-fisica/persona-fisica.component';
 import { FieldValidateDirective } from './core/directives/field-validate.directive';
 import { VersionComponent } from './components/version/version.component';
+import { VerificacionCorreoComponent } from './components/verificacion-correo/verificacion-correo.component';
 
 @NgModule({
   declarations: [
@@ -28,10 +29,11 @@ import { VersionComponent } from './components/version/version.component';
     CardPdfComponent,
     RestrictedAlphanumericDirective,
     NotFoundComponent,
-    PersonaFisicaComponent,
     PersonaMoralComponent,
+    PersonaFisicaComponent,
     FieldValidateDirective,
-    VersionComponent
+    VersionComponent,
+    VerificacionCorreoComponent
   ],
   imports: [
     BrowserModule,

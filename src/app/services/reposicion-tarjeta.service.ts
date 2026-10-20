@@ -1,10 +1,11 @@
-import { HttpClient, HttpParams } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, map, catchError, throwError } from "rxjs";
 import { RespuestaGenerica } from "../core/models/respuesta.generica.model";
 import { COLOR_CONFIRMAR } from "../shared/constants/colores";
 import { AlertaUtility } from "../shared/utilities/alerta";
 import { environment } from "../environments/environment";
+import { VerificacionCorreoService } from "./verificacion-correo.service";
 
 
 @Injectable({
@@ -15,7 +16,7 @@ export class ReposicionTarjetaService {
   private apiUrlFinanzas: string;
   private apiUrlSmyt: string;
   public configuracion: any = [];
-  constructor(private readonly http: HttpClient, private readonly alerta: AlertaUtility) {
+  constructor(private readonly http: HttpClient, private readonly alerta: AlertaUtility, private readonly verificacionCorreoService: VerificacionCorreoService) {
     this.apiUrlFinanzas = environment.apiUrlFinanzas;
     this.apiUrlSmyt = environment.apiUrlSmyt;
   }
@@ -76,7 +77,12 @@ export class ReposicionTarjetaService {
   Retorna la respuesta de la solicitud HTTP, que incluye un objeto `RespuestaGenerica`.
 */
   registrarTramite(body: any) {
-    return this.http.post<RespuestaGenerica>(`${this.apiUrlFinanzas}/tramites/registrarTramite`, body);
+    const sesion = this.verificacionCorreoService.actual();
+    if (!sesion?.token) {
+      return throwError(() => new Error('No existe una verificación de correo válida.'));
+    }
+    const headers = new HttpHeaders({ 'X-Verificacion-Token': sesion.token });
+    return this.http.post<RespuestaGenerica>(`${this.apiUrlFinanzas}/tramites/registrarTramite`, body, { headers });
   }
 
 /*

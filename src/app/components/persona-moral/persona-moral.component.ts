@@ -11,6 +11,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReposicionTarjetaService } from 'src/app/services/reposicion-tarjeta.service'
 import { RespuestaGenerica } from 'src/app/core/models/respuesta.generica.model';
+import { VerificacionCorreoService } from 'src/app/services/verificacion-correo.service';
 import { switchMap, retryWhen, delayWhen, timer, of, throwError, catchError, map } from 'rxjs';
 
 
@@ -79,16 +80,28 @@ export class PersonaMoralComponent {
     private readonly modalTerminosCondiciones: NgbModal,
     private readonly router: Router,
     private readonly servicios: ReposicionTarjetaService,
-    private readonly activatedRoute: ActivatedRoute
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly verificacionCorreoService: VerificacionCorreoService
   ) { this.iniciarReintentos(); }
 
   /*
   ngOnInit() inicializa formularios, configura validaciones, carga PDFs y documentos, 
   obtiene la configuración del trámite y observa cambios en los formularios.
   */
+  /** Mantiene el correo validado en altas nuevas; no modifica trámites en corrección. */
+  private restaurarCorreoVerificado(): void {
+    if (this.esModificacion) return;
+    const sesion = this.verificacionCorreoService.actual();
+    if (sesion?.tipo !== 'moral') return;
+    const control = this.datosConcesionarioForm.get('strEmail');
+    control?.setValue(sesion.correo, { emitEvent: false });
+    control?.updateValueAndValidity({ emitEvent: false });
+  }
+
   ngOnInit() {
     this.inicializarFormularios();
     this.detectarTipoTramite();
+    this.restaurarCorreoVerificado();
     this.configurarRFCFisicaMoral();
     this.cargarDefaultPDFs();
     this.obtenerDocumentosTramite();
@@ -558,6 +571,7 @@ convierte la cadena Base64 en un Blob y crea un objeto URL seguro.
           }
           this.actualizarForm = true;
           formulario.patchValue(value.data, { emitEvent: false });
+          if (nombreFormulario === 'datosConcesionarioForm') this.restaurarCorreoVerificado();
           if (nombreFormulario === 'datosConcesionarioForm') {
             this.buscaRFC = true;
           }
@@ -816,6 +830,7 @@ convierte la cadena Base64 en un Blob y crea un objeto URL seguro.
           this.servicios.registrarTramite(json).pipe(
             switchMap(value => {
               if (value.bolStatus) {
+                this.verificacionCorreoService.terminarTramite();
                 const intIdTramite = value.data.intIdTramite;
                 let jsonSmyt = {
                   intIdConcesion: this.formConcesion['intIdConcesionSMyT'].value,
@@ -845,6 +860,11 @@ convierte la cadena Base64 en un Blob y crea un objeto URL seguro.
             })
           ).subscribe({
             next: (value: any) => {
+              if (!value?.intIdTramite) {
+                this.cargarSpinner = false;
+                this.muestraError('No fue posible confirmar el registro del trámite en Finanzas.');
+                return;
+              }
               const email = this.datosConcesionarioForm.get('strEmail')?.value;
               const strCodigo = value.intIdTramite || '';
               let htmlTramiteEnviado = "";
@@ -873,14 +893,12 @@ convierte la cadena Base64 en un Blob y crea un objeto URL seguro.
                 allowOutsideClick: false,
               }).then(result => {
                 if (result.isConfirmed) {
-                  this.reiniciaFormulario();
-                  this.stepper.reset();
-                  this.router.navigate([this.router.url], { skipLocationChange: true });
+                  this.router.navigateByUrl('/verificar-correo/moral');
                 }
               });
             }, error: (err) => {
               this.cargarSpinner = false;
-              this.muestraError(err.error.message);
+              this.muestraError(err?.error?.message || err?.message || 'No fue posible completar el registro.');
             }
           })
         }
@@ -989,6 +1007,7 @@ convierte la cadena Base64 en un Blob y crea un objeto URL seguro.
       formulario.reset();
       formulario.markAsPristine();
       formulario.markAsUntouched();
+      if (nombreFormulario === 'datosConcesionarioForm') this.restaurarCorreoVerificado();
     }
   }
 

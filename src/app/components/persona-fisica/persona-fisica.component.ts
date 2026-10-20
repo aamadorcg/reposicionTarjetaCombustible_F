@@ -11,6 +11,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReposicionTarjetaService } from 'src/app/services/reposicion-tarjeta.service'
 import { RespuestaGenerica } from 'src/app/core/models/respuesta.generica.model';
+import { VerificacionCorreoService } from 'src/app/services/verificacion-correo.service';
 import { switchMap, retryWhen, delayWhen, timer, of, throwError, catchError, map } from 'rxjs';
 
 
@@ -80,15 +81,27 @@ export class PersonaFisicaComponent {
     private readonly modalTerminosCondiciones: NgbModal,
     private readonly router: Router,
     private readonly servicios: ReposicionTarjetaService,
-    private readonly activatedRoute: ActivatedRoute
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly verificacionCorreoService: VerificacionCorreoService
   ) { this.iniciarReintentos(); }
 
   /**
  * Método de inicialización del componente. Inicializa los formularios, detecta el tipo de trámite, configura el RFC, carga los PDFs por defecto, obtiene los documentos del trámite, carga la configuración del trámite desde el servicio y observa cambios en los formularios.
  */
+  /** Mantiene el correo validado en altas nuevas; no modifica trámites en corrección. */
+  private restaurarCorreoVerificado(): void {
+    if (this.esModificacion) return;
+    const sesion = this.verificacionCorreoService.actual();
+    if (sesion?.tipo !== 'fisica') return;
+    const control = this.datosConcesionarioForm.get('strEmail');
+    control?.setValue(sesion.correo, { emitEvent: false });
+    control?.updateValueAndValidity({ emitEvent: false });
+  }
+
   ngOnInit() {
     this.inicializarFormularios();
     this.detectarTipoTramite();
+    this.restaurarCorreoVerificado();
     this.configurarRFC();
     this.cargarDefaultPDFs();
     this.obtenerDocumentosTramite();
@@ -561,6 +574,7 @@ export class PersonaFisicaComponent {
           }
           this.actualizarForm = true;
           formulario.patchValue(value.data, { emitEvent: false });
+          if (nombreFormulario === 'datosConcesionarioForm') this.restaurarCorreoVerificado();
           if (nombreFormulario === 'datosConcesionarioForm') {
             this.buscaRFC = true;
           }
@@ -815,6 +829,7 @@ export class PersonaFisicaComponent {
           this.servicios.registrarTramite(json).pipe(
             switchMap(value => {
               if (value.bolStatus) {
+                this.verificacionCorreoService.terminarTramite();
                 const intIdTramite = value.data.intIdTramite;
                 let jsonSmyt = {
                   intIdConcesion: this.formConcesion['intIdConcesionSMyT'].value,
@@ -844,6 +859,11 @@ export class PersonaFisicaComponent {
             })
           ).subscribe({
             next: (value: any) => {
+              if (!value?.intIdTramite) {
+                this.cargarSpinner = false;
+                this.muestraError('No fue posible confirmar el registro del trámite en Finanzas.');
+                return;
+              }
               const email = this.datosConcesionarioForm.get('strEmail')?.value;
               const strCodigo = value.intIdTramite || '';
               let htmlTramiteEnviado = "";
@@ -872,14 +892,12 @@ export class PersonaFisicaComponent {
                 allowOutsideClick: false,
               }).then(result => {
                 if (result.isConfirmed) {
-                  this.reiniciaFormulario();
-                  this.stepper.reset();
-                  this.router.navigate([this.router.url], { skipLocationChange: true });
+                  this.router.navigateByUrl('/verificar-correo/fisica');
                 }
               });
             }, error: (err) => {
               this.cargarSpinner = false;
-              this.muestraError(err.error.message);
+              this.muestraError(err?.error?.message || err?.message || 'No fue posible completar el registro.');
             }
           })
         }
@@ -982,6 +1000,7 @@ export class PersonaFisicaComponent {
       formulario.reset();
       formulario.markAsPristine();
       formulario.markAsUntouched();
+      if (nombreFormulario === 'datosConcesionarioForm') this.restaurarCorreoVerificado();
     }
   }
 
