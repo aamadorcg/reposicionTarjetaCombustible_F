@@ -147,9 +147,8 @@ export class VerificacionCorreoComponent implements OnInit, OnDestroy {
           ).subscribe({
 
                next: () => {
-
+                    this.procesando = false;
                     this.reloj?.unsubscribe();
-
                     this.mostrarAlerta(
                          `Tu correo electrónico ha sido verificado correctamente.
          <br><br>
